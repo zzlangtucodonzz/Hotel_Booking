@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — Wanderly</title>
+  <meta name="description" content="Join Wanderly to unlock curated travel experiences, exclusive deals, and unique stays across Vietnam.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body>
+
+  <main class="auth-page" id="auth-register-page">
+
+    <!-- ===== LEFT PANEL — Registration Form ===== -->
+    <section class="auth-left" aria-label="Registration form">
+      <div class="auth-logo" id="auth-logo-register">
+        <span class="logo-dot"></span> WANDERLY
+      </div>
+
+      <h1 class="auth-heading">Start your journey.</h1>
+      <p class="auth-subtitle">Create an account to discover curated stays and unforgettable experiences across Vietnam.</p>
+
+      <form class="auth-form" id="register-form">
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullname" placeholder="John Doe" required autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number <span style="font-weight:400;opacity:.6;">(optional)</span></label>
+          <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="+84 xxx xxx xxx" autocomplete="tel">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Create a password" required autocomplete="new-password">
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirm-password" placeholder="Re-enter your password" required autocomplete="new-password">
+        </div>
+
+        <button type="submit" class="btn-auth-primary" id="btnSignUp">SIGN UP</button>
+      </form>
+
+      <div class="auth-message-box" id="messageBox" style="display: none;"></div>
+
+      <p class="auth-redirect">
+        Already have an account? <a href="login.html" id="goto-login-link">Sign in</a>
+      </p>
+    </section>
+
+    <!-- ===== RIGHT PANEL — Scenic Image ===== -->
+    <aside class="auth-right" aria-label="Scenic travel photography">
+      <div class="auth-image-wrapper">
+        <img src="assets/images/ninhbinh-landscape.png" alt="Ninh Binh, Vietnam — limestone karsts rising above green rice paddies in warm daylight" loading="eager">
+        <div class="auth-image-quote">
+          <p class="quote-text">"Every window opens to a story waiting to be lived."</p>
+          <p class="quote-location">Ninh Binh <span>_</span> VIETNAM</p>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <script src="assets/js/register.js"></script>
+</body>
+</html>

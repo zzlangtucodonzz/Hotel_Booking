@@ -1,0 +1,112 @@
+[
+  {
+    "id": "room-001",
+    "hotelId": "hotel-001",
+    "name": "Heritage Deluxe Room",
+    "description": "Elegant French-colonial inspired room with wooden shutters, vintage tiles, and views of the Old Quarter streets below.",
+    "price": 128,
+    "capacity": 2,
+    "size": "32 sqm",
+    "amenities": ["King Bed", "City View", "Minibar", "Rain Shower", "Free WiFi"],
+    "image": "assets/images/rooms/deluxe-room.png"
+  },
+  {
+    "id": "room-002",
+    "hotelId": "hotel-001",
+    "name": "Rooftop Suite",
+    "description": "Spacious suite on the top floor with a private terrace, panoramic Old Quarter rooftops, and complimentary afternoon tea.",
+    "price": 215,
+    "capacity": 2,
+    "size": "48 sqm",
+    "amenities": ["King Bed", "Private Terrace", "Bathtub", "Lounge Area", "Complimentary Tea"],
+    "image": "assets/images/rooms/suite-room.png"
+  },
+  {
+    "id": "room-003",
+    "hotelId": "hotel-002",
+    "name": "Beachfront Villa",
+    "description": "Private villa steps from the sand, with an infinity plunge pool, outdoor shower, and direct sunset views over the ocean.",
+    "price": 215,
+    "capacity": 2,
+    "size": "65 sqm",
+    "amenities": ["King Bed", "Private Pool", "Ocean View", "Outdoor Shower", "Butler Service"],
+    "image": "assets/images/rooms/beachfront-villa.png"
+  },
+  {
+    "id": "room-004",
+    "hotelId": "hotel-002",
+    "name": "Garden Pool Villa",
+    "description": "Tucked within a tropical garden, featuring a secluded plunge pool, hammock terrace, and open-air bathroom.",
+    "price": 280,
+    "capacity": 3,
+    "size": "80 sqm",
+    "amenities": ["King Bed", "Private Pool", "Garden View", "Hammock", "Minibar"],
+    "image": "assets/images/rooms/garden-villa.png"
+  },
+  {
+    "id": "room-005",
+    "hotelId": "hotel-003",
+    "name": "Riverside Charm Room",
+    "description": "Lantern-lit ambiance with wooden furnishings, silk accents, and a balcony overlooking the Thu Bon River.",
+    "price": 142,
+    "capacity": 2,
+    "size": "28 sqm",
+    "amenities": ["Queen Bed", "River View", "Balcony", "Free WiFi", "Bicycle"],
+    "image": "assets/images/rooms/riverside-room.png"
+  },
+  {
+    "id": "room-006",
+    "hotelId": "hotel-004",
+    "name": "Pine View Cabin",
+    "description": "Cozy highland cabin with a stone fireplace, floor-to-ceiling windows framing pine forests, and a deep soaking tub.",
+    "price": 95,
+    "capacity": 2,
+    "size": "35 sqm",
+    "amenities": ["King Bed", "Fireplace", "Mountain View", "Bathtub", "Complimentary Breakfast"],
+    "image": "assets/images/rooms/cabin-room.png"
+  },
+  {
+    "id": "room-007",
+    "hotelId": "hotel-005",
+    "name": "Skyline Executive Suite",
+    "description": "Floor-to-ceiling glass panels frame the Saigon skyline — modern minimalist design with a work desk and lounge area.",
+    "price": 188,
+    "capacity": 2,
+    "size": "55 sqm",
+    "amenities": ["King Bed", "City View", "Work Desk", "Lounge", "Minibar"],
+    "image": "assets/images/rooms/executive-suite.png"
+  },
+  {
+    "id": "room-008",
+    "hotelId": "hotel-005",
+    "name": "Presidential Penthouse",
+    "description": "The crown jewel — a two-level penthouse with private rooftop terrace, dining room, and 360-degree city panorama.",
+    "price": 450,
+    "capacity": 4,
+    "size": "120 sqm",
+    "amenities": ["King Bed", "Private Terrace", "Dining Room", "Jacuzzi", "Butler Service"],
+    "image": "assets/images/rooms/penthouse.png"
+  },
+  {
+    "id": "room-009",
+    "hotelId": "hotel-006",
+    "name": "Ocean Superior Room",
+    "description": "Bright, airy room with direct ocean views from a private balcony — wake up to the sound of waves on My Khe Beach.",
+    "price": 175,
+    "capacity": 2,
+    "size": "38 sqm",
+    "amenities": ["King Bed", "Ocean View", "Balcony", "Rain Shower", "Beach Access"],
+    "image": "assets/images/rooms/ocean-room.png"
+  },
+  {
+    "id": "room-010",
+    "hotelId": "hotel-007",
+    "name": "Terrace Cloud Room",
+    "description": "Wake above the clouds — private terrace overlooking cascading rice terraces, with ethnic-inspired textiles and handcrafted furniture.",
+    "price": 88,
+    "capacity": 2,
+    "size": "30 sqm",
+    "amenities": ["Queen Bed", "Mountain View", "Private Terrace", "Hot Tub", "Local Breakfast"],
+    "image": "assets/images/rooms/cloud-room.png"
+  }
+]

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wanderly Admin — Dashboard</title>
+  <meta name="description" content="Wanderly Hotel & Booking Management Dashboard — Manage properties, bookings, guests, and revenue analytics in one place.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- Mobile overlay -->
+  <div class="sidebar-mobile-overlay" id="sidebar-mobile-overlay"></div>
+
+  <div class="admin-layout">
+
+    <!-- ============================================================
+         SIDEBAR NAVIGATION
+         ============================================================ -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+
+      <!-- Brand -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M4 12c0-5 3.5-8 8-8s8 3 8 8-3.5 8-8 8-8-3-8-8z"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="sidebar-brand-name">Wanderly</span>
+          <span class="sidebar-brand-label">Admin Console</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav" id="sidebar-nav" aria-label="Admin navigation">
+
+        <!-- OVERVIEW -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-label">Overview</div>
+          <a href="#" class="sidebar-item active" id="nav-dashboard" data-tooltip="Dashboard">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="4" rx="1.5"/><rect x="11" y="8" width="7" height="10" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/></svg>
+            </span>
+            <span class="sidebar-item-text">Dashboard</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-reports" data-tooltip="Reports & Analytics">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17V8l4-3v12M9 17V5l4-3v15M15 17v-7l3-2v9"/></svg>
+            </span>
+            <span class="sidebar-item-text">Reports & Analytics</span>
+          </a>
+        </div>
+
+        <!-- PROPERTIES -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-label">Properties</div>
+          <a href="#" class="sidebar-item" id="nav-hotels" data-tooltip="Hotels">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="16" height="12" rx="1.5"/><path d="M5 6V4a5 5 0 0110 0v2"/><line x1="2" y1="12" x2="18" y2="12"/></svg>
+            </span>
+            <span class="sidebar-item-text">Hotels</span>
+            <span class="sidebar-item-badge">12</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-rooms" data-tooltip="Room Types & Rooms">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="16" height="9" rx="1.5"/><path d="M4 8V6a2 2 0 012-2h8a2 2 0 012 2v2"/><line x1="2" y1="13" x2="18" y2="13"/></svg>
+            </span>
+            <span class="sidebar-item-text">Room Types & Rooms</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-amenities" data-tooltip="Amenities">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v8M6 10h8"/></svg>
+            </span>
+            <span class="sidebar-item-text">Amenities</span>
+          </a>
+        </div>
+
+        <!-- OPERATIONS -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-label">Operations</div>
+          <a href="#" class="sidebar-item" id="nav-bookings" data-tooltip="Bookings">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>
+            </span>
+            <span class="sidebar-item-text">Bookings</span>
+            <span class="sidebar-item-badge">8</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-pricing" data-tooltip="Price & Inventory">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 10l3-8h12l3 8"/><rect x="1" y="10" width="18" height="8" rx="1.5"/><path d="M6 14h8"/></svg>
+            </span>
+            <span class="sidebar-item-text">Price & Inventory</span>
+          </a>
+        </div>
+
+        <!-- FINANCE -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-label">Finance</div>
+          <a href="#" class="sidebar-item" id="nav-payments" data-tooltip="Payments">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="16" height="12" rx="2"/><line x1="2" y1="9" x2="18" y2="9"/><line x1="6" y1="13" x2="10" y2="13"/></svg>
+            </span>
+            <span class="sidebar-item-text">Payments</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-coupons" data-tooltip="Coupons & Promotions">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6h16v3a2 2 0 100 2v3H2v-3a2 2 0 100-2V6z"/><line x1="8" y1="6" x2="8" y2="14" stroke-dasharray="2 2"/></svg>
+            </span>
+            <span class="sidebar-item-text">Coupons / Promos</span>
+          </a>
+        </div>
+
+        <!-- USERS & ACCESS -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-label">Users & Access</div>
+          <a href="#" class="sidebar-item" id="nav-customers" data-tooltip="Customers">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6" r="4"/><path d="M2 18c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg>
+            </span>
+            <span class="sidebar-item-text">Customers</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-roles" data-tooltip="Roles & Permissions">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 7h6M7 10h4M7 13h5"/></svg>
+            </span>
+            <span class="sidebar-item-text">Roles & Permissions</span>
+          </a>
+        </div>
+
+        <!-- CONTENT & FEEDBACK -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-label">Content & Feedback</div>
+          <a href="#" class="sidebar-item" id="nav-cms" data-tooltip="CMS Pages / Blogs">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2h12a2 2 0 012 2v14l-4-2-4 2-4-2-4 2V4a2 2 0 012-2z"/><line x1="7" y1="7" x2="13" y2="7"/><line x1="7" y1="11" x2="11" y2="11"/></svg>
+            </span>
+            <span class="sidebar-item-text">CMS (Pages/Blogs)</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-reviews" data-tooltip="Reviews">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="10,2 12.5,7.5 18,8 14,12 15,17.5 10,15 5,17.5 6,12 2,8 7.5,7.5"/></svg>
+            </span>
+            <span class="sidebar-item-text">Reviews</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-media" data-tooltip="Media Manager">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="16" height="14" rx="2"/><circle cx="7" cy="8" r="2"/><path d="M18 13l-4-4-6 6"/></svg>
+            </span>
+            <span class="sidebar-item-text">Media Manager</span>
+          </a>
+        </div>
+
+        <!-- SYSTEM -->
+        <div class="sidebar-group">
+          <div class="sidebar-group-label">System</div>
+          <a href="#" class="sidebar-item" id="nav-settings" data-tooltip="Settings">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3"/><path d="M10 1v2M10 17v2M3.5 3.5l1.4 1.4M15.1 15.1l1.4 1.4M1 10h2M17 10h2M3.5 16.5l1.4-1.4M15.1 4.9l1.4-1.4"/></svg>
+            </span>
+            <span class="sidebar-item-text">Settings</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-notifications" data-tooltip="Notifications">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7a5 5 0 00-10 0c0 5-2 7-2 7h14s-2-2-2-7"/><path d="M8.5 17a1.5 1.5 0 003 0"/></svg>
+            </span>
+            <span class="sidebar-item-text">Notifications</span>
+            <span class="sidebar-item-badge">3</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-tickets" data-tooltip="Support Tickets">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13l-6 4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2v8z"/><path d="M7 8h6M7 11h4"/></svg>
+            </span>
+            <span class="sidebar-item-text">Support Tickets</span>
+          </a>
+          <a href="#" class="sidebar-item" id="nav-audit" data-tooltip="Audit Logs">
+            <span class="sidebar-item-icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2H5a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7l-5-5z"/><path d="M12 2v5h5"/><line x1="7" y1="10" x2="13" y2="10"/><line x1="7" y1="13" x2="11" y2="13"/></svg>
+            </span>
+            <span class="sidebar-item-text">Audit Logs</span>
+          </a>
+        </div>
+
+      </nav>
+
+      <!-- Collapse toggle -->
+      <div class="sidebar-footer">
+        <button class="sidebar-collapse-btn" id="sidebar-collapse-btn" aria-label="Toggle sidebar">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4l-6 6 6 6"/></svg>
+          <span class="sidebar-collapse-text">Collapse</span>
+        </button>
+      </div>
+
+    </aside>
+
+
+    <!-- ============================================================
+         MAIN CONTENT AREA
+         ============================================================ -->
+    <div class="admin-main">
+
+      <!-- ===== TOP HEADER BAR ===== -->
+      <header class="admin-topbar" id="admin-topbar">
+
+        <!-- Mobile menu button -->
+        <button class="topbar-btn" id="mobile-menu-btn" style="display:none;" aria-label="Open menu">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="3" y1="5" x2="17" y2="5"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="15" x2="17" y2="15"/></svg>
+        </button>
+
+        <!-- Search -->
+        <div class="topbar-search" id="topbar-search">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8.5" cy="8.5" r="6"/><path d="M13.5 13.5l4 4"/></svg>
+          <input type="text" placeholder="Search bookings, guests, hotels..." id="global-search-input">
+          <kbd>⌘K</kbd>
+        </div>
+
+        <!-- Right actions -->
+        <div class="topbar-actions">
+          <button class="btn-quick-booking" id="btn-quick-booking">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+            New Booking
+          </button>
+
+          <div class="topbar-divider"></div>
+
+          <button class="topbar-btn" id="btn-fullscreen" data-tooltip="Fullscreen" aria-label="Toggle fullscreen">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V4a1 1 0 011-1h3M13 3h3a1 1 0 011 1v3M17 13v3a1 1 0 01-1 1h-3M7 17H4a1 1 0 01-1-1v-3"/></svg>
+          </button>
+
+          <button class="topbar-btn" id="btn-notifications" data-tooltip="Notifications" aria-label="Notifications">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7a5 5 0 00-10 0c0 5-2 7-2 7h14s-2-2-2-7"/><path d="M8.5 17a1.5 1.5 0 003 0"/></svg>
+            <span class="notification-dot"></span>
+          </button>
+
+          <div class="topbar-divider"></div>
+
+          <div class="topbar-user" id="topbar-user">
+            <div class="topbar-user-avatar">TD</div>
+            <div class="topbar-user-info">
+              <div class="topbar-user-name">Tran Vu Duc</div>
+              <div class="topbar-user-role">Super Admin</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+
+      <!-- ===== CONTENT ===== -->
+      <main class="admin-content" id="admin-content">
+
+        <!-- Page header -->
+        <div class="dashboard-header">
+          <div class="dashboard-header-left">
+            <h1>Dashboard Overview</h1>
+            <p>Welcome back, Duc — here's what's happening across your properties today.</p>
+          </div>
+          <div class="dashboard-header-actions">
+            <button class="btn-filter" id="btn-filter-date">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="12" height="11" rx="1"/><path d="M2 7h12M5 1v4M11 1v4"/></svg>
+              Filter by Date
+            </button>
+            <button class="btn-export" id="btn-export-report">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v3a1 1 0 001 1h8a1 1 0 001-1v-3"/><path d="M8 2v8M5 7l3 3 3-3"/></svg>
+              Export Report
+            </button>
+          </div>
+        </div>
+
+
+        <!-- ========== STAT CARDS ========== -->
+        <div class="stats-grid">
+          <!-- Total Revenue -->
+          <div class="stat-card accent-indigo animate-fade-in animate-delay-1" id="stat-revenue">
+            <div class="stat-card-header">
+              <div class="stat-card-icon">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v8M7.5 8.5c0-1 1.1-1.5 2.5-1.5s2.5.5 2.5 1.5-1 1.5-2.5 2-2.5 1-2.5 2 1.1 1.5 2.5 1.5 2.5-.5 2.5-1.5"/></svg>
+              </div>
+              <span class="stat-card-trend up">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12l4-4 3 3 5-6"/><path d="M10 5h4v4"/></svg>
+                +18.2%
+              </span>
+            </div>
+            <div class="stat-card-value count-up" data-count="284650" data-prefix="$" data-decimals="0">$0</div>
+            <div class="stat-card-label">Total Revenue (This Month)</div>
+          </div>
+
+          <!-- Today Bookings -->
+          <div class="stat-card accent-emerald animate-fade-in animate-delay-2" id="stat-bookings-today">
+            <div class="stat-card-header">
+              <div class="stat-card-icon">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/><circle cx="10" cy="13" r="1.5" fill="currentColor" stroke="none"/></svg>
+              </div>
+              <span class="stat-card-trend up">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12l4-4 3 3 5-6"/><path d="M10 5h4v4"/></svg>
+                +12
+              </span>
+            </div>
+            <div class="stat-card-value count-up" data-count="47">0</div>
+            <div class="stat-card-label">Bookings Today</div>
+          </div>
+
+          <!-- Occupancy Rate -->
+          <div class="stat-card accent-amber animate-fade-in animate-delay-3" id="stat-occupancy">
+            <div class="stat-card-header">
+              <div class="stat-card-icon">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="16" height="12" rx="1.5"/><path d="M5 6V4a5 5 0 0110 0v2"/><circle cx="10" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
+              </div>
+              <span class="stat-card-trend up">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12l4-4 3 3 5-6"/><path d="M10 5h4v4"/></svg>
+                +5.4%
+              </span>
+            </div>
+            <div class="stat-card-value count-up" data-count="78.6" data-suffix="%" data-decimals="1">0%</div>
+            <div class="stat-card-label">Occupancy Rate</div>
+          </div>
+
+          <!-- Guests Staying -->
+          <div class="stat-card accent-blue animate-fade-in animate-delay-4" id="stat-guests">
+            <div class="stat-card-header">
+              <div class="stat-card-icon">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="6" r="3"/><circle cx="14" cy="7" r="2.5"/><path d="M1 17c0-3 2.5-5 6-5s6 2 6 5"/><path d="M13 17c0-2.2 1.5-3.8 3.5-3.8S20 14.8 20 17"/></svg>
+              </div>
+              <span class="stat-card-trend up">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12l4-4 3 3 5-6"/><path d="M10 5h4v4"/></svg>
+                +23
+              </span>
+            </div>
+            <div class="stat-card-value count-up" data-count="186">0</div>
+            <div class="stat-card-label">Guests Currently Staying</div>
+          </div>
+
+          <!-- New Bookings (This Month) -->
+          <div class="stat-card accent-purple animate-fade-in animate-delay-5" id="stat-new-bookings">
+            <div class="stat-card-header">
+              <div class="stat-card-icon">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l2.5 5.5L18 8l-4 4 1 5.5L10 15l-5 2.5 1-5.5-4-4 5.5-.5z"/></svg>
+              </div>
+              <span class="stat-card-trend up">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12l4-4 3 3 5-6"/><path d="M10 5h4v4"/></svg>
+                +8.7%
+              </span>
+            </div>
+            <div class="stat-card-value count-up" data-count="312">0</div>
+            <div class="stat-card-label">New Bookings (Month)</div>
+          </div>
+
+          <!-- Cancelled Bookings -->
+          <div class="stat-card accent-rose animate-fade-in animate-delay-6" id="stat-cancelled">
+            <div class="stat-card-header">
+              <div class="stat-card-icon">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M13 7l-6 6M7 7l6 6"/></svg>
+              </div>
+              <span class="stat-card-trend down">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4l4 4 3-3 5 6"/><path d="M10 11h4v-4"/></svg>
+                -3.1%
+              </span>
+            </div>
+            <div class="stat-card-value count-up" data-count="24">0</div>
+            <div class="stat-card-label">Cancelled Bookings</div>
+          </div>
+        </div>
+
+
+        <!-- ========== CHARTS ROW ========== -->
+        <div class="charts-grid">
+          <!-- Revenue Trend Chart -->
+          <div class="chart-panel animate-fade-in" id="revenue-panel">
+            <div class="chart-panel-header">
+              <div>
+                <div class="chart-panel-title">Revenue Overview</div>
+                <div class="chart-panel-subtitle">Monthly revenue performance — 2025 vs 2026</div>
+              </div>
+              <div class="chart-tabs" id="revenue-chart-tabs">
+                <button class="chart-tab active">Monthly</button>
+                <button class="chart-tab">Weekly</button>
+                <button class="chart-tab">Daily</button>
+              </div>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="revenue-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Booking Trends Chart -->
+          <div class="chart-panel animate-fade-in" id="booking-panel">
+            <div class="chart-panel-header">
+              <div>
+                <div class="chart-panel-title">Booking Trends</div>
+                <div class="chart-panel-subtitle">This week's booking activity by status</div>
+              </div>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="booking-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ========== BOTTOM GRID ========== -->
+        <div class="bottom-grid">
+
+          <!-- Recent Bookings Table -->
+          <div class="table-panel animate-fade-in" id="recent-bookings-panel">
+            <div class="table-panel-header">
+              <h2 class="table-panel-title">Recent Bookings</h2>
+              <div class="table-panel-actions">
+                <button class="btn-table-action" id="btn-view-all-bookings">View All</button>
+              </div>
+            </div>
+            <table class="data-table" id="recent-bookings-table">
+              <thead>
+                <tr>
+                  <th>Booking Code</th>
+                  <th>Guest</th>
+                  <th>Hotel</th>
+                  <th>Check-in</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260610</strong></td>
+                  <td>
+                    <div class="cell-guest">
+                      <div class="cell-guest-avatar">LM</div>
+                      <span class="cell-guest-name">Le Thanh Mai</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-hotel">
+                      <div class="cell-hotel-img">🏨</div>
+                      <div>
+                        <div class="cell-hotel-name">Maison D'Orient</div>
+                        <div class="cell-hotel-location">Hanoi, Vietnam</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Jun 10, 2026</td>
+                  <td class="cell-amount">$255.00</td>
+                  <td><span class="badge badge-success"><span class="badge-dot"></span> Confirmed</span></td>
+                </tr>
+                <tr>
+                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260701</strong></td>
+                  <td>
+                    <div class="cell-guest">
+                      <div class="cell-guest-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">PL</div>
+                      <span class="cell-guest-name">Pham Hoang Long</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-hotel">
+                      <div class="cell-hotel-img">🏖️</div>
+                      <div>
+                        <div class="cell-hotel-name">Oceanfront Resort</div>
+                        <div class="cell-hotel-location">Da Nang, Vietnam</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Jul 01, 2026</td>
+                  <td class="cell-amount">$390.00</td>
+                  <td><span class="badge badge-warning"><span class="badge-dot"></span> Pending</span></td>
+                </tr>
+                <tr>
+                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260405</strong></td>
+                  <td>
+                    <div class="cell-guest">
+                      <div class="cell-guest-avatar">LM</div>
+                      <span class="cell-guest-name">Le Thanh Mai</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-hotel">
+                      <div class="cell-hotel-img">🌴</div>
+                      <div>
+                        <div class="cell-hotel-name">Bali Sunset Villa</div>
+                        <div class="cell-hotel-location">Canggu, Bali</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Apr 05, 2026</td>
+                  <td class="cell-amount">$660.00</td>
+                  <td><span class="badge badge-info"><span class="badge-dot"></span> Completed</span></td>
+                </tr>
+                <tr>
+                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260315</strong></td>
+                  <td>
+                    <div class="cell-guest">
+                      <div class="cell-guest-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">PL</div>
+                      <span class="cell-guest-name">Pham Hoang Long</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-hotel">
+                      <div class="cell-hotel-img">🗼</div>
+                      <div>
+                        <div class="cell-hotel-name">Le Marais Boutique</div>
+                        <div class="cell-hotel-location">Paris, France</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Mar 15, 2026</td>
+                  <td class="cell-amount">$585.00</td>
+                  <td><span class="badge badge-info"><span class="badge-dot"></span> Completed</span></td>
+                </tr>
+                <tr>
+                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260520</strong></td>
+                  <td>
+                    <div class="cell-guest">
+                      <div class="cell-guest-avatar">LM</div>
+                      <span class="cell-guest-name">Le Thanh Mai</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-hotel">
+                      <div class="cell-hotel-img">🏙️</div>
+                      <div>
+                        <div class="cell-hotel-name">Shibuya Sky Loft</div>
+                        <div class="cell-hotel-location">Tokyo, Japan</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>May 20, 2026</td>
+                  <td class="cell-amount">$350.00</td>
+                  <td><span class="badge badge-danger"><span class="badge-dot"></span> Cancelled</span></td>
+                </tr>
+                <tr>
+                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260618</strong></td>
+                  <td>
+                    <div class="cell-guest">
+                      <div class="cell-guest-avatar" style="background:linear-gradient(135deg,#10b981,#3b82f6)">NM</div>
+                      <span class="cell-guest-name">Nguyen Minh Tuan</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="cell-hotel">
+                      <div class="cell-hotel-img">🏨</div>
+                      <div>
+                        <div class="cell-hotel-name">Maison D'Orient</div>
+                        <div class="cell-hotel-location">Hanoi, Vietnam</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Jun 18, 2026</td>
+                  <td class="cell-amount">$450.00</td>
+                  <td><span class="badge badge-success"><span class="badge-dot"></span> Confirmed</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Top-Selling Hotels -->
+          <div class="chart-panel animate-fade-in" id="top-hotels-panel">
+            <div class="chart-panel-header">
+              <div>
+                <div class="chart-panel-title">Top-Performing Properties</div>
+                <div class="chart-panel-subtitle">Ranked by total revenue this month</div>
+              </div>
+              <button class="btn-table-action" id="btn-view-all-properties">View All</button>
+            </div>
+
+            <div id="top-hotels-list">
+              <!-- #1 -->
+              <div class="top-hotel-item">
+                <div class="top-hotel-rank gold">1</div>
+                <div class="top-hotel-info">
+                  <div class="top-hotel-name">Bali Sunset Paradise Villa</div>
+                  <div class="top-hotel-location">Canggu, Bali</div>
+                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 100%"></div></div>
+                </div>
+                <div class="top-hotel-stats">
+                  <div class="top-hotel-revenue">$84,200</div>
+                  <div class="top-hotel-bookings">142 bookings</div>
+                </div>
+              </div>
+              <!-- #2 -->
+              <div class="top-hotel-item">
+                <div class="top-hotel-rank silver">2</div>
+                <div class="top-hotel-info">
+                  <div class="top-hotel-name">Maison D'Orient Hanoi</div>
+                  <div class="top-hotel-location">Hanoi, Vietnam</div>
+                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 76%"></div></div>
+                </div>
+                <div class="top-hotel-stats">
+                  <div class="top-hotel-revenue">$63,950</div>
+                  <div class="top-hotel-bookings">118 bookings</div>
+                </div>
+              </div>
+              <!-- #3 -->
+              <div class="top-hotel-item">
+                <div class="top-hotel-rank bronze">3</div>
+                <div class="top-hotel-info">
+                  <div class="top-hotel-name">Oceanfront Da Nang Resort</div>
+                  <div class="top-hotel-location">Da Nang, Vietnam</div>
+                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 62%"></div></div>
+                </div>
+                <div class="top-hotel-stats">
+                  <div class="top-hotel-revenue">$52,180</div>
+                  <div class="top-hotel-bookings">97 bookings</div>
+                </div>
+              </div>
+              <!-- #4 -->
+              <div class="top-hotel-item">
+                <div class="top-hotel-rank">4</div>
+                <div class="top-hotel-info">
+                  <div class="top-hotel-name">Le Marais Boutique Hotel</div>
+                  <div class="top-hotel-location">Paris, France</div>
+                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 48%"></div></div>
+                </div>
+                <div class="top-hotel-stats">
+                  <div class="top-hotel-revenue">$40,410</div>
+                  <div class="top-hotel-bookings">76 bookings</div>
+                </div>
+              </div>
+              <!-- #5 -->
+              <div class="top-hotel-item">
+                <div class="top-hotel-rank">5</div>
+                <div class="top-hotel-info">
+                  <div class="top-hotel-name">Shibuya Sky Loft</div>
+                  <div class="top-hotel-location">Tokyo, Japan</div>
+                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 35%"></div></div>
+                </div>
+                <div class="top-hotel-stats">
+                  <div class="top-hotel-revenue">$29,400</div>
+                  <div class="top-hotel-bookings">54 bookings</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /bottom-grid -->
+
+      </main>
+    </div>
+    <!-- /admin-main -->
+
+  </div>
+  <!-- /admin-layout -->
+
+
+  <!-- ============================================================
+       FILTER BY DATE MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="filter-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-title">Filter by Date Range</span>
+        <button class="modal-close" id="filter-modal-close" aria-label="Close modal">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <div class="modal-body filter-modal-body">
+        <div class="filter-row">
+          <div class="form-group">
+            <label class="form-label" for="filter-start-date">Start Date</label>
+            <input type="date" class="form-input" id="filter-start-date" value="2026-05-01">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="filter-end-date">End Date</label>
+            <input type="date" class="form-input" id="filter-end-date" value="2026-05-20">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="filter-property">Property</label>
+          <select class="form-input form-select" id="filter-property">
+            <option value="">All Properties</option>
+            <option value="1">Maison D'Orient Hanoi</option>
+            <option value="2">Bali Sunset Paradise Villa</option>
+            <option value="3">Le Marais Boutique Hotel</option>
+            <option value="4">Oceanfront Da Nang Resort</option>
+            <option value="5">Shibuya Sky Loft</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="filter-status">Booking Status</label>
+          <select class="form-input form-select" id="filter-status">
+            <option value="">All Statuses</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="checked-in">Checked-in</option>
+            <option value="checked-out">Checked-out</option>
+            <option value="no-show">No-show</option>
+            <option value="refunded">Refunded</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="filter-modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="filter-modal-apply">Apply Filters</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>
