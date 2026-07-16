@@ -1,16 +1,13 @@
 <div align="center">
   <h1>🏨 Wanderly - Hotel Booking Platform</h1>
 
-  <p>
-    <img src="[https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)" alt="Node.js" />
-    <img src="[https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)" alt="Express" />
-    <img src="[https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)" alt="MySQL" />
-    <img src="[https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)" alt="Vanilla JS" />
-  </p>
+  ![NodeJS](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+  ![ExpressJS](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+  ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+  ![JavaScript](https://img.shields.io/badge/Vanilla_JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-  <p>
-    <em>A modern, fully functional hotel booking system designed to connect travelers with hotels, resorts, and homestays. Built with a lightweight Client-Server architecture.</em>
-  </p>
+  <br><br>
+  <em>A modern, fully functional hotel booking system designed to connect travelers with hotels, resorts, and homestays. Built with a lightweight Client-Server architecture.</em>
 </div>
 
 ---
@@ -107,7 +104,7 @@ npm start
 **6. Access the App:**
 
 * Open `index.html` in your preferred web browser (or serve the project directory via a local live server like VS Code Live Server).
-* API endpoints will be running on `http://localhost:3000`.
+* API endpoints will be running on `http://localhost:5000`.
 
 ---
 
