@@ -141,6 +141,7 @@ export const loginUser = async (req, res) => {
              INNER JOIN UserRoles ur ON u.UserID = ur.UserID
              INNER JOIN Roles     r  ON ur.RoleID  = r.RoleID
              WHERE u.Email = ?
+             ORDER BY r.RoleID ASC
              LIMIT 1`,
             [email.trim()]
         );

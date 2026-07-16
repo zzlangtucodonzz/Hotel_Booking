@@ -108,3 +108,48 @@ export const getPropertyById = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+
+/**
+ * GET /api/properties/search?q=<term>
+ * Searches properties by name, city, or country (case-insensitive).
+ * Returns the same shape as getAllProperties so the frontend can reuse the same card renderer.
+ */
+export const searchProperties = async (req, res) => {
+  try {
+    const term = `%${(req.query.q || '').trim()}%`;
+
+    const [properties] = await pool.query(`
+      SELECT
+        p.PropertyID,
+        p.Name,
+        p.Description,
+        p.Address,
+        p.BasePrice,
+        p.Rating,
+        l.City,
+        l.Country,
+        pt.TypeName,
+        u.FullName   AS HostName,
+        pi.ImageURL  AS PrimaryImage
+      FROM Properties p
+        LEFT JOIN Locations     l  ON p.LocationID = l.LocationID
+        LEFT JOIN PropertyTypes pt ON p.TypeID     = pt.TypeID
+        LEFT JOIN Users         u  ON p.HostID     = u.UserID
+        LEFT JOIN PropertyImages pi ON pi.PropertyID = p.PropertyID AND pi.IsPrimary = TRUE
+      WHERE
+        p.Name    LIKE ? OR
+        l.City    LIKE ? OR
+        l.Country LIKE ?
+      ORDER BY p.Rating DESC
+    `, [term, term, term]);
+
+    res.json({
+      success: true,
+      count: properties.length,
+      data: properties,
+    });
+  } catch (error) {
+    console.error('Error searching properties:', error.message);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};

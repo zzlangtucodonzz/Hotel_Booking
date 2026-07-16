@@ -3,19 +3,17 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-// 1. Lấy đường dẫn chính xác của file hiện tại (hỗ trợ cho ES Modules)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 2. Cấu hình dotenv trỏ thẳng ra thư mục gốc để đọc file .env
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const pool = mysql.createPool({
-    host: process.env.DB_HOST,
+    host: process.env.DB_HOST || '127.0.0.1',
     port: Number(process.env.DB_PORT) || 3306,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'hotel_booking',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
@@ -24,11 +22,25 @@ const pool = mysql.createPool({
 export const testConnection = async () => {
     try {
         const connection = await pool.getConnection();
-        console.log('✅ MySQL connected successfully');
+        console.log('✅ MySQL Pool connected successfully');
         connection.release();
+        return true;
     } catch (error) {
         console.error('❌ Database connection failed:', error.message);
+        throw error; // Crucial: Throw error so server.js can catch it and halt
     }
 };
+
+// Graceful shutdown handling for the pool
+process.on('SIGINT', async () => {
+    try {
+        await pool.end();
+        console.log('✅ Database connection pool closed.');
+        process.exit(0);
+    } catch (err) {
+        console.error('❌ Error closing database pool:', err);
+        process.exit(1);
+    }
+});
 
 export default pool;

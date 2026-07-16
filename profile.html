@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — Wanderly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* Bổ sung style cơ bản cho trang Profile */
+    .profile-layout { display: flex; max-width: 1100px; margin: 40px auto; padding: 0 20px; gap: 40px; }
+    .profile-sidebar { width: 250px; flex-shrink: 0; }
+    .profile-menu { list-style: none; padding: 0; margin: 0; }
+    .profile-menu li { margin-bottom: 10px; }
+    .profile-menu a { display: block; padding: 12px 16px; text-decoration: none; color: #4a5568; border-radius: 8px; font-weight: 500; transition: all 0.2s; }
+    .profile-menu a:hover { background-color: #f7fafc; }
+    .profile-menu a.active { background-color: #e2e8f0; color: #1a202c; }
+    .profile-content { flex-grow: 1; background: #fff; padding: 32px; border-radius: 12px; border: 1px solid #e2e8f0; }
+    .profile-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e2e8f0; }
+    .info-group { margin-bottom: 20px; }
+    .info-label { font-size: 0.875rem; color: #718096; margin-bottom: 6px; display: block; font-weight: 500; }
+    .info-value { font-size: 1rem; color: #1a202c; padding: 10px 14px; background: #f7fafc; border-radius: 6px; border: 1px solid #edf2f7; }
+    .btn-logout-outline { margin-top: 20px; padding: 10px 20px; border: 1px solid #e53e3e; color: #e53e3e; background: transparent; border-radius: 6px; cursor: pointer; font-weight: 500; }
+    .btn-logout-outline:hover { background: #fff5f5; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" style="border-bottom: 1px solid #e2e8f0; padding: 16px 0;">
+    <div class="container">
+      <a href="index.html" class="logo" style="text-decoration: none; color: #1a202c; font-size: 1.5rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;"><circle cx="14" cy="14" r="12"/><path d="M6 14c0-6 4-10 8-10s8 4 8 10-4 10-8 10-8-4-8-10z"/><line x1="2" y1="14" x2="26" y2="14"/></svg>
+        Wanderly
+      </a>
+    </div>
+  </header>
+
+  <div class="profile-layout">
+    <aside class="profile-sidebar">
+      <ul class="profile-menu">
+        <li><a href="profile.html" class="active">My Profile</a></li>
+        <li><a href="#" id="menu-bookings">My Bookings</a></li>
+        <li><a href="#" id="menu-settings">Settings</a></li>
+      </ul>
+    </aside>
+
+    <main class="profile-content">
+      <div class="profile-header">
+        <h1 style="margin: 0; font-size: 1.5rem;">Personal Information</h1>
+        <p style="margin: 8px 0 0; color: #718096; font-size: 0.95rem;">Manage your personal details and account role.</p>
+      </div>
+
+      <div id="profile-info-container">
+        <div class="info-group">
+          <label class="info-label">Full Name</label>
+          <div class="info-value" id="display-fullname">Loading...</div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">Email Address</label>
+          <div class="info-value" id="display-email">Loading...</div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">Account Role</label>
+          <div class="info-value" id="display-role">Loading...</div>
+        </div>
+
+        <button class="btn-logout-outline" id="btn-profile-logout">Log Out</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/profile.js"></script>
+</body>
+</html>

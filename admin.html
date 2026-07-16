@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body class="admin-body">
@@ -61,7 +63,7 @@
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="16" height="12" rx="1.5"/><path d="M5 6V4a5 5 0 0110 0v2"/><line x1="2" y1="12" x2="18" y2="12"/></svg>
             </span>
             <span class="sidebar-item-text">Hotels</span>
-            <span class="sidebar-item-badge">12</span>
+            <span id="badge-hotels" class="sidebar-item-badge" style="display: none;"></span>
           </a>
           <a href="#" class="sidebar-item" id="nav-rooms" data-tooltip="Room Types & Rooms">
             <span class="sidebar-item-icon">
@@ -85,7 +87,7 @@
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>
             </span>
             <span class="sidebar-item-text">Bookings</span>
-            <span class="sidebar-item-badge">8</span>
+            <span id="badge-bookings" class="sidebar-item-badge" style="display: none;"></span>
           </a>
           <a href="#" class="sidebar-item" id="nav-pricing" data-tooltip="Price & Inventory">
             <span class="sidebar-item-icon">
@@ -166,7 +168,7 @@
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7a5 5 0 00-10 0c0 5-2 7-2 7h14s-2-2-2-7"/><path d="M8.5 17a1.5 1.5 0 003 0"/></svg>
             </span>
             <span class="sidebar-item-text">Notifications</span>
-            <span class="sidebar-item-badge">3</span>
+            <span class="sidebar-item-badge badge" id="sidebar-notifications-badge" style="display: none; background: #ef4444; color: white;">0</span>
           </a>
           <a href="#" class="sidebar-item" id="nav-tickets" data-tooltip="Support Tickets">
             <span class="sidebar-item-icon">
@@ -224,13 +226,20 @@
 
           <div class="topbar-divider"></div>
 
+          <!-- Theme Toggle -->
+          <button class="topbar-btn" id="btn-theme-toggle" data-tooltip="Switch Theme" aria-label="Toggle Theme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          </button>
+
+          <!-- Fullscreen Toggle -->
           <button class="topbar-btn" id="btn-fullscreen" data-tooltip="Fullscreen" aria-label="Toggle fullscreen">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V4a1 1 0 011-1h3M13 3h3a1 1 0 011 1v3M17 13v3a1 1 0 01-1 1h-3M7 17H4a1 1 0 01-1-1v-3"/></svg>
           </button>
 
-          <button class="topbar-btn" id="btn-notifications" data-tooltip="Notifications" aria-label="Notifications">
+          <!-- Notifications -->
+          <button class="topbar-btn" id="btn-navbar-notifications" data-tooltip="Notifications" aria-label="Notifications">
             <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7a5 5 0 00-10 0c0 5-2 7-2 7h14s-2-2-2-7"/><path d="M8.5 17a1.5 1.5 0 003 0"/></svg>
-            <span class="notification-dot"></span>
+            <span class="notification-dot" style="display:none;" id="navbar-notification-dot"></span>
           </button>
 
           <div class="topbar-divider"></div>
@@ -240,6 +249,21 @@
             <div class="topbar-user-info">
               <div class="topbar-user-name">Tran Vu Duc</div>
               <div class="topbar-user-role">Super Admin</div>
+            </div>
+            
+            <!-- Dropdown Menu (Hidden by default) -->
+            <div class="user-dropdown" id="user-dropdown">
+              <a href="#" class="dropdown-item">
+                <i class="fa-solid fa-user"></i> Profile
+              </a>
+              <a href="#" class="dropdown-item">
+                <i class="fa-solid fa-gear"></i> Settings
+              </a>
+              <div class="dropdown-divider"></div>
+              <!-- Logout Button -->
+              <a href="#" class="dropdown-item logout-btn" id="btn-logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+              </a>
             </div>
           </div>
         </div>
@@ -281,8 +305,8 @@
                 +18.2%
               </span>
             </div>
-            <div class="stat-card-value count-up" data-count="284650" data-prefix="$" data-decimals="0">$0</div>
-            <div class="stat-card-label">Total Revenue (This Month)</div>
+            <div class="stat-card-value count-up" id="dash-revenue" data-prefix="$" data-decimals="0">$0</div>
+            <div class="stat-card-label">Total Revenue (Completed)</div>
           </div>
 
           <!-- Today Bookings -->
@@ -296,8 +320,8 @@
                 +12
               </span>
             </div>
-            <div class="stat-card-value count-up" data-count="47">0</div>
-            <div class="stat-card-label">Bookings Today</div>
+            <div class="stat-card-value count-up" id="dash-bookings" data-decimals="0">0</div>
+            <div class="stat-card-label">Total Bookings</div>
           </div>
 
           <!-- Occupancy Rate -->
@@ -311,8 +335,8 @@
                 +5.4%
               </span>
             </div>
-            <div class="stat-card-value count-up" data-count="78.6" data-suffix="%" data-decimals="1">0%</div>
-            <div class="stat-card-label">Occupancy Rate</div>
+            <div class="stat-card-value count-up" id="dash-properties" data-decimals="0">0</div>
+            <div class="stat-card-label">Total Properties</div>
           </div>
 
           <!-- Guests Staying -->
@@ -326,8 +350,8 @@
                 +23
               </span>
             </div>
-            <div class="stat-card-value count-up" data-count="186">0</div>
-            <div class="stat-card-label">Guests Currently Staying</div>
+            <div class="stat-card-value count-up" id="dash-users" data-decimals="0">0</div>
+            <div class="stat-card-label">Registered Users</div>
           </div>
 
           <!-- New Bookings (This Month) -->
@@ -356,7 +380,7 @@
                 -3.1%
               </span>
             </div>
-            <div class="stat-card-value count-up" data-count="24">0</div>
+            <div class="stat-card-value count-up" id="dash-cancelled" data-count="0">0</div>
             <div class="stat-card-label">Cancelled Bookings</div>
           </div>
         </div>
@@ -411,141 +435,16 @@
             <table class="data-table" id="recent-bookings-table">
               <thead>
                 <tr>
-                  <th>Booking Code</th>
+                  <th>Booking ID</th>
                   <th>Guest</th>
-                  <th>Hotel</th>
                   <th>Check-in</th>
+                  <th>Check-out</th>
                   <th>Amount</th>
                   <th>Status</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260610</strong></td>
-                  <td>
-                    <div class="cell-guest">
-                      <div class="cell-guest-avatar">LM</div>
-                      <span class="cell-guest-name">Le Thanh Mai</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="cell-hotel">
-                      <div class="cell-hotel-img">🏨</div>
-                      <div>
-                        <div class="cell-hotel-name">Maison D'Orient</div>
-                        <div class="cell-hotel-location">Hanoi, Vietnam</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Jun 10, 2026</td>
-                  <td class="cell-amount">$255.00</td>
-                  <td><span class="badge badge-success"><span class="badge-dot"></span> Confirmed</span></td>
-                </tr>
-                <tr>
-                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260701</strong></td>
-                  <td>
-                    <div class="cell-guest">
-                      <div class="cell-guest-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">PL</div>
-                      <span class="cell-guest-name">Pham Hoang Long</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="cell-hotel">
-                      <div class="cell-hotel-img">🏖️</div>
-                      <div>
-                        <div class="cell-hotel-name">Oceanfront Resort</div>
-                        <div class="cell-hotel-location">Da Nang, Vietnam</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Jul 01, 2026</td>
-                  <td class="cell-amount">$390.00</td>
-                  <td><span class="badge badge-warning"><span class="badge-dot"></span> Pending</span></td>
-                </tr>
-                <tr>
-                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260405</strong></td>
-                  <td>
-                    <div class="cell-guest">
-                      <div class="cell-guest-avatar">LM</div>
-                      <span class="cell-guest-name">Le Thanh Mai</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="cell-hotel">
-                      <div class="cell-hotel-img">🌴</div>
-                      <div>
-                        <div class="cell-hotel-name">Bali Sunset Villa</div>
-                        <div class="cell-hotel-location">Canggu, Bali</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Apr 05, 2026</td>
-                  <td class="cell-amount">$660.00</td>
-                  <td><span class="badge badge-info"><span class="badge-dot"></span> Completed</span></td>
-                </tr>
-                <tr>
-                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260315</strong></td>
-                  <td>
-                    <div class="cell-guest">
-                      <div class="cell-guest-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">PL</div>
-                      <span class="cell-guest-name">Pham Hoang Long</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="cell-hotel">
-                      <div class="cell-hotel-img">🗼</div>
-                      <div>
-                        <div class="cell-hotel-name">Le Marais Boutique</div>
-                        <div class="cell-hotel-location">Paris, France</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Mar 15, 2026</td>
-                  <td class="cell-amount">$585.00</td>
-                  <td><span class="badge badge-info"><span class="badge-dot"></span> Completed</span></td>
-                </tr>
-                <tr>
-                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260520</strong></td>
-                  <td>
-                    <div class="cell-guest">
-                      <div class="cell-guest-avatar">LM</div>
-                      <span class="cell-guest-name">Le Thanh Mai</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="cell-hotel">
-                      <div class="cell-hotel-img">🏙️</div>
-                      <div>
-                        <div class="cell-hotel-name">Shibuya Sky Loft</div>
-                        <div class="cell-hotel-location">Tokyo, Japan</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>May 20, 2026</td>
-                  <td class="cell-amount">$350.00</td>
-                  <td><span class="badge badge-danger"><span class="badge-dot"></span> Cancelled</span></td>
-                </tr>
-                <tr>
-                  <td><strong style="font-variant-numeric:tabular-nums;">#WDL-20260618</strong></td>
-                  <td>
-                    <div class="cell-guest">
-                      <div class="cell-guest-avatar" style="background:linear-gradient(135deg,#10b981,#3b82f6)">NM</div>
-                      <span class="cell-guest-name">Nguyen Minh Tuan</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="cell-hotel">
-                      <div class="cell-hotel-img">🏨</div>
-                      <div>
-                        <div class="cell-hotel-name">Maison D'Orient</div>
-                        <div class="cell-hotel-location">Hanoi, Vietnam</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>Jun 18, 2026</td>
-                  <td class="cell-amount">$450.00</td>
-                  <td><span class="badge badge-success"><span class="badge-dot"></span> Confirmed</span></td>
-                </tr>
+              <tbody id="admin-recent-bookings-list">
+                <!-- Populated dynamically by loadDashboardData() in admin.js -->
               </tbody>
             </table>
           </div>
@@ -560,84 +459,1451 @@
               <button class="btn-table-action" id="btn-view-all-properties">View All</button>
             </div>
 
-            <div id="top-hotels-list">
-              <!-- #1 -->
-              <div class="top-hotel-item">
-                <div class="top-hotel-rank gold">1</div>
-                <div class="top-hotel-info">
-                  <div class="top-hotel-name">Bali Sunset Paradise Villa</div>
-                  <div class="top-hotel-location">Canggu, Bali</div>
-                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 100%"></div></div>
-                </div>
-                <div class="top-hotel-stats">
-                  <div class="top-hotel-revenue">$84,200</div>
-                  <div class="top-hotel-bookings">142 bookings</div>
-                </div>
-              </div>
-              <!-- #2 -->
-              <div class="top-hotel-item">
-                <div class="top-hotel-rank silver">2</div>
-                <div class="top-hotel-info">
-                  <div class="top-hotel-name">Maison D'Orient Hanoi</div>
-                  <div class="top-hotel-location">Hanoi, Vietnam</div>
-                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 76%"></div></div>
-                </div>
-                <div class="top-hotel-stats">
-                  <div class="top-hotel-revenue">$63,950</div>
-                  <div class="top-hotel-bookings">118 bookings</div>
-                </div>
-              </div>
-              <!-- #3 -->
-              <div class="top-hotel-item">
-                <div class="top-hotel-rank bronze">3</div>
-                <div class="top-hotel-info">
-                  <div class="top-hotel-name">Oceanfront Da Nang Resort</div>
-                  <div class="top-hotel-location">Da Nang, Vietnam</div>
-                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 62%"></div></div>
-                </div>
-                <div class="top-hotel-stats">
-                  <div class="top-hotel-revenue">$52,180</div>
-                  <div class="top-hotel-bookings">97 bookings</div>
+            <div id="admin-top-properties-list">
+            </div>
+        </div> </div>
+      </main>
+
+
+
+        <!-- ============================================================
+             REPORTS & ANALYTICS PAGE  (hidden by default, toggled via nav)
+             ============================================================ -->
+        <section class="admin-content" id="analytics-page" style="display:none;">
+
+          <!-- Page header -->
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Reports &amp; Analytics</h1>
+              <p>Live performance data sourced directly from your database — no estimates.</p>
+            </div>
+            <div class="dashboard-header-actions">
+              <button class="btn-export" id="btn-export-analytics">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v3a1 1 0 001 1h8a1 1 0 001-1v-3"/><path d="M8 2v8M5 7l3 3 3-3"/></svg>
+                Export CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- ── KPI strip: Satisfaction + Review count ── -->
+          <div class="reports-stats-grid">
+            <div class="stat-card accent-indigo">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="10,2 12.5,7.5 18,8 14,12 15,17.5 10,15 5,17.5 6,12 2,8 7.5,7.5"/></svg>
                 </div>
               </div>
-              <!-- #4 -->
-              <div class="top-hotel-item">
-                <div class="top-hotel-rank">4</div>
-                <div class="top-hotel-info">
-                  <div class="top-hotel-name">Le Marais Boutique Hotel</div>
-                  <div class="top-hotel-location">Paris, France</div>
-                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 48%"></div></div>
-                </div>
-                <div class="top-hotel-stats">
-                  <div class="top-hotel-revenue">$40,410</div>
-                  <div class="top-hotel-bookings">76 bookings</div>
+              <div class="stat-card-value" id="analytics-avg-rating">—</div>
+              <div class="stat-card-label">Avg. Guest Rating <span style="color:var(--admin-text-muted);font-weight:400">(out of 10)</span></div>
+            </div>
+            <div class="stat-card accent-emerald">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13l-6 4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2v8z"/><path d="M7 8h6M7 11h4"/></svg>
                 </div>
               </div>
-              <!-- #5 -->
-              <div class="top-hotel-item">
-                <div class="top-hotel-rank">5</div>
-                <div class="top-hotel-info">
-                  <div class="top-hotel-name">Shibuya Sky Loft</div>
-                  <div class="top-hotel-location">Tokyo, Japan</div>
-                  <div class="top-hotel-bar"><div class="top-hotel-bar-fill" style="width: 35%"></div></div>
+              <div class="stat-card-value" id="analytics-total-reviews">—</div>
+              <div class="stat-card-label">Total Reviews Collected</div>
+            </div>
+            <div class="stat-card accent-amber">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v8M7.5 8.5c0-1 1.1-1.5 2.5-1.5s2.5.5 2.5 1.5-1 1.5-2.5 2-2.5 1-2.5 2 1.1 1.5 2.5 1.5 2.5-.5 2.5-1.5"/></svg>
                 </div>
-                <div class="top-hotel-stats">
-                  <div class="top-hotel-revenue">$29,400</div>
-                  <div class="top-hotel-bookings">54 bookings</div>
+              </div>
+              <div class="stat-card-value" id="analytics-annual-revenue">—</div>
+              <div class="stat-card-label">Annual Revenue (Successful Payments)</div>
+            </div>
+            <div class="stat-card accent-blue">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M3 8h14M7 2v4M13 2v4"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-value" id="analytics-top-destination">—</div>
+              <div class="stat-card-label">Top Destination (Completed Bookings)</div>
+            </div>
+          </div>
+
+          <!-- ── Charts row ── -->
+          <div class="reports-charts-grid">
+
+            <!-- Revenue Trend Line Chart -->
+            <div class="chart-panel animate-fade-in" id="analytics-revenue-panel">
+              <div class="chart-panel-header">
+                <div>
+                  <div class="chart-panel-title">Monthly Revenue Trend</div>
+                  <div class="chart-panel-subtitle" id="analytics-revenue-subtitle">Successful payments — current year</div>
+                </div>
+                <div class="analytics-chart-legend" id="analytics-revenue-legend"></div>
+              </div>
+              <div class="chart-canvas-wrapper">
+                <canvas id="revenueTrendChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Destination Popularity Doughnut Chart -->
+            <div class="chart-panel animate-fade-in" id="analytics-location-panel">
+              <div class="chart-panel-header">
+                <div>
+                  <div class="chart-panel-title">Destination Popularity</div>
+                  <div class="chart-panel-subtitle">Completed bookings per city</div>
+                </div>
+              </div>
+              <div class="chart-canvas-wrapper">
+                <canvas id="destinationPopularityChart"></canvas>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ── Bottom Grid ── -->
+          <div class="bottom-grid">
+            <!-- ── Rating Distribution ── -->
+            <div class="chart-panel animate-fade-in" id="analytics-satisfaction-panel">
+              <div class="chart-panel-header" style="margin-bottom:16px;">
+                <div>
+                  <div class="chart-panel-title">Guest Satisfaction Distribution</div>
+                  <div class="chart-panel-subtitle">Breakdown of all review scores (1–10 scale)</div>
+                </div>
+                <div class="analytics-score-badge" id="analytics-score-badge">
+                  <span id="analytics-score-value">—</span>
+                  <span class="analytics-score-label">/ 10</span>
+                </div>
+              </div>
+              <div class="rating-bars" id="analytics-rating-bars">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- ── Top Properties Table ── -->
+            <div class="table-panel animate-fade-in" id="analytics-top-properties-panel">
+              <div class="table-panel-header">
+                <h2 class="table-panel-title">Top-Performing Properties</h2>
+                <div class="table-panel-actions">
+                  <span class="analytics-table-note">Ranked by total confirmed + completed revenue</span>
+                </div>
+              </div>
+              <table class="data-table" id="top-properties-table">
+                <thead>
+                  <tr>
+                    <th style="width:48px;">#</th>
+                    <th>Property</th>
+                    <th>Location</th>
+                    <th>Bookings</th>
+                    <th>Total Revenue</th>
+                    <th>Revenue Share</th>
+                  </tr>
+                </thead>
+                <tbody id="analytics-properties-list">
+                  <!-- Populated dynamically by initAnalyticsPage() in admin.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+        <!-- /analytics-page -->
+
+
+        <!-- ============================================================
+             PRICE & INVENTORY PAGE
+             ============================================================ -->
+        <section class="admin-content" id="pricing-page" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Price & Inventory</h1>
+              <p>Manage dynamic pricing and block rooms for maintenance.</p>
+            </div>
+            <div class="dashboard-header-actions">
+              <button class="btn btn-secondary" onclick="openPriceOverrideModal()">Override Price</button>
+              <button class="btn btn-secondary" onclick="openBlockRoomModal()">Block Room</button>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="filter-bar" style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem; background: var(--admin-bg-elevated); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-border-light);">
+            <div class="form-group" style="margin-bottom: 0; flex: 2;">
+              <label>Select Hotel</label>
+              <select id="pricing-hotel-select" class="form-input"></select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+              <label>Month</label>
+              <select id="pricing-month-select" class="form-input">
+                <!-- JS populated -->
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+              <label>Year</label>
+              <select id="pricing-year-select" class="form-input">
+                <!-- JS populated -->
+              </select>
+            </div>
+            <button class="btn btn-primary" id="btn-load-calendar">Load Calendar</button>
+          </div>
+
+          <!-- Calendar Matrix (Tape Chart) -->
+          <div class="inventory-calendar-container animate-fade-in" style="overflow-x: auto; background: var(--admin-bg-elevated); border: 1px solid var(--admin-border); border-radius: 12px;">
+            <div class="inventory-calendar" id="inventory-calendar" style="min-width: 800px;">
+              <!-- Grid populated by JS -->
+              <div style="padding: 2rem; text-align: center; color: var(--admin-text-muted);">Please select a hotel and load the calendar.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             BOOKINGS MANAGEMENT PAGE (hidden by default)
+             ============================================================ -->
+        <section class="admin-content" id="bookings-page" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Bookings Management</h1>
+              <p>Manage all customer reservations, view details, and update statuses.</p>
+            </div>
+          </div>
+
+          <!-- Advanced Filter Bar -->
+          <div class="filter-bar" style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem; background: var(--admin-bg-elevated); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-border-light); flex-wrap: wrap;">
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+              <label for="filter-booking-id">Booking ID</label>
+              <input type="text" id="filter-booking-id" class="form-input" placeholder="e.g. BKG-1001">
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 150px;">
+              <label for="filter-customer-name">Customer Name</label>
+              <input type="text" id="filter-customer-name" class="form-input" placeholder="Search by name">
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 130px;">
+              <label for="filter-start-date">Check-in From</label>
+              <input type="date" id="filter-start-date" class="form-input">
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 130px;">
+              <label for="filter-end-date">Check-in To</label>
+              <input type="date" id="filter-end-date" class="form-input">
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 120px;">
+              <label for="filter-status">Status</label>
+              <select id="filter-status" class="form-input">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: 0.5rem; flex: 0 0 auto;">
+              <button class="btn btn-primary" id="btn-filter-bookings">Filter</button>
+              <button class="btn btn-secondary" id="btn-clear-bookings-filter">Clear</button>
+            </div>
+          </div>
+
+          <!-- Bookings Data Table -->
+          <div class="table-panel animate-fade-in">
+            <table class="data-table" id="bookings-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Customer</th>
+                  <th>Hotel</th>
+                  <th>Check In - Out</th>
+                  <th>Total Amount</th>
+                  <th>Payment</th>
+                  <th>Status</th>
+                  <th style="width: 80px; text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-bookings-list">
+                <tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:2rem;">Loading bookings...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             PAYMENTS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="payments-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Payments</h1>
+              <p>Manage and monitor all transaction records and payment statuses.</p>
+            </div>
+          </div>
+
+          <!-- Overview Cards -->
+          <div class="stats-grid">
+            <div class="stat-card accent-indigo animate-fade-in animate-delay-1">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M10 6v8M7.5 8.5c0-1 1.1-1.5 2.5-1.5s2.5.5 2.5 1.5-1 1.5-2.5 2-2.5 1-2.5 2 1.1 1.5 2.5 1.5 2.5-.5 2.5-1.5"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-value count-up" id="admin-pay-revenue" data-prefix="$" data-decimals="0">$0</div>
+              <div class="stat-card-label">Total Revenue</div>
+            </div>
+            
+            <div class="stat-card accent-emerald animate-fade-in animate-delay-2">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l5 5L18 4"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-value count-up" id="admin-pay-success" data-decimals="0">0</div>
+              <div class="stat-card-label">Successful Transactions</div>
+            </div>
+
+            <div class="stat-card accent-amber animate-fade-in animate-delay-3">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M10 5v5l3 3"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-value count-up" id="admin-pay-pending" data-decimals="0">0</div>
+              <div class="stat-card-label">Pending Transactions</div>
+            </div>
+
+            <div class="stat-card accent-rose animate-fade-in animate-delay-4">
+              <div class="stat-card-header">
+                <div class="stat-card-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="8"/><path d="M13 7l-6 6M7 7l6 6"/></svg>
+                </div>
+              </div>
+              <div class="stat-card-value count-up" id="admin-pay-failed" data-decimals="0">0</div>
+              <div class="stat-card-label">Failed / Refunded</div>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="filter-bar" style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem; background: var(--admin-bg-elevated); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--admin-border-light);">
+            <div class="form-group" style="margin-bottom: 0; flex: 2;">
+              <label for="payment-search">Search Order / Booking ID</label>
+              <input type="text" id="payment-search" class="form-input" placeholder="e.g. BK12345">
+            </div>
+            <div class="form-group" style="margin-bottom: 0; flex: 1;">
+              <label for="payment-status-filter">Status</label>
+              <select id="payment-status-filter" class="form-input">
+                <option value="">All Statuses</option>
+                <option value="SUCCESS">Success</option>
+                <option value="PENDING">Pending</option>
+                <option value="FAILED">Failed</option>
+                <option value="REFUNDED">Refunded</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="btn-filter-payments">Filter</button>
+          </div>
+
+          <!-- Data Table -->
+          <div class="table-panel animate-fade-in">
+            <table class="data-table" id="payments-table">
+              <thead>
+                <tr>
+                  <th>Order Code</th>
+                  <th>Booking ID</th>
+                  <th>Amount</th>
+                  <th>Gateway</th>
+                  <th>Status</th>
+                  <th>Created At</th>
+                  <th style="width: 100px; text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-payments-list">
+                <tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:2rem;">Loading payments...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             COUPONS / PROMOS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="coupons-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Coupons / Promos</h1>
+              <p>Manage discount codes and promotional offers.</p>
+            </div>
+            <div class="dashboard-header-actions">
+              <button class="btn btn-primary" onclick="openCouponModal()">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+                Create New Coupon
+              </button>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in">
+            <table class="data-table" id="coupons-table">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Type & Value</th>
+                  <th>Usage</th>
+                  <th>Expiry Date</th>
+                  <th>Status</th>
+                  <th style="width: 120px; text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="coupons-table-body">
+                <tr><td colspan="6" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading coupons...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             CUSTOMERS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="customers-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Customers</h1>
+              <p>Manage users, view profiles, and monitor activity.</p>
+            </div>
+          </div>
+
+          <!-- Overview Cards -->
+          <div class="stats-grid" style="margin-bottom: 24px;">
+            <div class="stat-card accent-indigo">
+              <div class="stat-card-header"><div class="stat-card-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-6 8a6 6 0 1112 0H4z"/></svg></div></div>
+              <div class="stat-card-value" id="cust-stat-total">0</div>
+              <div class="stat-card-label">Total Customers</div>
+            </div>
+            <div class="stat-card accent-emerald">
+              <div class="stat-card-header"><div class="stat-card-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 10l5 5L18 4"/></svg></div></div>
+              <div class="stat-card-value" id="cust-stat-active">0</div>
+              <div class="stat-card-label">Active Customers</div>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in">
+            <table class="data-table" id="customers-table">
+              <thead>
+                <tr>
+                  <th>Customer Name</th>
+                  <th>Email & Phone</th>
+                  <th>Membership Tier</th>
+                  <th>Total Bookings</th>
+                  <th>Total Spent</th>
+                  <th>Status</th>
+                  <th style="width: 120px; text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="customers-table-body">
+                <tr><td colspan="7" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading customers...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             ROLES & PERMISSIONS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="roles-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Roles & Permissions</h1>
+              <p>Manage access control and staff assignments.</p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+            <!-- Area 1: Roles -->
+            <div class="table-panel animate-fade-in" style="margin-bottom: 0;">
+              <div style="padding: 16px 24px; border-bottom: 1px solid var(--admin-border-light); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">System Roles</h3>
+                <button class="btn btn-primary btn-sm" onclick="openRoleModal()">+ Create Role</button>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Role Name</th>
+                    <th>Permissions</th>
+                    <th style="width: 80px; text-align: center;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="roles-table-body">
+                  <tr><td colspan="3" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading roles...</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Area 2: Assigned Staff -->
+            <div class="table-panel animate-fade-in" style="margin-bottom: 0;">
+              <div style="padding: 16px 24px; border-bottom: 1px solid var(--admin-border-light); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0;">Assigned Staff</h3>
+                <button class="btn btn-primary btn-sm" onclick="openAssignStaffModal()">+ Assign Role</button>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                  </tr>
+                </thead>
+                <tbody id="staff-table-body">
+                  <tr><td colspan="2" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading staff...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             REVIEWS (MODERATION & STATISTICS) SECTION
+             ============================================================ -->
+        <section class="admin-content" id="reviews-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Reviews</h1>
+              <p>Moderate customer reviews and respond to feedback.</p>
+            </div>
+          </div>
+
+          <!-- Overview Cards -->
+          <div class="stats-grid" style="margin-bottom: 24px;">
+            <div class="stat-card accent-indigo">
+              <div class="stat-card-header"><div class="stat-card-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="10 2 12.5 7.5 18 8 14 12 15 17.5 10 15 5 17.5 6 12 2 8 7.5 7.5"/></svg></div></div>
+              <div class="stat-card-value" id="review-stat-overall">0.0</div>
+              <div class="stat-card-label">Overall Rating</div>
+            </div>
+            <div class="stat-card accent-blue">
+              <div class="stat-card-header"><div class="stat-card-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg></div></div>
+              <div class="stat-card-value" id="review-stat-total">0</div>
+              <div class="stat-card-label">Total Reviews</div>
+            </div>
+            <div class="stat-card accent-rose">
+              <div class="stat-card-header"><div class="stat-card-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg></div></div>
+              <div class="stat-card-value" id="review-stat-pending">0</div>
+              <div class="stat-card-label">Pending Moderation</div>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in">
+            <table class="data-table" id="reviews-table">
+              <thead>
+                <tr>
+                  <th>Hotel</th>
+                  <th>Customer</th>
+                  <th>Rating</th>
+                  <th>Snippet</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th style="width: 120px; text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="reviews-table-body">
+                <tr><td colspan="7" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading reviews...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             SYSTEM SETTINGS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="settings-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>System Settings</h1>
+              <p>Manage global configuration, business rules, and integrations.</p>
+            </div>
+            <div class="dashboard-header-right">
+              <button class="btn btn-primary" id="settings-save-btn" onclick="saveSettings()">Save Changes</button>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in" style="padding: 0;">
+            <!-- Tabs Header -->
+            <div class="settings-tabs-header">
+              <button class="settings-tab-btn active" onclick="switchSettingsTab('global')">Global Settings</button>
+              <button class="settings-tab-btn" onclick="switchSettingsTab('business')">Business Rules</button>
+              <button class="settings-tab-btn" onclick="switchSettingsTab('integrations')">Integrations</button>
+            </div>
+
+            <!-- Tabs Content -->
+            <form id="settings-form" style="padding: 24px;">
+              
+              <!-- Tab 1: Global Settings -->
+              <div class="settings-tab-content active" id="settings-tab-global">
+                <h3 style="margin-top: 0; margin-bottom: 24px;">Global Settings</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                  <div class="form-group">
+                    <label class="form-label">Site Name</label>
+                    <input type="text" class="form-control" name="site_name" placeholder="e.g. Wanderly">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Contact Email</label>
+                    <input type="email" class="form-control" name="contact_email" placeholder="support@domain.com">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Contact Phone</label>
+                    <input type="text" class="form-control" name="contact_phone" placeholder="+1 234 567 8900">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" name="address" placeholder="123 Street Name">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 2: Business Rules -->
+              <div class="settings-tab-content" id="settings-tab-business" style="display:none;">
+                <h3 style="margin-top: 0; margin-bottom: 24px;">Business Rules</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 600px;">
+                  <div class="form-group">
+                    <label class="form-label">VAT Rate (%)</label>
+                    <input type="number" step="0.1" class="form-control" name="vat_rate" placeholder="10">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Commission Rate (%)</label>
+                    <input type="number" step="0.1" class="form-control" name="commission_rate" placeholder="15">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Free Cancellation Days</label>
+                    <input type="number" class="form-control" name="free_cancel_days" placeholder="3">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab 3: Integrations -->
+              <div class="settings-tab-content" id="settings-tab-integrations" style="display:none;">
+                <h3 style="margin-top: 0; margin-bottom: 24px;">Integrations</h3>
+                
+                <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; max-width: 400px; padding: 16px; border: 1px solid var(--admin-border); border-radius: 8px; margin-bottom: 16px;">
+                  <div>
+                    <div style="font-weight: 600;">Enable payOS</div>
+                    <div style="font-size: 0.85rem; color: var(--admin-text-muted);">Process payments via payOS gateway.</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="enable_payos">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                
+                <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; max-width: 400px; padding: 16px; border: 1px solid var(--admin-border); border-radius: 8px;">
+                  <div>
+                    <div style="font-weight: 600;">Enable Stripe</div>
+                    <div style="font-size: 0.85rem; color: var(--admin-text-muted);">Process international payments.</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" name="enable_stripe">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             NOTIFICATIONS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="notifications-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Notifications</h1>
+              <p>Stay updated with system alerts and activities.</p>
+            </div>
+            <div class="dashboard-header-right">
+              <button class="btn btn-secondary" onclick="markAllAsRead()">
+                <i class="fa-solid fa-check-double"></i> Mark all as read
+              </button>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in" style="padding: 24px;">
+            <div id="notifications-list" style="display: flex; flex-direction: column; gap: 12px; max-width: 800px; margin: 0 auto;">
+              <!-- Cards injected here -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TICKETS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="tickets-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Support Tickets</h1>
+              <p>Manage customer inquiries and support requests.</p>
+            </div>
+            <div class="dashboard-header-right" style="display: flex; gap: 12px; align-items: center;">
+              <input type="text" id="ticket-search" class="form-input" placeholder="Search ID or Subject..." style="width: 250px;" onkeyup="loadTickets()">
+              <select id="ticket-status-filter" class="form-input" onchange="loadTickets()">
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Customer</th>
+                  <th>Subject</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Last Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tickets-table-body">
+                <!-- Rows injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Ticket Slide-over Panel -->
+        <div id="ticket-panel-overlay" class="side-panel-overlay" onclick="closeTicketPanel()"></div>
+        <div id="ticket-panel" class="side-panel">
+          <div class="side-panel-header">
+            <div>
+              <h2 id="tp-subject" style="margin:0; font-size: 1.25rem;">Ticket Subject</h2>
+              <div id="tp-customer" style="font-size: 0.9rem; color: var(--admin-text-secondary); margin-top: 4px;">Customer Name</div>
+            </div>
+            <button class="close-panel-btn" onclick="closeTicketPanel()"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          
+          <div class="side-panel-body" style="display: flex; flex-direction: column; padding: 0;">
+            <!-- Actions Toolbar -->
+            <div style="padding: 16px 24px; border-bottom: 1px solid var(--admin-border); background: var(--admin-bg-hover); display: flex; gap: 12px;">
+              <input type="hidden" id="tp-id">
+              <select id="tp-status" class="form-input" style="width: 150px;" onchange="updateTicketStatus()">
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+              </select>
+              <select id="tp-priority" class="form-input" style="width: 150px;" onchange="updateTicketStatus()">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+
+            <!-- Chat Body -->
+            <div id="tp-chat-body" style="flex-grow: 1; overflow-y: auto; padding: 24px; background: #f8fafc; display: flex; flex-direction: column; gap: 16px; height: 50vh;">
+              <!-- Messages injected here -->
+            </div>
+
+            <!-- Reply Footer -->
+            <div style="padding: 16px 24px; border-top: 1px solid var(--admin-border); background: var(--admin-surface);">
+              <textarea id="tp-reply-text" class="form-input" rows="3" placeholder="Type your reply here..." style="resize: none; margin-bottom: 12px;"></textarea>
+              <div style="display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary" onclick="replyTicket()">
+                  <i class="fa-solid fa-paper-plane"></i> Send Reply
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             AUDIT LOGS SECTION
+             ============================================================ -->
+        <section class="admin-content" id="audit-logs-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Audit Logs</h1>
+              <p>Monitor system activity and administrative actions.</p>
+            </div>
+            <div class="dashboard-header-right" style="display: flex; gap: 12px; align-items: center;">
+              <select id="audit-entity-filter" class="form-input" onchange="loadAuditLogs()">
+                <option value="">All Entities</option>
+                <option value="hotels">Hotels</option>
+                <option value="users">Users</option>
+                <option value="settings">Settings</option>
+                <option value="bookings">Bookings</option>
+                <option value="rooms">Rooms</option>
+              </select>
+              <select id="audit-action-filter" class="form-input" onchange="loadAuditLogs()">
+                <option value="">All Actions</option>
+                <option value="CREATE">CREATE</option>
+                <option value="UPDATE">UPDATE</option>
+                <option value="DELETE">DELETE</option>
+                <option value="UPDATE_HOTEL">UPDATE_HOTEL</option>
+                <option value="DELETE_USER">DELETE_USER</option>
+                <option value="CHANGE_SETTINGS">CHANGE_SETTINGS</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Admin User</th>
+                  <th>Action</th>
+                  <th>Entity Type</th>
+                  <th>Entity ID</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="audit-logs-table-body">
+                <!-- Rows injected here -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Audit Log Slide-over Panel -->
+        <div id="audit-panel-overlay" class="side-panel-overlay" onclick="closeAuditPanel()"></div>
+        <div id="audit-panel" class="side-panel">
+          <div class="side-panel-header">
+            <div>
+              <h2 id="ap-summary" style="margin:0; font-size: 1.25rem;">Log Details</h2>
+              <div id="ap-date" style="font-size: 0.9rem; color: var(--admin-text-secondary); margin-top: 4px;">Date</div>
+            </div>
+            <button class="close-panel-btn" onclick="closeAuditPanel()"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+          
+          <div class="side-panel-body" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="form-group">
+              <label>Admin User</label>
+              <input type="text" id="ap-admin" class="form-input" readonly>
+            </div>
+            <div style="display: flex; gap: 16px;">
+              <div class="form-group" style="flex:1;">
+                <label>Entity Type</label>
+                <input type="text" id="ap-entity-type" class="form-input" readonly>
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label>Entity ID</label>
+                <input type="text" id="ap-entity-id" class="form-input" readonly>
+              </div>
+            </div>
+            <div class="form-group" style="flex-grow: 1;">
+              <label>Details (JSON Payload)</label>
+              <div style="background: #1e1e1e; border-radius: 8px; padding: 16px; overflow-x: auto; height: 100%; min-height: 250px;">
+                <pre><code id="ap-details" style="color: #d4d4d4; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.9rem;"></code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             MEDIA MANAGER SECTION
+             ============================================================ -->
+        <section class="admin-content" id="media-section" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Media Manager</h1>
+              <p>Manage your images and files.</p>
+            </div>
+            <div class="dashboard-header-right" style="display: flex; gap: 12px; align-items: center;">
+              <select class="form-control" id="media-folder-filter" onchange="loadMedia()" style="min-width: 150px;">
+                <option value="all">All Folders</option>
+                <option value="root">root</option>
+                <option value="hotels">hotels</option>
+                <option value="users">users</option>
+                <option value="posts">posts</option>
+              </select>
+              <input type="file" id="media-upload-input" multiple style="display: none;" onchange="handleMediaUpload(event)" accept="image/*">
+              <button class="btn btn-primary" onclick="document.getElementById('media-upload-input').click()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload Media
+              </button>
+            </div>
+          </div>
+
+          <div class="table-panel animate-fade-in" style="padding: 24px; min-height: 400px;">
+            <div id="media-gallery" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px;">
+              <!-- Cards injected here -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             CMS (PAGES / BLOGS) SECTION
+             ============================================================ -->
+        <section class="admin-content" id="cms-section" style="display:none;">
+          <!-- CMS List View -->
+          <div id="cms-list-view">
+            <div class="dashboard-header">
+              <div class="dashboard-header-left">
+                <h1>CMS (Pages/Blogs)</h1>
+                <p>Manage your articles, announcements, and pages.</p>
+              </div>
+              <div class="dashboard-header-right">
+                <button class="btn btn-primary" onclick="openCmsForm()">+ Create New Post</button>
+              </div>
+            </div>
+
+            <div class="table-panel animate-fade-in">
+              <table class="data-table" id="cms-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                    <th style="width: 140px; text-align: center;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="cms-table-body">
+                  <tr><td colspan="5" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading posts...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CMS Form View (Hidden by default) -->
+          <div id="cms-form-view" class="hidden">
+            <div class="dashboard-header">
+              <div class="dashboard-header-left">
+                <h1 id="cms-form-title">Create Post</h1>
+              </div>
+              <div class="dashboard-header-right">
+                <button class="btn btn-secondary" onclick="closeCmsForm()">Cancel</button>
+                <button class="btn btn-primary" id="cms-save-btn" onclick="submitCmsForm()">Save Post</button>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+              <!-- Main Content Area -->
+              <div class="table-panel" style="padding: 24px; margin-bottom: 0;">
+                <form id="cms-form">
+                  <input type="hidden" id="cms-post-id">
+                  
+                  <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-control" id="cms-title" placeholder="Enter post title" required oninput="generateSlugFromTitle()">
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 24px;">
+                    <label class="form-label">Content</label>
+                    <!-- Quill JS Editor Container -->
+                    <div id="editor-container" style="height: 400px; border-radius: 0 0 6px 6px;"></div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- SEO Settings & Status Sidebar -->
+              <div class="table-panel" style="padding: 24px; margin-bottom: 0;">
+                <h3 style="margin-top: 0; margin-bottom: 16px; font-size: 1.1rem;">Settings & SEO</h3>
+                
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <select class="form-control" id="cms-status">
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Slug (URL)</label>
+                  <input type="text" class="form-control" id="cms-slug" placeholder="e.g. my-awesome-post" required>
+                  <div class="form-help" style="font-size: 0.8rem; color: var(--admin-text-muted); margin-top: 4px;">Must be unique. No spaces.</div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Meta Title</label>
+                  <input type="text" class="form-control" id="cms-meta-title" placeholder="SEO Title">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Meta Description</label>
+                  <textarea class="form-control" id="cms-meta-description" rows="3" placeholder="Brief description for search engines"></textarea>
                 </div>
               </div>
             </div>
           </div>
+        </section>
 
-        </div>
-        <!-- /bottom-grid -->
+        <!-- ============================================================
+             HOTELS MANAGEMENT PAGE  (hidden by default, toggled via nav)
+             ============================================================ -->
+        <section class="admin-content" id="hotels-page" style="display:none;">
 
-      </main>
+          <!-- Page header -->
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Hotels Management</h1>
+              <p>Add, edit, and manage all your hotel properties from one place.</p>
+            </div>
+            <div class="dashboard-header-actions">
+              <button class="btn btn-primary" id="btn-add-hotel">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+                Add New Hotel
+              </button>
+            </div>
+          </div>
+
+          <!-- Search & Filter Bar -->
+          <div class="hotels-toolbar" id="hotels-toolbar">
+            <div class="hotels-search">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8.5" cy="8.5" r="6"/><path d="M13.5 13.5l4 4"/></svg>
+              <input type="text" placeholder="Search hotels by name, city, or country..." id="hotels-search-input">
+            </div>
+            <div class="hotels-filter-group">
+              <select class="form-input form-select hotels-filter-select" id="hotels-status-filter">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Hotels Data Table -->
+          <div class="table-panel" id="hotels-table-panel">
+            <table class="data-table" id="hotels-data-table">
+              <thead>
+                <tr>
+                  <th style="width:60px;">Image</th>
+                  <th>Hotel Name</th>
+                  <th>Location</th>
+                  <th>Type</th>
+                  <th>Base Price</th>
+                  <th>Rating</th>
+                  <th>Status</th>
+                  <th style="width:110px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="hotels-table-body">
+                <!-- Populated dynamically by loadHotels() -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty state (shown when no hotels) -->
+          <div class="hotels-empty-state" id="hotels-empty-state" style="display:none;">
+            <div class="hotels-empty-icon">
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="8" y="20" width="48" height="36" rx="4"/>
+                <path d="M16 20V14a16 16 0 0132 0v6"/>
+                <line x1="8" y1="36" x2="56" y2="36"/>
+                <rect x="24" y="42" width="16" height="14" rx="2"/>
+              </svg>
+            </div>
+            <h3>No Hotels Found</h3>
+            <p>Get started by adding your first hotel property.</p>
+            <button class="btn btn-primary" id="btn-add-hotel-empty">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+              Add New Hotel
+            </button>
+          </div>
+
+        </section>
+        <!-- /hotels-page -->
+
+        <!-- ============================================================
+             ROOM TYPES & ROOMS PAGE
+             ============================================================ -->
+        <section class="admin-content" id="rooms-page" style="display:none;">
+
+          <!-- Page header -->
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Room Types &amp; Rooms</h1>
+              <p>Manage room types and physical inventory for your properties.</p>
+            </div>
+            <div class="dashboard-header-actions">
+              <button class="btn btn-primary" id="btn-add-room-type">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+                Add Room Type
+              </button>
+              <button class="btn btn-secondary" id="btn-add-physical-rooms" style="display: none;">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+                Add Rooms
+              </button>
+            </div>
+          </div>
+
+          <!-- Hotel Selector Bar -->
+          <div class="hotels-toolbar">
+            <div class="hotels-filter-group" style="flex: 1;">
+              <select class="form-input form-select" id="rooms-hotel-select" style="max-width: 400px;">
+                <option value="">-- Select a Hotel to manage its rooms --</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Tabs (Hidden until a hotel is selected) -->
+          <div id="rooms-content-area" style="display: none; margin-top: 24px;">
+            <div class="chart-tabs" style="margin-bottom: 16px; border-bottom: 1px solid var(--admin-border);">
+              <button class="chart-tab active" id="tab-room-types">Room Types</button>
+              <button class="chart-tab" id="tab-physical-rooms">Physical Rooms</button>
+            </div>
+
+            <!-- Room Types Table Panel -->
+            <div class="table-panel animate-fade-in" id="panel-room-types">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Type Name</th>
+                    <th>Max Occupancy</th>
+                    <th>Bed Size</th>
+                    <th>Base Price</th>
+                    <th>Total Rooms</th>
+                    <th>Status</th>
+                    <th style="width:110px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="room-types-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Physical Rooms Table Panel -->
+            <div class="table-panel animate-fade-in" id="panel-physical-rooms" style="display: none;">
+              <div class="hotels-toolbar" style="margin-bottom: 16px; background: transparent; padding: 0;">
+                <select class="form-input form-select" id="rooms-type-select" style="max-width: 300px;">
+                  <option value="">-- All Room Types --</option>
+                </select>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Room Number</th>
+                    <th>Room Type</th>
+                    <th>Floor</th>
+                    <th>Status</th>
+                    <th style="width:110px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="physical-rooms-tbody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+        <!-- /rooms-page -->
+
+        <!-- ============================================================
+             AMENITIES MANAGEMENT PAGE
+             ============================================================ -->
+        <section class="admin-content" id="amenities-page" style="display:none;">
+          <div class="dashboard-header">
+            <div class="dashboard-header-left">
+              <h1>Amenities Catalog</h1>
+              <p>Manage all available amenities across your hotels and rooms.</p>
+            </div>
+            <div class="dashboard-header-actions">
+              <button class="btn btn-primary" id="btn-add-amenity">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+                Add Amenity
+              </button>
+            </div>
+          </div>
+          <div class="hotels-toolbar" id="amenities-toolbar">
+            <div class="hotels-search">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8.5" cy="8.5" r="6"/><path d="M13.5 13.5l4 4"/></svg>
+              <input type="text" placeholder="Search amenities..." id="amenities-search-input">
+            </div>
+            <div class="hotels-filter-group">
+              <select class="form-input form-select hotels-filter-select" id="amenities-scope-filter">
+                <option value="">All Scopes</option>
+                <option value="hotel">Hotel Level</option>
+                <option value="room">Room Level</option>
+                <option value="both">Both</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-panel" id="amenities-table-panel">
+            <table class="data-table" id="amenities-data-table">
+              <thead>
+                <tr>
+                  <th style="width: 60px;">Icon</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Scope</th>
+                  <th>Status</th>
+                  <th style="width:110px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="amenities-table-body">
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <!-- /amenities-page -->
+
     </div>
-    <!-- /admin-main -->
+      <!-- /main-content-wrapper -->
+    </div>
+    <!-- /admin-layout -->
 
+    <!-- ============================================================
+         PRICE OVERRIDE MODAL
+         ============================================================ -->
+    <div class="modal-overlay" id="modal-price-override">
+      <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+          <h2>Add Price Override</h2>
+          <button class="modal-close" onclick="closePriceOverrideModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        </div>
+        <form id="form-price-override">
+          <div class="form-group">
+            <label>Hotel</label>
+            <select id="override-hotel" class="form-input" required></select>
+          </div>
+          <div class="form-group">
+            <label>Physical Room</label>
+            <select id="override-room-id" class="form-input" required>
+              <option value="">Select Hotel First</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex; gap:10px;">
+            <div style="flex:1;">
+              <label>Start Date</label>
+              <input type="date" id="override-start" class="form-input" required>
+            </div>
+            <div style="flex:1;">
+              <label>End Date</label>
+              <input type="date" id="override-end" class="form-input" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Override Price ($)</label>
+            <input type="number" step="0.01" id="override-price" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label>Reason (Optional)</label>
+            <input type="text" id="override-reason" class="form-input" placeholder="e.g. Peak Season / Lunar New Year">
+          </div>
+          <div class="modal-actions" style="margin-top: 20px;">
+            <button type="button" class="btn btn-secondary" onclick="closePriceOverrideModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Override</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         BLOCK ROOM MODAL
+         ============================================================ -->
+    <div class="modal-overlay" id="modal-block-room">
+      <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+          <h2>Block Room (Maintenance)</h2>
+          <button class="modal-close" onclick="closeBlockRoomModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        </div>
+        <form id="form-block-room">
+          <div class="form-group">
+            <label>Hotel</label>
+            <select id="block-hotel" class="form-input" required></select>
+          </div>
+          <div class="form-group">
+            <label>Physical Room</label>
+            <select id="block-room-id" class="form-input" required>
+              <option value="">Select Hotel First</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex; gap:10px;">
+            <div style="flex:1;">
+              <label>Start Date</label>
+              <input type="date" id="block-start" class="form-input" required>
+            </div>
+            <div style="flex:1;">
+              <label>End Date</label>
+              <input type="date" id="block-end" class="form-input" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Reason</label>
+            <input type="text" id="block-reason" class="form-input" placeholder="e.g. AC Repair" required>
+          </div>
+          <div class="modal-actions" style="margin-top: 20px;">
+            <button type="button" class="btn btn-secondary" onclick="closeBlockRoomModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" style="background:var(--admin-danger); border-color:var(--admin-danger);">Block Room</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         BOOKING DETAILS SLIDEOUT PANEL
+         ============================================================ -->
+    <div class="slideout-overlay" id="booking-slideout-overlay">
+      <div class="slideout-panel" style="width: 600px;">
+        <div class="slideout-header">
+          <h2 class="slideout-title" id="booking-slideout-title">Booking Details</h2>
+          <button class="slideout-close close-drawer-btn" id="booking-slideout-close" aria-label="Close panel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        
+        <!-- Tab Navigation inside Slideout -->
+        <div class="booking-tabs" style="border-bottom: 1px solid var(--admin-border-light); display: flex; gap: 1rem; padding: 0 1.5rem;">
+          <button class="booking-tab-btn active" data-target="booking-tab-summary">Summary</button>
+          <button class="booking-tab-btn" data-target="booking-tab-rooms">Allocated Rooms</button>
+          <button class="booking-tab-btn" data-target="booking-tab-payments">Payment History</button>
+        </div>
+
+        <div class="slideout-body" id="booking-slideout-body" style="padding: 1.5rem;">
+          <!-- Summary Tab -->
+          <div id="booking-tab-summary" class="booking-tab-content active" style="display: block;">
+            <div id="booking-summary-content">Loading...</div>
+          </div>
+          
+          <!-- Rooms Tab -->
+          <div id="booking-tab-rooms" class="booking-tab-content" style="display: none;">
+            <div id="booking-rooms-content">Loading...</div>
+          </div>
+
+          <!-- Payments Tab -->
+          <div id="booking-tab-payments" class="booking-tab-content" style="display: none;">
+            <div id="booking-payments-content">Loading...</div>
+          </div>
+        </div>
+
+        <div class="slideout-footer" style="justify-content: space-between;">
+          <input type="hidden" id="booking-current-id">
+          <div id="booking-action-buttons" style="display: flex; gap: 0.5rem; width: 100%; justify-content: flex-end;">
+            <!-- Action buttons rendered dynamically based on state -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================================
+         HOTEL SLIDE-OUT PANEL
+         ============================================================ -->
+  <div class="slideout-overlay" id="hotel-slideout-overlay">
+    <div class="slideout-panel" id="hotel-slideout-panel">
+      <div class="slideout-header">
+        <span class="slideout-title" id="hotel-slideout-title">Add New Hotel</span>
+        <button class="modal-close" id="hotel-slideout-close" aria-label="Close panel">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <form id="hotel-form" autocomplete="off" enctype="multipart/form-data">
+        <div class="slideout-body">
+          <input type="hidden" id="hotel-form-id" value="">
+
+          <!-- Hotel Name -->
+          <div class="form-group">
+            <label class="form-label" for="hotel-name">Hotel Name <span class="form-required">*</span></label>
+            <input type="text" class="form-input" id="hotel-name" placeholder="e.g. Maison D'Orient Hanoi" required maxlength="150">
+          </div>
+
+          <!-- Address -->
+          <div class="form-group">
+            <label class="form-label" for="hotel-address">Address <span class="form-required">*</span></label>
+            <input type="text" class="form-input" id="hotel-address" placeholder="e.g. 22 Hang Buom, Hoan Kiem" required maxlength="200">
+          </div>
+
+          <!-- Location & Type (side by side) -->
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="hotel-location">Location <span class="form-required">*</span></label>
+              <select class="form-input form-select" id="hotel-location" required>
+                <option value="">Select location…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hotel-type">Property Type <span class="form-required">*</span></label>
+              <select class="form-input form-select" id="hotel-type" required>
+                <option value="">Select type…</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Base Price & Status (side by side) -->
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="hotel-price">Base Price (USD) <span class="form-required">*</span></label>
+              <input type="number" class="form-input" id="hotel-price" placeholder="0.00" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="hotel-status-toggle">Status</label>
+              <div class="status-toggle-wrapper">
+                <label class="status-toggle" id="hotel-status-toggle">
+                  <input type="checkbox" id="hotel-status-checkbox" checked>
+                  <span class="status-toggle-slider"></span>
+                </label>
+                <span class="status-toggle-label" id="hotel-status-label">Active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label" for="hotel-description">Description</label>
+            <textarea class="form-input" id="hotel-description" rows="4" placeholder="Describe the hotel, its unique features, and location highlights…" style="resize:vertical;"></textarea>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="form-group">
+            <label class="form-label">Hotel Image</label>
+            <div class="image-upload-zone" id="hotel-image-zone">
+              <input type="file" id="hotel-image-input" accept=".jpg,.jpeg,.png,.webp" hidden>
+              <div class="image-upload-placeholder" id="hotel-image-placeholder">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="8" width="40" height="32" rx="4"/>
+                  <circle cx="16" cy="20" r="4"/>
+                  <path d="M44 32l-10-10-14 14"/>
+                  <path d="M28 28l-4-4-12 12"/>
+                </svg>
+                <p>Drag & drop an image here, or <span class="image-upload-link">browse</span></p>
+                <small>JPG, PNG, or WebP — Max 5 MB</small>
+              </div>
+              <div class="image-upload-preview" id="hotel-image-preview" style="display:none;">
+                <img id="hotel-image-preview-img" alt="Hotel preview">
+                <button type="button" class="image-upload-remove" id="hotel-image-remove" aria-label="Remove image">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amenities -->
+          <div class="form-group">
+            <label class="form-label">Amenities</label>
+            <div id="hotel-amenities-container" class="amenity-selector-container">
+               <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <div class="slideout-footer">
+          <button type="button" class="btn btn-secondary" id="hotel-form-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="hotel-form-submit">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 3l-7 7-3-3"/></svg>
+            <span id="hotel-form-submit-text">Save Hotel</span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
-  <!-- /admin-layout -->
+
+
+  <!-- ============================================================
+       DELETE HOTEL CONFIRMATION MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="delete-hotel-modal">
+    <div class="modal-content" style="max-width:440px;">
+      <div class="modal-body" style="text-align:center; padding:32px 24px;">
+        <div class="delete-modal-icon">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="24" cy="24" r="20"/>
+            <line x1="24" y1="14" x2="24" y2="28"/>
+            <line x1="24" y1="34" x2="24.02" y2="34"/>
+          </svg>
+        </div>
+        <h3 class="delete-modal-title">Delete Hotel</h3>
+        <p class="delete-modal-text">Are you sure you want to delete <strong id="delete-hotel-name"></strong>? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer" style="justify-content:center;">
+        <button class="btn btn-secondary" id="delete-hotel-cancel">Cancel</button>
+        <button class="btn btn-danger" id="delete-hotel-confirm">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 4h12M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1M13 4v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4"/></svg>
+          Delete Hotel
+        </button>
+      </div>
+    </div>
+  </div>
 
 
   <!-- ============================================================
@@ -696,8 +1962,628 @@
   </div>
 
 
-  <!-- Chart.js from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <!-- ============================================================
+       NEW BOOKING MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="new-booking-modal">
+    <div class="modal-content" style="max-width:600px;">
+      <div class="modal-header">
+        <span class="modal-title">Create New Booking</span>
+        <button class="modal-close" id="new-booking-modal-close" aria-label="Close modal">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <form id="new-booking-form" autocomplete="off">
+        <div class="modal-body">
+          <!-- Property -->
+          <div class="form-group">
+            <label class="form-label" for="nb-property">Property *</label>
+            <select class="form-input form-select" id="nb-property" required>
+              <option value="">Select a property…</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <!-- Room -->
+          <div class="form-group">
+            <label class="form-label" for="nb-room">Room / Room Type *</label>
+            <select class="form-input form-select" id="nb-room" required disabled>
+              <option value="">Select a property first…</option>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <!-- Guest Email -->
+          <div class="form-group">
+            <label class="form-label" for="nb-guest-email">Guest Email *</label>
+            <input type="email" class="form-input" id="nb-guest-email" placeholder="guest@example.com" required>
+          </div>
+          <!-- Dates -->
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="nb-checkin">Check-in Date *</label>
+              <input type="date" class="form-input" id="nb-checkin" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="nb-checkout">Check-out Date *</label>
+              <input type="date" class="form-input" id="nb-checkout" required>
+            </div>
+          </div>
+          <!-- Guest Count -->
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="nb-guests">Number of Guests *</label>
+              <input type="number" class="form-input" id="nb-guests" min="1" max="10" value="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="nb-status">Status</label>
+              <select class="form-input form-select" id="nb-status">
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+              </select>
+            </div>
+          </div>
+          <!-- Special Requests -->
+          <div class="form-group">
+            <label class="form-label" for="nb-notes">Special Requests</label>
+            <textarea class="form-input" id="nb-notes" rows="3" placeholder="Any special requests or notes…" style="resize:vertical;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="new-booking-modal-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="new-booking-submit">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+            Create Booking
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       ROOM TYPE CREATE / EDIT — SLIDE-OUT PANEL
+       ============================================================ -->
+  <div class="slideout-overlay" id="room-type-slideout-overlay">
+    <div class="slideout-panel" id="room-type-slideout-panel">
+      <div class="slideout-header">
+        <span class="slideout-title" id="room-type-slideout-title">Add Room Type</span>
+        <button class="modal-close" id="room-type-slideout-close" aria-label="Close panel">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <form id="room-type-form" autocomplete="off">
+        <div class="slideout-body">
+          <input type="hidden" id="room-type-form-id" value="">
+          <input type="hidden" id="room-type-hotel-id" value="">
+
+          <div class="form-group">
+            <label class="form-label" for="rt-name">Type Name <span class="form-required">*</span></label>
+            <input type="text" class="form-input" id="rt-name" placeholder="e.g. Deluxe Double Room" required maxlength="150">
+          </div>
+
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="rt-occupancy">Max Occupancy</label>
+              <input type="number" class="form-input" id="rt-occupancy" placeholder="2" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rt-bed-size">Bed Size</label>
+              <input type="text" class="form-input" id="rt-bed-size" placeholder="e.g. 1 King Bed">
+            </div>
+          </div>
+
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="rt-price">Base Price (USD) <span class="form-required">*</span></label>
+              <input type="number" class="form-input" id="rt-price" placeholder="0.00" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="rt-status">Status</label>
+              <select class="form-input form-select" id="rt-status">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="rt-description">Description</label>
+            <textarea class="form-input" id="rt-description" rows="4" placeholder="Describe the room features…" style="resize:vertical;"></textarea>
+          </div>
+
+          <!-- Amenities -->
+          <div class="form-group">
+            <label class="form-label">Amenities</label>
+            <div id="room-type-amenities-container" class="amenity-selector-container">
+               <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+        <div class="slideout-footer">
+          <button type="button" class="btn btn-secondary" id="room-type-form-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="room-type-form-submit">Save Room Type</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       BULK ADD PHYSICAL ROOMS MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="bulk-add-rooms-modal">
+    <div class="modal-content" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Bulk Add Physical Rooms</h3>
+        <button class="modal-close" id="bulk-rooms-close" aria-label="Close modal">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <form id="bulk-rooms-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="bulk-room-type">Select Room Type <span class="form-required">*</span></label>
+            <select class="form-input form-select" id="bulk-room-type" required>
+              <option value="">-- Choose a Type --</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="bulk-room-numbers">Room Numbers <span class="form-required">*</span></label>
+            <textarea class="form-input" id="bulk-room-numbers" rows="4" placeholder="e.g. 101, 102, 103 OR 101-105" required style="resize:vertical;"></textarea>
+            <small style="display:block; margin-top:4px; color:var(--admin-text-muted);">Enter room numbers separated by commas (101, 102) or as a range (101-105).</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="bulk-rooms-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="bulk-rooms-submit">Add Rooms</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       AMENITY CREATE / EDIT — SLIDE-OUT PANEL
+       ============================================================ -->
+  <div class="slideout-overlay" id="amenity-slideout-overlay">
+    <div class="slideout-panel" id="amenity-slideout-panel">
+      <div class="slideout-header">
+        <span class="slideout-title" id="amenity-slideout-title">Add Amenity</span>
+        <button class="modal-close" id="amenity-slideout-close" aria-label="Close panel">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <form id="amenity-form" autocomplete="off">
+        <div class="slideout-body">
+          <input type="hidden" id="amenity-form-id" value="">
+
+          <div class="form-group">
+            <label class="form-label" for="amenity-name">Name <span class="form-required">*</span></label>
+            <input type="text" class="form-input" id="amenity-name" placeholder="e.g. Free High-Speed Wifi" required maxlength="150">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="amenity-icon">Icon Class (FontAwesome) <span class="form-required">*</span></label>
+            <input type="text" class="form-input" id="amenity-icon" placeholder="e.g. fa-solid fa-wifi" required>
+            <div class="icon-preview-box" id="amenity-icon-preview">
+              <i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="amenity-category">Category</label>
+              <input type="text" class="form-input" id="amenity-category" placeholder="e.g. Bathroom, Entertainment">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="amenity-scope">Scope</label>
+              <select class="form-input form-select" id="amenity-scope">
+                <option value="both">Both</option>
+                <option value="hotel">Hotel Level</option>
+                <option value="room">Room Level</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="amenity-status">Status</label>
+            <select class="form-input form-select" id="amenity-status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="slideout-footer">
+          <button type="button" class="btn btn-secondary" id="amenity-form-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="amenity-form-submit">Save Amenity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       PAYMENT DETAILS SIDE PANEL
+       ============================================================ -->
+  <div id="payment-panel-overlay" class="panel-overlay" onclick="closePaymentSidePanel()"></div>
+  <div id="payment-side-panel" class="side-panel">
+    <div class="side-panel-header">
+      <h3 class="side-panel-title">Payment Details</h3>
+      <button class="modal-close" onclick="closePaymentSidePanel()" aria-label="Close panel">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+      </button>
+    </div>
+    <div class="side-panel-body">
+      <div class="detail-row">
+        <span class="detail-label">Order Code:</span>
+        <strong id="panel-pay-order-code" class="detail-value" style="font-variant-numeric:tabular-nums;"></strong>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Booking ID:</span>
+        <strong id="panel-pay-booking-id" class="detail-value"></strong>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Amount:</span>
+        <strong id="panel-pay-amount" class="detail-value" style="color:var(--admin-primary);"></strong>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Gateway:</span>
+        <strong id="panel-pay-gateway" class="detail-value"></strong>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Status:</span>
+        <strong id="panel-pay-status" class="detail-value"></strong>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Date:</span>
+        <strong id="panel-pay-date" class="detail-value"></strong>
+      </div>
+    </div>
+    <div class="side-panel-footer">
+      <button class="btn btn-danger" id="btn-archive-payment" style="width:100%; justify-content:center;">
+        <i class="fa-solid fa-eye-slash"></i> Archive Payment
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       COUPON MODAL / SIDE PANEL
+       ============================================================ -->
+  <div class="slideout-overlay" id="coupon-slideout-overlay">
+    <div class="slideout-panel" id="coupon-slideout-panel">
+      <div class="slideout-header">
+        <span class="slideout-title">Create New Coupon</span>
+        <button class="modal-close" onclick="closeCouponModal()" aria-label="Close panel">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <form id="coupon-form" autocomplete="off">
+        <div class="slideout-body">
+          <div class="form-group">
+            <label class="form-label" for="coupon-code">Coupon Code <span class="form-required">*</span></label>
+            <input type="text" class="form-input" id="coupon-code" placeholder="e.g. SUMMER20" required style="text-transform: uppercase;">
+          </div>
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="coupon-discount-type">Discount Type <span class="form-required">*</span></label>
+              <select class="form-input form-select" id="coupon-discount-type" required>
+                <option value="percentage">Percentage (%)</option>
+                <option value="fixed">Fixed Amount</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="coupon-discount-value">Value <span class="form-required">*</span></label>
+              <input type="number" step="0.01" class="form-input" id="coupon-discount-value" placeholder="e.g. 20" required>
+            </div>
+          </div>
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label" for="coupon-max-uses">Max Uses <span class="form-required">*</span></label>
+              <input type="number" class="form-input" id="coupon-max-uses" placeholder="e.g. 100" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="coupon-valid-until">Valid Until <span class="form-required">*</span></label>
+              <input type="date" class="form-input" id="coupon-valid-until" required>
+            </div>
+          </div>
+          <div class="form-group" style="display:none;">
+            <label class="form-label" for="coupon-valid-from">Valid From</label>
+            <input type="date" class="form-input" id="coupon-valid-from">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="coupon-hotel-id">Applicable Hotel (Optional)</label>
+            <select class="form-input form-select" id="coupon-hotel-id">
+              <option value="">All Hotels</option>
+            </select>
+            <small style="color:var(--admin-text-muted);display:block;margin-top:4px;">Leave empty to apply to all hotels.</small>
+          </div>
+        </div>
+        <div class="slideout-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeCouponModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Coupon</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CUSTOMER PROFILE SLIDEOUT PANEL
+       ============================================================ -->
+  <div class="slideout-overlay" id="customer-slideout-overlay">
+    <div class="slideout-panel" id="customer-slideout-panel" style="max-width: 500px;">
+      <div class="slideout-header">
+        <span class="slideout-title">Customer Profile</span>
+        <button class="modal-close" onclick="closeCustomerModal()" aria-label="Close panel">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5l-10 10"/></svg>
+        </button>
+      </div>
+      <div class="slideout-body" style="padding: 0;">
+        <div style="padding: 24px; border-bottom: 1px solid var(--admin-border-light); display: flex; align-items: center; gap: 16px;">
+          <div id="cust-profile-avatar" style="width: 60px; height: 60px; border-radius: 50%; background: var(--admin-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">?</div>
+          <div>
+            <h3 id="cust-profile-name" style="margin: 0; font-size: 1.25rem; color: var(--admin-text);">Name</h3>
+            <div id="cust-profile-email" style="color: var(--admin-text-muted); font-size: 0.9rem; margin-top: 4px;">email@domain.com</div>
+            <div id="cust-profile-membership" style="margin-top: 8px;"><span class="badge badge-outline">Standard</span></div>
+          </div>
+        </div>
+        <div style="padding: 24px; display: flex; flex-direction: column; gap: 24px;">
+          
+          <div>
+            <h4 style="margin: 0 0 12px 0; color: var(--admin-text); font-size: 1rem;">Overview</h4>
+            <div class="detail-row"><span class="detail-label">Phone:</span><strong class="detail-value" id="cust-profile-phone">—</strong></div>
+            <div class="detail-row"><span class="detail-label">Join Date:</span><strong class="detail-value" id="cust-profile-join">—</strong></div>
+          </div>
+
+          <div>
+            <h4 style="margin: 0 0 12px 0; color: var(--admin-text); font-size: 1rem;">Recent Bookings</h4>
+            <div id="cust-profile-bookings" style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="color: var(--admin-text-muted); font-size: 0.9rem;">No bookings found.</div>
+            </div>
+          </div>
+
+          <div>
+            <h4 style="margin: 0 0 12px 0; color: var(--admin-text); font-size: 1rem;">Recent Reviews</h4>
+            <div id="cust-profile-reviews" style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="color: var(--admin-text-muted); font-size: 0.9rem;">No reviews found.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="slideout-footer" style="justify-content: flex-end;">
+        <button type="button" class="btn btn-danger" id="btn-toggle-customer" onclick="toggleCustomerStatusFromPanel()" style="width: 100%; justify-content: center;">Ban User</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ROLE MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="role-modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2 id="role-modal-title">Create Role</h2>
+        <button class="modal-close" onclick="closeRoleModal()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="role-form">
+          <input type="hidden" id="role-id">
+          <div class="form-group">
+            <label class="form-label">Role Name</label>
+            <input type="text" class="form-control" id="role-name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Permissions</label>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;" id="role-permissions-list">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" name="permissions" value="view_dashboard"> View Dashboard
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" name="permissions" value="manage_bookings"> Manage Bookings
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" name="permissions" value="manage_hotels"> Manage Hotels
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" name="permissions" value="view_finance"> View Finance
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" name="permissions" value="manage_users"> Manage Users
+              </label>
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" name="permissions" value="manage_content"> Manage Content
+              </label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeRoleModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Role</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       ASSIGN STAFF MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="assign-staff-modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h2>Assign Role</h2>
+        <button class="modal-close" onclick="closeAssignStaffModal()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="assign-staff-form">
+          <div class="form-group">
+            <label class="form-label">User ID (or Email)</label>
+            <input type="number" class="form-control" id="assign-user-id" placeholder="Enter User ID" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <select class="form-control" id="assign-role-id" required>
+              <option value="">Select Role</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeAssignStaffModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Assign Role</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       REVIEW MODERATION SIDE PANEL
+       ============================================================ -->
+  <div class="slideout-overlay" id="review-panel-overlay"></div>
+  <div class="slideout-panel" id="review-slide-panel">
+    <div class="slideout-header">
+      <h2>Moderate Review</h2>
+      <button class="slideout-close" onclick="closeReviewPanel()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="slideout-body">
+      <div id="review-details-content" style="margin-bottom: 24px; padding: 16px; background: var(--admin-bg-hover); border-radius: 8px;">
+        <!-- Filled by JS -->
+      </div>
+      
+      <form id="review-moderation-form">
+        <input type="hidden" id="mod-review-id">
+        <div class="form-group">
+          <label class="form-label">Review Status</label>
+          <div style="display: flex; gap: 16px;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="radio" name="mod_status" value="pending"> Pending
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="radio" name="mod_status" value="approved"> Approved
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+              <input type="radio" name="mod_status" value="hidden"> Hidden
+            </label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Admin Reply (Official Response)</label>
+          <textarea class="form-control" id="mod-admin-reply" rows="4" placeholder="Draft a response from the hotel..."></textarea>
+        </div>
+
+        <div class="form-actions" style="margin-top: 24px;">
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
   <script src="assets/js/admin.js"></script>
+
+  <script>
+    // Hàm mới thêm để Confirm booking
+    window.confirmBooking = function(code) {
+        let adminBookings = JSON.parse(localStorage.getItem('Wanderly_Admin_Bookings')) || [];
+        let updated = false;
+
+        adminBookings = adminBookings.map(b => {
+            if (b.code === code) {
+                b.status = 'Confirmed';
+                updated = true;
+            }
+            return b;
+        });
+
+        if (updated) {
+            localStorage.setItem('Wanderly_Admin_Bookings', JSON.stringify(adminBookings));
+            
+            // Đồng bộ trạng thái sang phía Khách Hàng
+            let myBookings = JSON.parse(localStorage.getItem('myBookings')) || [];
+            myBookings = myBookings.map(b => {
+                if (b.code === code) b.status = 'Confirmed';
+                return b;
+            });
+            localStorage.setItem('myBookings', JSON.stringify(myBookings));
+
+            renderAdminBookings(); // Tải lại bảng sau khi duyệt
+        }
+    };
+
+    const renderAdminBookings = () => {
+      const adminBookings = JSON.parse(localStorage.getItem('Wanderly_Admin_Bookings')) || [];
+      if (adminBookings.length === 0) return;
+
+      // Hàm hỗ trợ render UI Trạng thái
+      const getStatusHtml = (status) => {
+          if (!status || status === 'Pending') {
+              return `<span style="background: #f59e0b; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight:600;">Pending</span>`;
+          }
+          return `<span style="background: #10b981; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight:600;">Confirmed</span>`;
+      };
+
+      const recentTbody = document.getElementById('recent-bookings-tbody');
+      if (recentTbody) {
+        let recentRows = '';
+        [...adminBookings].reverse().forEach(b => {
+          recentRows += `
+            <tr>
+              <td style="font-weight:700; color:#0f172a;">${b.code}</td>
+              <td style="font-weight:600;">${b.guestName}</td>
+              <td>${b.checkIn}</td>
+              <td>${b.checkOut}</td>
+              <td style="font-weight:800; color:#dc2626;">${b.totalPrice}</td>
+              <td>${getStatusHtml(b.status)}</td>
+            </tr>
+          `;
+        });
+        recentTbody.innerHTML = recentRows;
+      }
+
+      const mainTbody = document.getElementById('bookings-table-body');
+      if (mainTbody) {
+        let mainRows = '';
+        [...adminBookings].reverse().forEach(b => {
+          mainRows += `
+            <tr>
+              <td style="font-weight:700; color:#0f172a;">${b.code}</td>
+              <td style="font-weight:600;">${b.guestName}</td>
+              <td>${b.hotelName} <br><span style="font-size: 0.85rem; color: #64748b;">${b.guestsAndRooms || ''}</span></td>
+              <td>${b.checkIn} to ${b.checkOut}</td>
+              <td style="font-weight:800; color:#dc2626;">${b.totalPrice}</td>
+              <td>${b.paymentMethod || 'Cash at Check-in'}</td>
+              <td>${getStatusHtml(b.status)}</td>
+              <td style="text-align:center;">
+                  ${(!b.status || b.status === 'Pending') 
+                      ? `<button class="btn btn-primary btn-sm" style="padding: 4px 8px; background: #0f172a; color: #fff; border: none; border-radius: 4px; cursor: pointer;" onclick="confirmBooking('${b.code}')">Confirm</button>`
+                      : `<button class="btn btn-secondary btn-sm" style="padding: 4px 8px; border: 1px solid #cbd5e1; background: transparent; border-radius: 4px;">View</button>`
+                  }
+              </td>
+            </tr>
+          `;
+        });
+        mainTbody.innerHTML = mainRows;
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(renderAdminBookings, 800);
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.addEventListener('click', () => {
+          setTimeout(renderAdminBookings, 300);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+</body>
+</html>
 </body>
 </html>
