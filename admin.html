@@ -980,6 +980,7 @@
             <table class="data-table" id="reviews-table">
               <thead>
                 <tr>
+                  <th style="width: 40px;"><input type="checkbox" id="review-select-all" onchange="document.querySelectorAll('.review-bulk-check').forEach(c => c.checked = this.checked);"></th>
                   <th>Hotel</th>
                   <th>Customer</th>
                   <th>Rating</th>
@@ -990,7 +991,7 @@
                 </tr>
               </thead>
               <tbody id="reviews-table-body">
-                <tr><td colspan="7" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading reviews...</td></tr>
+                <tr><td colspan="8" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading reviews...</td></tr>
               </tbody>
             </table>
           </div>
@@ -1339,15 +1340,16 @@
               <table class="data-table" id="cms-table">
                 <thead>
                   <tr>
+                    <th style="width: 40px;"><input type="checkbox" id="cms-select-all" onchange="document.querySelectorAll('.cms-bulk-check').forEach(c => c.checked = this.checked);"></th>
                     <th>Title</th>
                     <th>Slug</th>
                     <th>Status</th>
                     <th>Last Updated</th>
-                    <th style="width: 140px; text-align: center;">Actions</th>
+                    <th style="width: 200px; text-align: center;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="cms-table-body">
-                  <tr><td colspan="5" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading posts...</td></tr>
+                  <tr><td colspan="6" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">Loading posts...</td></tr>
                 </tbody>
               </table>
             </div>

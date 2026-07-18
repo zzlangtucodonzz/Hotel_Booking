@@ -226,6 +226,7 @@ function initSidebarNavigation() {
       if (!document.getElementById('cms-section').dataset.loaded) {
         document.getElementById('cms-section').dataset.loaded = 'true';
         initCmsSection();
+        showCmsFilters();
       }
       loadPosts();
     } else if (id === 'nav-reviews') {
@@ -233,12 +234,15 @@ function initSidebarNavigation() {
       if (!document.getElementById('reviews-section').dataset.loaded) {
         document.getElementById('reviews-section').dataset.loaded = 'true';
         initReviewsSection();
+        showReviewsFilters();
       }
       loadReviews();
     } else if (id === 'nav-media') {
       showPage('media-section');
       if (!document.getElementById('media-section').dataset.loaded) {
         document.getElementById('media-section').dataset.loaded = 'true';
+        showMediaFilters();
+        loadMediaFolders();
       }
       loadMedia();
     } else if (id === 'nav-settings') {
@@ -3970,16 +3974,33 @@ function initCmsSection() {
   }
 }
 
-async function loadPosts() {
+// CMS Pagination & Filter State
+window.cmsState = {
+  currentPage: 1,
+  currentLimit: 10,
+  currentStatus: '',
+  currentSearch: ''
+};
+
+async function loadPosts(page = 1) {
   try {
-    const res = await fetch('/api/admin/posts');
+    window.cmsState.currentPage = page;
+    const params = new URLSearchParams({
+      page: window.cmsState.currentPage,
+      limit: window.cmsState.currentLimit,
+      ...(window.cmsState.currentStatus && { status: window.cmsState.currentStatus }),
+      ...(window.cmsState.currentSearch && { search: window.cmsState.currentSearch })
+    });
+
+    const res = await fetch(`/api/admin/posts?${params}`);
     const json = await res.json();
     const tbody = document.getElementById('cms-table-body');
     
     if (!tbody) return;
 
     if (!json.success || !json.data || json.data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">No posts found.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">No posts found.</td></tr>`;
+      updateCmsPagination(0);
       return;
     }
 
@@ -3991,6 +4012,7 @@ async function loadPosts() {
 
       return `
         <tr>
+          <td><input type="checkbox" class="cms-bulk-check" value="${p.id}"></td>
           <td><strong>${p.title}</strong></td>
           <td><code style="background: var(--admin-bg-hover); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem;">${p.slug}</code></td>
           <td>${statusBadge}</td>
@@ -3998,14 +4020,96 @@ async function loadPosts() {
           <td style="text-align:center;">
             <button class="btn btn-secondary btn-sm" onclick="editPost(${p.id})">Edit</button>
             <button class="btn btn-secondary btn-sm" onclick="togglePostStatus(${p.id}, '${p.status === 'published' ? 'draft' : 'published'}')">${p.status === 'published' ? 'Unpublish' : 'Publish'}</button>
+            <button class="btn btn-secondary btn-sm" style="color:#ef4444;" onclick="deletePost(${p.id})">Delete</button>
           </td>
         </tr>
       `;
     }).join('');
 
+    // Update pagination
+    if (json.pagination) {
+      updateCmsPagination(json.pagination);
+    }
+
   } catch (err) {
     console.error(err);
     showToast('Failed to load posts', 'error');
+  }
+}
+
+function updateCmsPagination(pagination) {
+  let paginationHTML = '';
+  if (pagination && pagination.pages > 1) {
+    paginationHTML = `
+      <div style="margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap;">
+        ${window.cmsState.currentPage > 1 ? `<button class="btn btn-secondary btn-sm" onclick="loadPosts(${window.cmsState.currentPage - 1})">← Previous</button>` : ''}
+        <span style="color: var(--admin-text-muted); font-size: 0.9rem;">Page <strong>${window.cmsState.currentPage}</strong> of <strong>${pagination.pages}</strong></span>
+        ${window.cmsState.currentPage < pagination.pages ? `<button class="btn btn-secondary btn-sm" onclick="loadPosts(${window.cmsState.currentPage + 1})">Next →</button>` : ''}
+      </div>
+    `;
+  }
+  document.getElementById('cms-table-body').insertAdjacentHTML('afterend', paginationHTML);
+}
+
+function showCmsFilters() {
+  const filterHTML = `
+    <div style="background: var(--admin-surface); padding: 16px; border-radius: 8px; margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <input type="text" id="cms-search-input" placeholder="Search posts..." style="padding: 8px 12px; border: 1px solid var(--admin-border); border-radius: 6px; width: 200px;" onkeyup="setTimeout(() => { window.cmsState.currentSearch = this.value; loadPosts(1); }, 500)">
+      <select id="cms-status-filter" style="padding: 8px 12px; border: 1px solid var(--admin-border); border-radius: 6px;" onchange="window.cmsState.currentStatus = this.value; loadPosts(1);">
+        <option value="">All Status</option>
+        <option value="draft">Draft</option>
+        <option value="published">Published</option>
+        <option value="archived">Archived</option>
+      </select>
+      <button class="btn btn-danger btn-sm" id="cms-bulk-delete-btn" style="display:none;" onclick="bulkDeleteCMSPosts()">Delete Selected</button>
+    </div>
+  `;
+  const table = document.getElementById('cms-table');
+  table.parentNode.insertBefore(Object.assign(document.createElement('div'), { innerHTML: filterHTML }).firstElementChild, table);
+}
+
+async function deletePost(id) {
+  if (!confirm('Are you sure? This action cannot be undone.')) return;
+  try {
+    const res = await fetch(`/api/admin/posts/${id}`, { method: 'DELETE' });
+    const json = await res.json();
+    if (json.success) {
+      showToast('Post deleted successfully', 'success');
+      loadPosts(window.cmsState.currentPage);
+    } else {
+      showToast(json.message || 'Failed to delete', 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('An error occurred', 'error');
+  }
+}
+
+async function bulkDeleteCMSPosts() {
+  const checked = document.querySelectorAll('.cms-bulk-check:checked');
+  if (checked.length === 0) {
+    showToast('No posts selected', 'warning');
+    return;
+  }
+  if (!confirm(`Delete ${checked.length} post(s)? This action cannot be undone.`)) return;
+  
+  const ids = Array.from(checked).map(c => parseInt(c.value));
+  try {
+    const res = await fetch('/api/admin/posts/bulk-delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids })
+    });
+    const json = await res.json();
+    if (json.success) {
+      showToast(`${json.deletedCount} post(s) deleted successfully`, 'success');
+      loadPosts(window.cmsState.currentPage);
+    } else {
+      showToast(json.message || 'Failed to delete', 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('An error occurred', 'error');
   }
 }
 
@@ -4029,6 +4133,7 @@ function openCmsForm() {
 function closeCmsForm() {
   document.getElementById('cms-form-view').classList.add('hidden');
   document.getElementById('cms-list-view').classList.remove('hidden');
+  loadPosts(window.cmsState?.currentPage || 1);
 }
 
 async function editPost(id) {
@@ -4158,29 +4263,46 @@ function initReviewsSection() {
   }
 }
 
-async function loadReviews() {
+// Reviews Pagination & Filter State
+window.reviewsState = {
+  currentPage: 1,
+  currentLimit: 10,
+  currentStatus: '',
+  currentRating: '',
+  currentSearch: ''
+};
+
+async function loadReviews(page = 1) {
   try {
-    const res = await fetch('/api/admin/reviews');
+    window.reviewsState.currentPage = page;
+    const params = new URLSearchParams({
+      page: window.reviewsState.currentPage,
+      limit: window.reviewsState.currentLimit,
+      ...(window.reviewsState.currentStatus && { status: window.reviewsState.currentStatus }),
+      ...(window.reviewsState.currentRating && { rating: window.reviewsState.currentRating }),
+      ...(window.reviewsState.currentSearch && { search: window.reviewsState.currentSearch })
+    });
+
+    const res = await fetch(`/api/admin/reviews?${params}`);
     const json = await res.json();
     const tbody = document.getElementById('reviews-table-body');
     
     if (!tbody) return;
 
     if (!json.success || !json.data || json.data.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">No reviews found.</td></tr>`;
-      
-      // Update cards to 0
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--admin-text-muted);padding:2rem;">No reviews found.</td></tr>`;
       document.getElementById('review-stat-overall').textContent = '0.0';
       document.getElementById('review-stat-total').textContent = '0';
       document.getElementById('review-stat-pending').textContent = '0';
+      updateReviewsPagination(0);
       return;
     }
 
     // Update Overview Cards
     if (json.stats) {
-      document.getElementById('review-stat-overall').textContent = json.stats.overallAverage || '0.0';
-      document.getElementById('review-stat-total').textContent = json.stats.totalReviews || '0';
-      document.getElementById('review-stat-pending').textContent = json.stats.pendingReviews || '0';
+      document.getElementById('review-stat-overall').textContent = json.stats.average_rating || '0.0';
+      document.getElementById('review-stat-total').textContent = json.stats.total_reviews || '0';
+      document.getElementById('review-stat-pending').textContent = json.stats.pending_reviews || '0';
     }
 
     // Render Table
@@ -4195,6 +4317,7 @@ async function loadReviews() {
 
       return `
         <tr>
+          <td><input type="checkbox" class="review-bulk-check" value="${r.id}"></td>
           <td><strong>${r.hotel_name || 'N/A'}</strong></td>
           <td>${r.customer_name || 'Anonymous'}</td>
           <td style="color:#f59e0b; font-size:1.1rem;">${ratingStars}</td>
@@ -4208,9 +4331,120 @@ async function loadReviews() {
       `;
     }).join('');
 
+    // Update pagination
+    if (json.pagination) {
+      updateReviewsPagination(json.pagination);
+    }
+
   } catch (err) {
     console.error(err);
     showToast('Failed to load reviews', 'error');
+  }
+}
+
+function updateReviewsPagination(pagination) {
+  let paginationHTML = '';
+  if (pagination && pagination.pages > 1) {
+    paginationHTML = `
+      <div style="margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap;">
+        ${window.reviewsState.currentPage > 1 ? `<button class="btn btn-secondary btn-sm" onclick="loadReviews(${window.reviewsState.currentPage - 1})">← Previous</button>` : ''}
+        <span style="color: var(--admin-text-muted); font-size: 0.9rem;">Page <strong>${window.reviewsState.currentPage}</strong> of <strong>${pagination.pages}</strong></span>
+        ${window.reviewsState.currentPage < pagination.pages ? `<button class="btn btn-secondary btn-sm" onclick="loadReviews(${window.reviewsState.currentPage + 1})">Next →</button>` : ''}
+      </div>
+    `;
+  }
+  document.getElementById('reviews-table-body').insertAdjacentHTML('afterend', paginationHTML);
+}
+
+function showReviewsFilters() {
+  const filterHTML = `
+    <div style="background: var(--admin-surface); padding: 16px; border-radius: 8px; margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <input type="text" id="review-search-input" placeholder="Search reviews..." style="padding: 8px 12px; border: 1px solid var(--admin-border); border-radius: 6px; width: 200px;" onkeyup="setTimeout(() => { window.reviewsState.currentSearch = this.value; loadReviews(1); }, 500)">
+      <select id="review-status-filter" style="padding: 8px 12px; border: 1px solid var(--admin-border); border-radius: 6px;" onchange="window.reviewsState.currentStatus = this.value; loadReviews(1);">
+        <option value="">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="hidden">Hidden</option>
+      </select>
+      <select id="review-rating-filter" style="padding: 8px 12px; border: 1px solid var(--admin-border); border-radius: 6px;" onchange="window.reviewsState.currentRating = this.value; loadReviews(1);">
+        <option value="">All Ratings</option>
+        <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+        <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+        <option value="3">⭐⭐⭐ (3 Stars)</option>
+        <option value="2">⭐⭐ (2 Stars)</option>
+        <option value="1">⭐ (1 Star)</option>
+      </select>
+      <button class="btn btn-secondary btn-sm" onclick="exportReviews()">📥 Export CSV</button>
+      <button class="btn btn-danger btn-sm" id="review-bulk-update-btn" style="display:none;" onclick="bulkUpdateReviewStatus()">Bulk Update</button>
+    </div>
+  `;
+  const table = document.querySelector('#reviews-table');
+  if (table && !document.getElementById('review-filters')) {
+    const filterDiv = document.createElement('div');
+    filterDiv.id = 'review-filters';
+    filterDiv.innerHTML = filterHTML;
+    table.parentNode.insertBefore(filterDiv, table);
+  }
+}
+
+async function exportReviews() {
+  const params = new URLSearchParams({
+    ...(window.reviewsState.currentStatus && { status: window.reviewsState.currentStatus }),
+    ...(window.reviewsState.currentRating && { rating: window.reviewsState.currentRating })
+  });
+
+  try {
+    const res = await fetch(`/api/admin/reviews/export/csv?${params}`);
+    if (res.ok) {
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `reviews-${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      showToast('Reviews exported successfully', 'success');
+    } else {
+      showToast('Failed to export reviews', 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('An error occurred', 'error');
+  }
+}
+
+async function bulkUpdateReviewStatus() {
+  const checked = document.querySelectorAll('.review-bulk-check:checked');
+  if (checked.length === 0) {
+    showToast('No reviews selected', 'warning');
+    return;
+  }
+
+  const status = prompt('Enter new status (pending/approved/hidden):');
+  if (!status || !['pending', 'approved', 'hidden'].includes(status)) {
+    showToast('Invalid status', 'error');
+    return;
+  }
+
+  const ids = Array.from(checked).map(c => parseInt(c.value));
+  try {
+    const res = await fetch('/api/admin/reviews/bulk-update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids, status })
+    });
+    const json = await res.json();
+    if (json.success) {
+      showToast(`${json.updatedCount} review(s) updated successfully`, 'success');
+      loadReviews(window.reviewsState.currentPage);
+    } else {
+      showToast(json.message || 'Failed to update', 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('An error occurred', 'error');
   }
 }
 
@@ -4298,20 +4532,37 @@ document.getElementById('review-panel-overlay')?.addEventListener('click', close
    MEDIA MANAGER SECTION
    ================================================================ */
 
-async function loadMedia() {
-  const folder = document.getElementById('media-folder-filter').value;
+// Media Pagination & Filter State
+window.mediaState = {
+  currentPage: 1,
+  currentLimit: 20,
+  currentFolder: 'all',
+  currentSearch: ''
+};
+
+async function loadMedia(page = 1) {
   const gallery = document.getElementById('media-gallery');
   
   if (!gallery) return;
 
+  window.mediaState.currentPage = page;
+
   try {
     gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--admin-text-muted);">Loading media...</div>';
     
-    const res = await fetch(`/api/admin/media?folder=${folder}`);
+    const params = new URLSearchParams({
+      page: window.mediaState.currentPage,
+      limit: window.mediaState.currentLimit,
+      ...(window.mediaState.currentFolder && window.mediaState.currentFolder !== 'all' && { folder: window.mediaState.currentFolder }),
+      ...(window.mediaState.currentSearch && { search: window.mediaState.currentSearch })
+    });
+
+    const res = await fetch(`/api/admin/media?${params}`);
     const json = await res.json();
     
     if (!json.success || !json.data || json.data.length === 0) {
       gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--admin-text-muted);">No media files found.</div>';
+      updateMediaPagination(0);
       return;
     }
 
@@ -4321,7 +4572,8 @@ async function loadMedia() {
       
       return `
         <div class="media-card" style="border: 1px solid var(--admin-border); border-radius: 8px; overflow: hidden; background: var(--admin-bg-hover); position: relative; display: flex; flex-direction: column;">
-          <div style="height: 120px; width: 100%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+          <div style="height: 120px; width: 100%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+            <input type="checkbox" class="media-bulk-check" value="${m.id}" style="position: absolute; top: 8px; left: 8px; cursor: pointer; z-index: 10;">
             ${m.mime_type?.startsWith('image/') 
               ? `<img src="${m.file_path}" alt="${m.original_name}" style="width: 100%; height: 100%; object-fit: cover;">`
               : `<i class="fa-solid fa-file" style="font-size: 2rem; color: #9ca3af;"></i>`
@@ -4343,15 +4595,72 @@ async function loadMedia() {
       `;
     }).join('');
 
+    // Update pagination
+    if (json.pagination) {
+      updateMediaPagination(json.pagination);
+    }
+
   } catch (err) {
     console.error(err);
     gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #ef4444;">Failed to load media.</div>';
   }
 }
 
+function updateMediaPagination(pagination) {
+  // Remove old pagination if exists
+  const oldPagination = document.querySelector('#media-gallery + div[style*="margin-top"]');
+  if (oldPagination) oldPagination.remove();
+
+  let paginationHTML = '';
+  if (pagination && pagination.pages > 1) {
+    paginationHTML = `
+      <div style="margin-top: 20px; display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap;">
+        ${window.mediaState.currentPage > 1 ? `<button class="btn btn-secondary btn-sm" onclick="loadMedia(${window.mediaState.currentPage - 1})">← Previous</button>` : ''}
+        <span style="color: var(--admin-text-muted); font-size: 0.9rem;">Page <strong>${window.mediaState.currentPage}</strong> of <strong>${pagination.pages}</strong></span>
+        ${window.mediaState.currentPage < pagination.pages ? `<button class="btn btn-secondary btn-sm" onclick="loadMedia(${window.mediaState.currentPage + 1})">Next →</button>` : ''}
+      </div>
+    `;
+    document.getElementById('media-gallery').insertAdjacentHTML('afterend', paginationHTML);
+  }
+}
+
+function showMediaFilters() {
+  const filterHTML = `
+    <div style="background: var(--admin-surface); padding: 16px; border-radius: 8px; margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+      <input type="text" id="media-search-input" placeholder="Search files..." style="padding: 8px 12px; border: 1px solid var(--admin-border); border-radius: 6px; width: 200px;" onkeyup="setTimeout(() => { window.mediaState.currentSearch = this.value; loadMedia(1); }, 500)">
+      <button class="btn btn-secondary btn-sm" onclick="showFolderModal()">📁 Create Folder</button>
+      <button class="btn btn-danger btn-sm" id="media-bulk-delete-btn" style="display:none;" onclick="bulkDeleteMedia()">Delete Selected</button>
+    </div>
+  `;
+  const panel = document.querySelector('#media-section .table-panel');
+  if (panel && !document.getElementById('media-filters')) {
+    const filterDiv = document.createElement('div');
+    filterDiv.id = 'media-filters';
+    filterDiv.innerHTML = filterHTML;
+    panel.insertBefore(filterDiv, panel.firstChild);
+  }
+}
+
 async function handleMediaUpload(event) {
   const files = event.target.files;
   if (!files || files.length === 0) return;
+
+  // Validate files
+  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf', 'application/msword'];
+  const maxSize = 10 * 1024 * 1024; // 10MB
+
+  for (let file of files) {
+    if (!validTypes.includes(file.type)) {
+      showToast(`❌ ${file.name}: Invalid file type. Only images, PDF, and DOC are allowed.`, 'error');
+      event.target.value = '';
+      return;
+    }
+    if (file.size > maxSize) {
+      showToast(`❌ ${file.name}: File too large (max 10MB).`, 'error');
+      event.target.value = '';
+      return;
+    }
+  }
 
   const folder = document.getElementById('media-folder-filter').value;
   const uploadFolder = folder === 'all' ? 'root' : folder;
@@ -4363,16 +4672,16 @@ async function handleMediaUpload(event) {
   formData.append('folder', uploadFolder);
 
   try {
-    showToast('Uploading files...', 'info');
+    showToast(`Uploading ${files.length} file(s)...`, 'info');
     
     const res = await fetch('/api/admin/media/upload', {
       method: 'POST',
-      body: formData // Note: Content-Type is NOT set manually so browser sets multipart boundary automatically
+      body: formData
     });
     
     const json = await res.json();
     if (json.success) {
-      showToast(`Successfully uploaded ${json.data.length} files.`, 'success');
+      showToast(`✅ Successfully uploaded ${json.data.length} file(s)`, 'success');
       loadMedia();
     } else {
       showToast(json.message || 'Upload failed', 'error');
@@ -4381,8 +4690,82 @@ async function handleMediaUpload(event) {
     console.error(err);
     showToast('An error occurred during upload', 'error');
   } finally {
-    // Reset file input
     event.target.value = '';
+  }
+}
+
+async function bulkDeleteMedia() {
+  const checked = document.querySelectorAll('.media-bulk-check:checked');
+  if (checked.length === 0) {
+    showToast('No files selected', 'warning');
+    return;
+  }
+  if (!confirm(`Delete ${checked.length} file(s)? This action cannot be undone.`)) return;
+  
+  const ids = Array.from(checked).map(c => parseInt(c.value));
+  try {
+    const res = await fetch('/api/admin/media/bulk-delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids })
+    });
+    const json = await res.json();
+    if (json.success) {
+      showToast(`${json.deletedCount} file(s) deleted successfully`, 'success');
+      loadMedia(window.mediaState.currentPage);
+    } else {
+      showToast(json.message || 'Failed to delete', 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('An error occurred', 'error');
+  }
+}
+
+function showFolderModal() {
+  const folderName = prompt('Enter folder name (e.g., hotels, products):');
+  if (!folderName || !folderName.trim()) return;
+  
+  const parentFolder = prompt('Enter parent folder (leave empty for root):');
+  createMediaFolder(folderName.trim(), parentFolder?.trim() || '');
+}
+
+async function createMediaFolder(folderName, parentFolder) {
+  try {
+    const res = await fetch('/api/admin/media/folder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        folder_name: folderName,
+        parent_folder: parentFolder || null
+      })
+    });
+    const json = await res.json();
+    if (json.success) {
+      showToast(`✅ Folder "${json.folder}" created successfully`, 'success');
+      // Reload folder filter dropdown
+      loadMediaFolders();
+    } else {
+      showToast(json.message || 'Failed to create folder', 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('An error occurred', 'error');
+  }
+}
+
+async function loadMediaFolders() {
+  try {
+    const res = await fetch('/api/admin/media/folders/list');
+    const json = await res.json();
+    if (json.success && json.data) {
+      const select = document.getElementById('media-folder-filter');
+      const currentValue = select.value;
+      select.innerHTML = json.data.map(f => `<option value="${f}">${f}</option>`).join('');
+      select.value = currentValue;
+    }
+  } catch (err) {
+    console.error('Failed to load folders', err);
   }
 }
 
