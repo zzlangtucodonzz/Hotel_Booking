@@ -13,6 +13,7 @@ import {
   deleteHotel,
   getFormDropdowns,
   upload,
+  getHotelRoomTypes,
 } from '../controllers/hotelController.js';
 
 const router = Router();
@@ -26,6 +27,9 @@ router.get('/', getAllHotels);
 
 // GET  /api/hotels/:id             → single hotel with images
 router.get('/:id', getHotelById);
+
+// GET  /api/hotels/:id/room-types  → room types and amenities for hotel
+router.get('/:id/room-types', getHotelRoomTypes);
 
 // POST /api/hotels                 → create hotel (multipart/form-data with image)
 router.post('/', upload.single('image'), createHotel);
