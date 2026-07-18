@@ -371,6 +371,14 @@
 
           <h3 style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-top: 0; margin-bottom: 24px; color: #0f172a;">1. Stay Details</h3>
           <div style="background: #fcf9f2; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 32px;">
+            <div style="margin-bottom: 16px;">
+              <label class="info-item-label">Room Type</label>
+              <select id="book-room-type" class="form-input-box" required>
+                <option value="" disabled selected>Loading room types...</option>
+              </select>
+              <div id="room-amenities-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+              </div>
+            </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
               <div><label class="info-item-label">Number of Rooms</label><input type="number" class="form-input-box" id="book-rooms" value="1" min="1" required></div>
               <div><label class="info-item-label">Number of Guests</label><input type="number" class="form-input-box" id="book-guests" value="2" min="1" required></div>
@@ -540,6 +548,81 @@
       if(sPrice) sPrice.textContent = `$${Math.round(parseFloat(price))}`;
 
       currentPricePerNight = price;
+
+      // Fetch Room Types dynamically
+      const roomTypeSelect = document.getElementById('book-room-type');
+      const amenitiesContainer = document.getElementById('room-amenities-container');
+      
+      console.log("Fetching room types for Property ID:", propertyId);
+      if (!propertyId) {
+          console.error("Missing Property ID for room types fetch!");
+          if (roomTypeSelect) roomTypeSelect.innerHTML = '<option value="" disabled>Error: No Property ID</option>';
+          return;
+      }
+
+      if (roomTypeSelect) {
+        roomTypeSelect.innerHTML = '<option value="" disabled selected>Loading room types...</option>';
+        if (amenitiesContainer) amenitiesContainer.innerHTML = '';
+        fetch(`/api/hotels/${propertyId}/room-types`)
+          .then(async res => {
+              if (!res.ok) {
+                  const errData = await res.json().catch(() => ({}));
+                  console.error("Backend Error:", errData);
+                  throw new Error(errData.details || 'Network response was not ok');
+              }
+              return res.json();
+          })
+          .then(data => {
+            if (data.success && data.data.length > 0) {
+              roomTypeSelect.innerHTML = '';
+              data.data.forEach((rt, idx) => {
+                const exactId = rt.RoomTypeID || rt.room_type_id || rt.id;
+                const exactName = rt.Name || rt.type_name || rt.name;
+                const exactPrice = rt.PricePerNight || rt.base_price || rt.price || 0;
+
+                const opt = document.createElement('option');
+                opt.value = exactId;
+                opt.dataset.price = exactPrice;
+                opt.dataset.name = exactName;
+                opt.dataset.amenities = rt.amenities_list || '[]';
+                opt.textContent = `${exactName} - $${Math.round(exactPrice)}/night`;
+                if (idx === 0) opt.selected = true; // Auto select first
+                roomTypeSelect.appendChild(opt);
+              });
+              // Trigger change for the first one
+              roomTypeSelect.dispatchEvent(new Event('change'));
+            } else {
+              roomTypeSelect.innerHTML = '<option value="" disabled>No room types available</option>';
+            }
+          })
+          .catch(err => {
+            console.error('Failed to load room types', err);
+            roomTypeSelect.innerHTML = '<option value="" disabled>Error loading</option>';
+          });
+
+        roomTypeSelect.onchange = (e) => {
+          const selectedOpt = e.target.options[e.target.selectedIndex];
+          if (!selectedOpt) return;
+          const newPrice = parseFloat(selectedOpt.dataset.price) || 0;
+          const newName = selectedOpt.dataset.name;
+          const amenities = JSON.parse(selectedOpt.dataset.amenities || '[]');
+
+          currentPricePerNight = newPrice;
+          if (sType) sType.textContent = newName;
+          if (sPrice) sPrice.textContent = `$${Math.round(newPrice)}`;
+
+          // Update amenities
+          if (amenitiesContainer) {
+            amenitiesContainer.innerHTML = amenities.map(a => 
+              `<span style="background: #e2e8f0; color: #475569; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
+                <i class="fas ${a.icon || 'fa-check'}"></i> ${a.name}
+              </span>`
+            ).join('');
+          }
+
+          if (typeof updatePriceSummary === 'function') updatePriceSummary();
+        };
+      }
 
       const bIn = document.getElementById('book-in-date');
       const bOut = document.getElementById('book-out-date');
@@ -853,7 +936,7 @@
 
           const payload = {
               propertyId: parseInt(localStorage.getItem('selectedPropertyId')) || 1, // Dynamic property ID
-              roomId: parseInt(localStorage.getItem('selectedRoomId')) || 1, // Dynamic room ID
+              room_type_id: parseInt(document.getElementById('book-room-type') ? document.getElementById('book-room-type').value : null) || null,
               guestEmail: emailVal,
               guest_name: nameVal,
               guest_phone: phoneVal,

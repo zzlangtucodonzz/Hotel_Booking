@@ -493,3 +493,41 @@ export const getFormDropdowns = async (_req, res) => {
     });
   }
 };
+
+/**
+ * GET /api/hotels/:id/room-types
+ * Returns all room types for a hotel, along with the hotel's amenities.
+ */
+export const getHotelRoomTypes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const sql = `
+      SELECT 
+          rt.*,
+          (
+              SELECT CONCAT('[', IFNULL(GROUP_CONCAT(JSON_OBJECT('name', a.name, 'icon', a.icon_class)), ''), ']')
+              FROM room_type_amenities rta
+              JOIN amenities a ON rta.amenity_id = a.id
+              WHERE rta.room_type_id = rt.RoomTypeID
+          ) as amenities_list
+      FROM roomtypes rt
+      WHERE rt.PropertyID = ? 
+    `;
+
+    const [results] = await pool.query(sql, [id]);
+    
+    console.log("Fetched Room Types:", results);
+
+    return res.status(200).json({
+      success: true,
+      data: results
+    });
+  } catch (error) {
+    console.error("❌ SQL ERROR FETCHING ROOM TYPES:", error.sqlMessage || error.message || error);
+    return res.status(500).json({
+      success: false,
+      message: 'Database error fetching room types',
+      details: error.sqlMessage || error.message
+    });
+  }
+};

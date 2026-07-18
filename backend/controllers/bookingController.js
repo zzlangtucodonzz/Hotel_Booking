@@ -273,9 +273,9 @@ export const createBooking = async (req, res) => {
   console.log("INCOMING BOOKING PAYLOAD:", req.body);
   const connection = await pool.getConnection();
   try {
-    const { propertyId, roomId, guestEmail, checkIn, checkOut, guests, status, notes, promo_code, payment_method, total_amount, guest_name, guest_phone } = req.body;
+    const { propertyId, room_type_id, guestEmail, checkIn, checkOut, guests, status, notes, promo_code, payment_method, total_amount, guest_name, guest_phone } = req.body;
 
-    if (!propertyId || !roomId || !guestEmail || !checkIn || !checkOut) {
+    if (!propertyId || !room_type_id || !guestEmail || !checkIn || !checkOut) {
       return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
 
@@ -294,10 +294,23 @@ export const createBooking = async (req, res) => {
       }
     }
 
+    // 3.5 FIND AVAILABLE PHYSICAL ROOM
+    const [availableRooms] = await connection.query(
+      `SELECT RoomID FROM Rooms WHERE RoomTypeID = ? AND Status = 'Available' LIMIT 1`,
+      [room_type_id]
+    );
+
+    if (availableRooms.length === 0) {
+      await connection.rollback();
+      return res.status(400).json({ success: false, message: 'No rooms available for this type.' });
+    }
+    
+    const roomId = availableRooms[0].RoomID;
+
     // 4. GET PRICE
     const [roomTypeRows] = await connection.query(
-      `SELECT rt.PricePerNight FROM RoomTypes rt JOIN Rooms r ON rt.RoomTypeID = r.RoomTypeID WHERE r.RoomID = ?`,
-      [roomId]
+      `SELECT PricePerNight FROM RoomTypes WHERE RoomTypeID = ?`,
+      [room_type_id]
     );
     
     if (roomTypeRows.length === 0) {
