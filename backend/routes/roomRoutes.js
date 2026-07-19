@@ -7,14 +7,15 @@ import {
     updateRoom,
     deleteRoom
 } from '../controllers/roomController.js';
+import { verifyToken, verifyAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
 router.get('/', getRoomsByType);
 router.get('/hotel/:hotelId', getRoomsByHotel);
-router.post('/', createRoom);
-router.post('/bulk', bulkCreateRooms);
-router.put('/:id', updateRoom);
-router.delete('/:id', deleteRoom);
+router.post('/', verifyToken, verifyAdmin, createRoom);
+router.post('/bulk', verifyToken, verifyAdmin, bulkCreateRooms);
+router.put('/:id', verifyToken, verifyAdmin, updateRoom);
+router.delete('/:id', verifyToken, verifyAdmin, deleteRoom);
 
 export default router;

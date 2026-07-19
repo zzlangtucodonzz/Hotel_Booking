@@ -15,6 +15,7 @@ import {
   upload,
   getHotelRoomTypes,
 } from '../controllers/hotelController.js';
+import { verifyToken, verifyAdmin } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
@@ -32,12 +33,12 @@ router.get('/:id', getHotelById);
 router.get('/:id/room-types', getHotelRoomTypes);
 
 // POST /api/hotels                 → create hotel (multipart/form-data with image)
-router.post('/', upload.single('image'), createHotel);
+router.post('/', verifyToken, verifyAdmin, upload.single('image'), createHotel);
 
 // PUT  /api/hotels/:id             → update hotel (multipart/form-data with optional image)
-router.put('/:id', upload.single('image'), updateHotel);
+router.put('/:id', verifyToken, verifyAdmin, upload.single('image'), updateHotel);
 
 // DELETE /api/hotels/:id           → delete hotel
-router.delete('/:id', deleteHotel);
+router.delete('/:id', verifyToken, verifyAdmin, deleteHotel);
 
 export default router;
