@@ -526,5 +526,43 @@ document.addEventListener('DOMContentLoaded', () => {
         block: "start"
       });
     });
+
+  });
+
+  const collectionMap = {
+    "collection-resort": ["Resort"],
+    "collection-city": ["Hotel", "Villa"],
+    "collection-homestay": ["Homestay"]
+  };
+
+  document.querySelectorAll(".curated-card").forEach(card => {
+    card.addEventListener("click", () => {
+
+      const types = collectionMap[card.id];
+      if (!types) return;
+
+      if (typeof switchView === "function") {
+        switchView("discover");
+      }
+
+      document.querySelectorAll(".type-filter").forEach(cb => {
+        cb.checked = false;
+      });
+
+      types.forEach(type => {
+        const checkbox = document.querySelector(`.type-filter[value="${type}"]`);
+        if (checkbox) checkbox.checked = true;
+      });
+
+      const input = document.getElementById("discover-dest");
+      if (input) input.value = "";
+
+      applyFiltersAndRender();
+
+      document.getElementById("discover")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
   });
 });
