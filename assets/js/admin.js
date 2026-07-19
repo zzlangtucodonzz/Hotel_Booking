@@ -3173,7 +3173,7 @@ function renderCalendarGrid(year, month, daysInMonth) {
               const e = new Date(b.check_out_date); e.setHours(0,0,0,0);
               return cellDateObj >= s && cellDateObj < e; 
             });
-            if (booking) { cellStatus = 'booked'; tooltip = `Booked: ${booking.customer_name}`; }
+            if (booking) { cellStatus = 'booked'; tooltip = `Booked${booking.customer_name ? ': ' + booking.customer_name : ''}`; }
           }
 
           // 3. Check Price Overrides (Only matters if not blocked)
@@ -3195,7 +3195,7 @@ function renderCalendarGrid(year, month, daysInMonth) {
              cellContent = '<i class="fa-solid fa-ban"></i>';
           }
 
-          html += `<div class="gantt-cell status-cell cell-${cellStatus} ${isWeekend ? 'weekend' : ''} ${isOverride && cellStatus === 'available' ? 'has-override' : ''}" title="${tooltip}" style="font-size: 11px; display: flex; align-items: center; justify-content: center; ${isOverride && cellStatus === 'available' ? 'background: #dcfce7; color: #166534; font-weight: bold; border-color: #86efac;' : ''}">
+          html += `<div class="gantt-cell status-cell cell-${cellStatus} ${isWeekend ? 'weekend' : ''} ${isOverride && cellStatus === 'available' ? 'has-override' : ''}" title="${tooltip}" style="font-size: 11px; display: flex; align-items: center; justify-content: center; ${isOverride && cellStatus === 'available' ? 'background: #dcfce7; color: #166534; font-weight: bold; border-color: #86efac;' : ''}" data-room-id="${room.id}" data-date="${cellDateStr}">
                      ${cellContent}
                    </div>`;
         }
@@ -3205,6 +3205,41 @@ function renderCalendarGrid(year, month, daysInMonth) {
 
   html += `</div>`;
   container.innerHTML = html;
+
+  // Map bookings visually onto the grid
+  currentInventoryData.forEach(rt => {
+    if (rt.rooms && rt.rooms.length > 0) {
+      rt.rooms.forEach(room => {
+        if (room.bookings && room.bookings.length > 0) {
+          room.bookings.forEach(booking => {
+            let currentDate = new Date(booking.check_in_date);
+            let endDate = new Date(booking.check_out_date);
+
+            while (currentDate < endDate) {
+                let y = currentDate.getFullYear();
+                let m = String(currentDate.getMonth() + 1).padStart(2, '0');
+                let d = String(currentDate.getDate()).padStart(2, '0');
+                let dateString = `${y}-${m}-${d}`; 
+
+                let cell = document.querySelector(`div[data-room-id="${booking.room_id}"][data-date="${dateString}"]`);
+
+                if (cell) {
+                    cell.style.backgroundColor = '#f8d7da'; 
+                    cell.style.color = '#721c24'; 
+                    cell.style.borderColor = '#f5c6cb';
+                    cell.style.fontWeight = 'bold';
+                    cell.style.pointerEvents = 'none'; 
+                    cell.innerHTML = 'Booked';
+                    if (booking.customer_name) cell.title = `Booked: ${booking.customer_name}`;
+                }
+
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+          });
+        }
+      });
+    }
+  });
 }
 
 window.toggleGanttGroup = function(groupId) {

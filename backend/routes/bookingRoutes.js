@@ -6,13 +6,15 @@ import {
   updateBookingStatus,
   createBooking,
   syncPaymentStatus,
-  verifyPayment
+  verifyPayment,
+  getUserRewardHistory
 } from '../controllers/bookingController.js';
 import { verifyToken, verifyAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
 router.get('/guest', getGuestBookings);
+router.get('/users/:userId/reward-history', verifyToken, getUserRewardHistory);
 router.get('/', verifyToken, getBookings);
 router.get('/:id', verifyToken, getBookingDetails);
 router.post('/', createBooking);

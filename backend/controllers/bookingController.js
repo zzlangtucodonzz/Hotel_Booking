@@ -407,6 +407,21 @@ export const createBooking = async (req, res) => {
       }
     }
 
+    // 7.5 UPDATE REWARD POINTS (if logged in user)
+    if (userId) {
+      const earnedPoints = Math.round(finalTotalAmount * 0.10);
+      try {
+        await connection.query(
+          `INSERT INTO userrewards (UserID, PointsBalance) VALUES (?, ?) 
+           ON DUPLICATE KEY UPDATE PointsBalance = PointsBalance + ?`,
+          [userId, earnedPoints, earnedPoints]
+        );
+      } catch (rewardErr) {
+        console.error("❌ Failed to update user rewards:", rewardErr);
+        // Do not crash the booking if rewards fail
+      }
+    }
+
     // 8. COMMIT
     await connection.commit();
 
@@ -503,4 +518,21 @@ export const verifyPayment = async (req, res) => {
         console.error("verifyPayment Error:", error);
         return res.status(500).json({ success: false, error: error.message });
     }
+};
+
+
+export const getUserRewardHistory = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const sql = `SELECT id AS booking_code, check_in_date, check_out_date, total_amount, created_at, ROUND(total_amount * 0.10) AS points_earned FROM bookings WHERE UserID = ? AND LOWER(booking_status) != 'cancelled' ORDER BY created_at DESC`;
+    const [results] = await pool.query(sql, [userId]);
+    
+    // Calculate the true total based on the exact history
+    const totalPoints = results.reduce((sum, item) => sum + (Number(item.points_earned) || 0), 0);
+    
+    res.json({ success: true, totalPoints: totalPoints, history: results });
+  } catch (err) {
+    console.error('Error fetching reward history:', err);
+    res.status(500).json({ success: false, message: 'Database error' });
+  }
 };

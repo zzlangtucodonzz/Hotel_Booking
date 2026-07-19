@@ -350,8 +350,40 @@
           <div class="rewards-banner-card">
             <span class="rewards-tier" style="color: #fbbf24; font-weight: 700;">Gold Explorer</span>
             <p style="margin: 0 0 8px 0; color: #94a3b8; text-transform: uppercase; font-weight: 600; font-size: 0.85rem;">Available Points</p>
-            <h2 class="rewards-points" style="font-size: 2.5rem; margin: 0; color: #0f172a;"><span id="dash-display-points">0</span> <span>Pts</span></h2>
-            <p style="margin: 24px 0 0 0; font-size: 0.95rem; color: #cbd5e1;">Earn +100 points upon successful completion of any booking!</p>
+            <h2 id="total-available-points" class="rewards-points" style="font-size: 2.5rem; margin: 0; color: #0f172a;"><span id="dash-display-points">0</span> <span>Pts</span></h2>
+            <!-- Replace the old +100 points text with this exactly -->
+<p style="color: #6c757d; font-size: 0.95rem; margin-top: 10px;">
+    <i class="fas fa-gift"></i> Earn reward points equal to <strong>10%</strong> of the total value of every successful booking!
+</p>
+
+<div style="margin-top: 20px; padding: 15px; background: #fff8e1; border-left: 4px solid #ffc107; border-radius: 6px;">
+    <h5 style="color: #d32f2f; margin-bottom: 8px; font-weight: bold; font-size: 1rem;">
+        ✈️ Exclusive Milestone Reward
+    </h5>
+    <p style="margin: 0; color: #555; font-size: 0.9rem; line-height: 1.5;">
+        When you reach <strong>50,000 points (Pts)</strong>, please contact Customer Support to redeem a <span style="font-weight: bold; color: #d32f2f;">Free Vacation Voucher to South Korea</span>!
+    </p>
+</div>
+          </div>
+          <div class="rewards-history-container" style="margin-top: 40px;">
+              <h4 style="font-weight: bold; margin-bottom: 15px; color: #333;">Points History</h4>
+              <div class="table-responsive" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                  <table class="table table-hover" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
+                      <thead style="background-color: #f8f9fa;">
+                          <tr>
+                              <th style="border-top: none; font-weight: 600; color: #555; padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Date</th>
+                              <th style="border-top: none; font-weight: 600; color: #555; padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Booking Code</th>
+                              <th style="border-top: none; font-weight: 600; color: #555; padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6;">Booking Value</th>
+                              <th style="border-top: none; font-weight: 600; text-align: right; color: #28a745; padding: 12px; border-bottom: 2px solid #dee2e6;">Points Earned</th>
+                          </tr>
+                      </thead>
+                      <tbody id="reward-history-body">
+                          <tr>
+                              <td colspan="4" class="text-center text-muted" style="padding: 20px; text-align: center;">Loading history...</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
           </div>
         </div>
       </main>
@@ -772,6 +804,7 @@
           if (dLink) dLink.classList.add('active');
 
           if (targetSectionId === 'section-bookings' && window.loadMyBookings) window.loadMyBookings();
+          if (targetSectionId === 'section-rewards' && window.loadRewardHistory && user) window.loadRewardHistory(user.UserID || user.id || user.userId);
 
           if (targetSectionId === 'section-bookings') {
             const navBookings = document.querySelector('a[href="#bookings"].spa-link');
@@ -1246,6 +1279,44 @@
           window.history.replaceState({}, document.title, window.location.pathname + '#bookings');
       }
   });
+
+  window.loadRewardHistory = async function(userId) {
+      const tbody = document.getElementById('reward-history-body');
+      if (!tbody) return;
+
+      try {
+          const response = await fetch(`/api/bookings/users/${userId}/reward-history`, {
+              headers: {
+                  'Authorization': `Bearer ${localStorage.getItem('token')}`
+              }
+          });
+          const data = await response.json();
+
+          if (data.success) {
+              const safeTotalElement = document.getElementById('total-available-points') || document.querySelector('.rewards-points');
+              if (safeTotalElement && data.totalPoints !== undefined) {
+                  // Keep inner span for compatibility but update number safely
+                  safeTotalElement.innerHTML = `<span id="dash-display-points">${data.totalPoints.toLocaleString('en-US')}</span> <span>Pts</span>`;
+              }
+
+              if (data.history && data.history.length > 0) {
+                  tbody.innerHTML = data.history.map(item => `
+                      <tr>
+                          <td style="vertical-align: middle; color: #666; padding: 12px; border-bottom: 1px solid #eee;">${new Date(item.created_at).toLocaleDateString()}</td>
+                          <td style="vertical-align: middle; font-weight: 500; padding: 12px; border-bottom: 1px solid #eee;">#${item.booking_code}</td>
+                          <td style="vertical-align: middle; color: #666; padding: 12px; border-bottom: 1px solid #eee;">$${item.total_amount}</td>
+                          <td style="vertical-align: middle; text-align: right; font-weight: bold; color: #28a745; padding: 12px; border-bottom: 1px solid #eee;">+${item.points_earned} Pts</td>
+                      </tr>
+                  `).join('');
+              } else {
+                  tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted" style="padding: 20px; text-align: center;">No point transactions found yet. Book a stay to earn points!</td></tr>';
+              }
+          }
+      } catch (error) {
+          console.error("Error fetching reward history:", error);
+          tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger" style="padding: 20px; text-align: center;">Failed to load history.</td></tr>';
+      }
+  };
   </script>
 </body>
 </html>
