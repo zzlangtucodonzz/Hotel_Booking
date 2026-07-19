@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,92 +14,413 @@
     /* ==========================================
        1. CSS LAYOUT TRANG & ĐỒNG BỘ MÀU NỀN
        ========================================== */
-    body, .view-section { background-color: #fcf9f2 !important; }
-    .site-header { background-color: #fcf9f2 !important; }
+    body,
+    .view-section {
+      background-color: #fcf9f2 !important;
+    }
 
-    .view-section { display: none !important; }
-    .view-section.active { display: block !important; }
-    .dashboard-section { display: none !important; }
-    .dashboard-section.active { display: block !important; }
-    .dashboard-view-container { max-width: 1200px; margin: 40px auto; display: flex; gap: 40px; padding: 0 20px; }
-    .dash-sidebar { width: 260px; flex-shrink: 0; background: #fcf9f2; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; height: fit-content; }
-    .dash-sidebar h2 { margin-top: 0; font-size: 1.25rem; margin-bottom: 24px; color: #0f172a; }
-    .dash-nav { display: flex; flex-direction: column; gap: 8px; }
-    .dash-nav-link { padding: 12px 16px; border-radius: 8px; color: #475569; text-decoration: none; font-weight: 600; cursor: pointer; transition: all 0.2s; display: block; }
-    .dash-nav-link:hover { background: #fcf9f2; }
-    .dash-nav-link.active { background: #0f172a; color: #fcf9f2; }
-    .dash-content { flex-grow: 1; background: #fcf9f2; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px; }
-    
+    .site-header {
+      background-color: #fcf9f2 !important;
+    }
+
+    .view-section {
+      display: none !important;
+    }
+
+    .view-section.active {
+      display: block !important;
+    }
+
+    .dashboard-section {
+      display: none !important;
+    }
+
+    .dashboard-section.active {
+      display: block !important;
+    }
+
+    .dashboard-view-container {
+      max-width: 1200px;
+      margin: 40px auto;
+      display: flex;
+      gap: 40px;
+      padding: 0 20px;
+    }
+
+    .dash-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: #fcf9f2;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      height: fit-content;
+    }
+
+    .dash-sidebar h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      margin-bottom: 24px;
+      color: #0f172a;
+    }
+
+    .dash-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .dash-nav-link {
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: #475569;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: block;
+    }
+
+    .dash-nav-link:hover {
+      background: #fcf9f2;
+    }
+
+    .dash-nav-link.active {
+      background: #0f172a;
+      color: #fcf9f2;
+    }
+
+    .dash-content {
+      flex-grow: 1;
+      background: #fcf9f2;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 32px;
+    }
+
     /* ==========================================
        2. CSS HEADER & LOGOUT TRỰC TIẾP
        ========================================== */
-    .auth-user-block { display: flex; align-items: center; gap: 12px; }
-    .user-greeting-box { background: #fcf9f2; padding: 8px 16px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 600; color: #0f172a; }
-    .btn-direct-logout { background: #dc2626; color: #fcf9f2; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; font-family: inherit; }
-    .btn-direct-logout:hover { opacity: 0.8; }
-    
+    .auth-user-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-greeting-box {
+      background: #fcf9f2;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .btn-direct-logout {
+      background: #dc2626;
+      color: #fcf9f2;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-direct-logout:hover {
+      opacity: 0.8;
+    }
+
     /* ==========================================
        3. CSS CHỨC NĂNG TÌM & ĐẶT PHÒNG
        ========================================== */
-    .discover-layout { max-width: 1200px; margin: 40px auto; display: flex; gap: 40px; padding: 0 20px; }
-    .sidebar-filters { width: 260px; flex-shrink: 0; background: #fcf9f2; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; height: fit-content; position: sticky; top: 100px; }
-    .filter-group { margin-bottom: 24px; }
-    .filter-title { font-weight: 700; margin-bottom: 16px; font-size: 1.05rem; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
-    .filter-label { display: flex; align-items: center; margin-bottom: 12px; font-size: 0.95rem; color: #475569; cursor: pointer; font-weight: 500; }
-    .filter-label input { margin-right: 10px; cursor: pointer; width: 16px; height: 16px; }
-    .top-filter-bar { display: flex; justify-content: space-between; align-items: center; background: #fcf9f2; padding: 16px 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 24px; }
-    .chip-filter { background: #fcf9f2; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 8px;}
-    .chip-filter:hover { background: #e2e8f0; }
+    .discover-layout {
+      max-width: 1200px;
+      margin: 40px auto;
+      display: flex;
+      gap: 40px;
+      padding: 0 20px;
+    }
 
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.85); display: none; justify-content: center; align-items: flex-start; z-index: 99999 !important; overflow-y: auto; padding: 40px 20px; }
-    .modal-overlay.active { display: flex; }
-    .booking-modal { background: #fcf9f2; width: 100%; max-width: 1100px; border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.3); margin: auto; }
-    .modal-header { background: #0f172a; color: #fcf9f2; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; }
-    .modal-body { padding: 32px; display: flex; gap: 40px; }
-    .summary-section { width: 360px; background: #fcf9f2; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; height: fit-content; position: sticky; top: 20px; }
-    .payment-card-opt { display: flex; align-items: flex-start; padding: 16px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; margin-bottom: 12px; background: #fcf9f2; transition: all 0.2s; }
-    .payment-card-opt.active { border-color: #0f172a; background: #fcf9f2; border-width: 2px; }
-    .payment-card-opt input { margin-right: 12px; margin-top: 4px; transform: scale(1.2); cursor: pointer;}
-    .bank-info-box { background: #fcf9f2; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; display: none; margin-bottom: 24px; }
-    .booking-tier-banner { padding: 16px; border-radius: 8px; margin-bottom: 24px; border: 1px solid #e2e8f0; }
-    .success-modal { background: #fcf9f2; width: 100%; max-width: 500px; border-radius: 12px; padding: 40px; text-align: center; margin: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .sidebar-filters {
+      width: 260px;
+      flex-shrink: 0;
+      background: #fcf9f2;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
 
-    select:disabled { background-color: #e2e8f0 !important; color: #94a3b8 !important; cursor: not-allowed !important; border-color: #cbd5e1 !important; }
-    .profile-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .info-item-label { display: block; font-weight: 600; margin-bottom: 8px; color: #475569; font-size: 0.95rem; }
-    .form-input-box { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 1rem; box-sizing: border-box; transition: border-color 0.2s; }
-    .form-input-box:focus { outline: none; border-color: #0f172a; }
-    .btn-manage { padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .btn-manage:hover { opacity: 0.9; }
+    .filter-group {
+      margin-bottom: 24px;
+    }
+
+    .filter-title {
+      font-weight: 700;
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+      color: #0f172a;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    .filter-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      color: #475569;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .filter-label input {
+      margin-right: 10px;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+
+    .top-filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fcf9f2;
+      padding: 16px 24px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 24px;
+    }
+
+    .chip-filter {
+      background: #fcf9f2;
+      border: 1px solid #cbd5e1;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip-filter:hover {
+      background: #e2e8f0;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      display: none;
+      justify-content: center;
+      align-items: flex-start;
+      z-index: 99999 !important;
+      overflow-y: auto;
+      padding: 40px 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .booking-modal {
+      background: #fcf9f2;
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      margin: auto;
+    }
+
+    .modal-header {
+      background: #0f172a;
+      color: #fcf9f2;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 32px;
+      display: flex;
+      gap: 40px;
+    }
+
+    .summary-section {
+      width: 360px;
+      background: #fcf9f2;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+
+    .payment-card-opt {
+      display: flex;
+      align-items: flex-start;
+      padding: 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      background: #fcf9f2;
+      transition: all 0.2s;
+    }
+
+    .payment-card-opt.active {
+      border-color: #0f172a;
+      background: #fcf9f2;
+      border-width: 2px;
+    }
+
+    .payment-card-opt input {
+      margin-right: 12px;
+      margin-top: 4px;
+      transform: scale(1.2);
+      cursor: pointer;
+    }
+
+    .bank-info-box {
+      background: #fcf9f2;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 16px;
+      display: none;
+      margin-bottom: 24px;
+    }
+
+    .booking-tier-banner {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .success-modal {
+      background: #fcf9f2;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      margin: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    select:disabled {
+      background-color: #e2e8f0 !important;
+      color: #94a3b8 !important;
+      cursor: not-allowed !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    .profile-form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .info-item-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #475569;
+      font-size: 0.95rem;
+    }
+
+    .form-input-box {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 1rem;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+
+    .form-input-box:focus {
+      outline: none;
+      border-color: #0f172a;
+    }
+
+    .btn-manage {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-manage:hover {
+      opacity: 0.9;
+    }
 
     @media (max-width: 768px) {
-        .profile-form-grid { grid-template-columns: 1fr; }
-        .dashboard-view-container { flex-direction: column; }
-        .dash-sidebar { width: 100%; }
-        .modal-body { flex-direction: column; }
-        .summary-section { width: 100%; }
+      .profile-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-view-container {
+        flex-direction: column;
+      }
+
+      .dash-sidebar {
+        width: 100%;
+      }
+
+      .modal-body {
+        flex-direction: column;
+      }
+
+      .summary-section {
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
   <header class="site-header" id="site-header">
     <div class="container">
       <div class="header-top">
-        <a href="#home" class="logo spa-link" onclick="switchView('home')" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px; color: #0f172a;"><circle cx="14" cy="14" r="12"/><path d="M6 14c0-6 4-10 8-10s8 4 8 10-4 10-8 10-8-4-8-10z"/><line x1="2" y1="14" x2="26" y2="14"/></svg>
+        <a href="#home" class="logo spa-link" onclick="switchView('home')"
+          style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+          <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" style="width: 28px; height: 28px; color: #0f172a;">
+            <circle cx="14" cy="14" r="12" />
+            <path d="M6 14c0-6 4-10 8-10s8 4 8 10-4 10-8 10-8-4-8-10z" />
+            <line x1="2" y1="14" x2="26" y2="14" />
+          </svg>
           <span style="font-weight: 800; font-size: 1.5rem; color: #0f172a;">Wanderly</span>
         </a>
 
         <div class="header-utils">
           <div style="display: flex; gap: 20px; align-items: center;">
-              <a href="#support" style="text-decoration: none; color: inherit; font-weight: 600; display: flex; align-items: center; gap: 6px;">
-                  🎧 <span class="hide-mobile">Support</span>
-              </a>
+            <a href="#support"
+              style="text-decoration: none; color: inherit; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+              🎧 <span class="hide-mobile">Support</span>
+            </a>
           </div>
 
           <div class="auth-guest-block" id="auth-guest-block">
             <a href="register.html" class="btn-outline-amber" id="register-btn">Register</a>
-            <a href="login.html" class="btn-outline-amber" id="signin-btn" style="background: #0f172a; color: #fcf9f2; border-color: #0f172a;">Sign In</a>
+            <a href="login.html" class="btn-outline-amber" id="signin-btn"
+              style="background: #0f172a; color: #fcf9f2; border-color: #0f172a;">Sign In</a>
           </div>
 
           <div class="auth-user-block" id="auth-user-block" style="display: none;">
@@ -120,11 +442,13 @@
 
   <div id="home-view" class="view-section active">
     <section class="hero-section" id="hero-section">
-      <div class="hero-bg"><img src="assets/images/hero-landscape.png" alt="Scenic travel destination" loading="eager"></div>
+      <div class="hero-bg"><img src="assets/images/hero-landscape.png" alt="Scenic travel destination" loading="eager">
+      </div>
       <div class="container">
         <div class="hero-content animate-in">
           <h1 class="h1-hero">Discover Vietnam.<br>Stay with soul.</h1>
-          <p class="subtitle">From misty highlands to sun-kissed coastlines — handpicked stays and curated experiences across the heart of Vietnam.</p>
+          <p class="subtitle">From misty highlands to sun-kissed coastlines — handpicked stays and curated experiences
+            across the heart of Vietnam.</p>
         </div>
 
         <div class="search-container animate-in">
@@ -135,11 +459,13 @@
             </div>
             <div class="search-field">
               <label for="search-checkin">Check-in</label>
-              <input type="date" id="search-checkin" style="border: none; outline: none; font-family: inherit; font-size: 1rem; width: 100%;">
+              <input type="date" id="search-checkin"
+                style="border: none; outline: none; font-family: inherit; font-size: 1rem; width: 100%;">
             </div>
             <div class="search-field">
               <label for="search-checkout">Check-out</label>
-              <input type="date" id="search-checkout" style="border: none; outline: none; font-family: inherit; font-size: 1rem; width: 100%;">
+              <input type="date" id="search-checkout"
+                style="border: none; outline: none; font-family: inherit; font-size: 1rem; width: 100%;">
             </div>
             <button type="submit" class="btn-discover" id="btn-discover">Discover</button>
           </form>
@@ -159,7 +485,8 @@
         </div>
         <div class="curated-grid animate-in">
           <div class="curated-card" id="collection-secluded">
-            <img src="assets/images/secluded-getaway.png" alt="Rice terraces and homestay in Sapa highlands" loading="lazy">
+            <img src="assets/images/secluded-getaway.png" alt="Rice terraces and homestay in Sapa highlands"
+              loading="lazy">
             <div class="curated-overlay">
               <h3>Highland Hideaways</h3>
               <p>Mist, mountains & serenity — 196 handpicked retreats</p>
@@ -174,7 +501,8 @@
             </div>
           </div>
           <div class="curated-card" id="collection-mountain">
-            <img src="assets/images/mountain-retreat.png" alt="Winding mountain road through Ha Giang karst peaks" loading="lazy">
+            <img src="assets/images/mountain-retreat.png" alt="Winding mountain road through Ha Giang karst peaks"
+              loading="lazy">
             <div class="curated-overlay">
               <h3>Mountain Escapes</h3>
               <p>Peaks, passes & panoramas — 142 lodges</p>
@@ -192,26 +520,29 @@
         </div>
         <div class="destinations-grid animate-in">
           <div class="destination-card" id="dest-hoian">
-            <img src="assets/images/hoian-destination.png" alt="Hoi An ancient town with lanterns at night" loading="lazy">
+            <img src="assets/images/hoian-destination.png" alt="Hoi An ancient town with lanterns at night"
+              loading="lazy">
             <div class="destination-info">
-              <h3>Hoi An, Viet Nam</h3>
-              <p>Lantern-lit streets, riverside tailors & ancient charm</p>
+              <h3>Ha Noi, Viet Nam</h3>
+              <p>Explore the Old Quarter, Hoàn Kiếm Lake, rich culture, and authentic street food.</p>
             </div>
             <span class="destination-badge">Trending</span>
           </div>
           <div class="destination-card" id="dest-danang">
-            <img src="assets/images/danang-destination.png" alt="Da Nang beach with Dragon Bridge at sunset" loading="lazy">
+            <img src="assets/images/danang-destination.png" alt="Da Nang beach with Dragon Bridge at sunset"
+              loading="lazy">
             <div class="destination-info">
               <h3>Da Nang, Viet Nam</h3>
-              <p>Golden beaches, marble mountains & coastal energy</p>
+              <p>Relax on beautiful beaches, visit the Marble Mountains, and experience modern coastal living.</p>
             </div>
             <span class="destination-badge">Popular</span>
           </div>
           <div class="destination-card" id="dest-nhatrang">
-            <img src="assets/images/nhatrang-destination.png" alt="Nha Trang crystal clear bay with islands" loading="lazy">
+            <img src="assets/images/nhatrang-destination.png" alt="Nha Trang crystal clear bay with islands"
+              loading="lazy">
             <div class="destination-info">
-              <h3>Nha Trang, Viet Nam</h3>
-              <p>Island hopping, seafood feasts & turquoise waters</p>
+              <h3>Ho Chi Minh, Viet Nam</h3>
+              <p>Experience exciting nightlife, local markets, iconic landmarks, and dynamic urban culture.</p>
             </div>
             <span class="destination-badge">Coastal Gem</span>
           </div>
@@ -268,9 +599,11 @@
         <div class="loyalty-banner animate-in">
           <div class="loyalty-content">
             <h2>Join Wanderly Rewards</h2>
-            <p>Unlock instant savings, free upgrades, and exclusive access to our finest curated stays. Members save an average of 15% on every booking.</p>
+            <p>Unlock instant savings, free upgrades, and exclusive access to our finest curated stays. Members save an
+              average of 15% on every booking.</p>
           </div>
-          <button class="btn-loyalty" id="btn-join-rewards" onclick="switchView('rewards')">Start Earning — It's Free</button>
+          <button class="btn-loyalty" id="btn-join-rewards" onclick="switchView('rewards')">Start Earning — It's
+            Free</button>
         </div>
       </div>
     </section>
@@ -281,7 +614,8 @@
       <aside class="sidebar-filters">
         <div class="filter-group">
           <div class="filter-title">Search Property</div>
-          <input type="text" id="discover-dest" placeholder="Hotel name..." class="form-input-box" style="margin-bottom: 12px;">
+          <input type="text" id="discover-dest" placeholder="Hotel name..." class="form-input-box"
+            style="margin-bottom: 12px;">
         </div>
         <div class="filter-group">
           <div class="filter-title">Price per night</div>
@@ -297,16 +631,20 @@
         </div>
       </aside>
       <main style="flex-grow: 1;">
-        <h2 style="font-size: 1.75rem; margin-top: 0; margin-bottom: 16px; font-weight: 800; color: #0f172a;">All Available Properties</h2>
-        
+        <h2 style="font-size: 1.75rem; margin-top: 0; margin-bottom: 16px; font-weight: 800; color: #0f172a;">All
+          Available Properties</h2>
+
         <div class="top-filter-bar">
           <div class="quick-filters" style="display: flex; gap: 12px;">
-            <label class="chip-filter"><input type="checkbox" id="filter-free-cancel" style="margin-right: 6px; cursor: pointer;"> Free Cancellation</label>
-            <label class="chip-filter"><input type="checkbox" id="filter-breakfast" style="margin-right: 6px; cursor: pointer;"> Breakfast Included</label>
+            <label class="chip-filter"><input type="checkbox" id="filter-free-cancel"
+                style="margin-right: 6px; cursor: pointer;"> Free Cancellation</label>
+            <label class="chip-filter"><input type="checkbox" id="filter-breakfast"
+                style="margin-right: 6px; cursor: pointer;"> Breakfast Included</label>
           </div>
           <div style="display: flex; align-items: center; gap: 12px; font-weight: 600; color: #0f172a;">
             <label>Sort by:</label>
-            <select id="sort-select" class="form-input-box" style="padding: 8px 12px; width: auto; font-weight: 600; cursor: pointer;">
+            <select id="sort-select" class="form-input-box"
+              style="padding: 8px 12px; width: auto; font-weight: 600; cursor: pointer;">
               <option value="recommended">Recommendations</option>
               <option value="price-asc">Price: Low to High</option>
               <option value="price-desc">Price: High to Low</option>
@@ -314,7 +652,7 @@
           </div>
         </div>
         <div id="hotel-listings-container">
-            <p style="color: #64748b;">Loading available stays...</p>
+          <p style="color: #64748b;">Loading available stays...</p>
         </div>
       </main>
     </div>
@@ -325,33 +663,45 @@
       <aside class="dash-sidebar">
         <h2>My Account</h2>
         <nav class="dash-nav">
-          <a class="dash-nav-link menu-tab active" onclick="switchView('profile')" data-target="section-profile">Account Settings</a>
-          <a class="dash-nav-link menu-tab" onclick="switchView('bookings')" data-target="section-bookings">My Bookings</a>
-          <a class="dash-nav-link menu-tab" onclick="switchView('rewards')" data-target="section-rewards">Wanderly Rewards</a>
+          <a class="dash-nav-link menu-tab active" onclick="switchView('profile')" data-target="section-profile">Account
+            Settings</a>
+          <a class="dash-nav-link menu-tab" onclick="switchView('bookings')" data-target="section-bookings">My
+            Bookings</a>
+          <a class="dash-nav-link menu-tab" onclick="switchView('rewards')" data-target="section-rewards">Wanderly
+            Rewards</a>
         </nav>
       </aside>
       <main class="dash-content">
         <div id="section-profile" class="dashboard-section active">
           <h1 style="margin: 0 0 8px 0; font-size: 1.75rem; color: #0f172a;">Personal Information</h1>
-          <p style="color: #64748b; margin-bottom: 24px;">Save your details here to auto-fill future bookings securely.</p>
+          <p style="color: #64748b; margin-bottom: 24px;">Save your details here to auto-fill future bookings securely.
+          </p>
 
           <form id="profile-form" class="profile-form-grid">
-            <div><label class="info-item-label">Full Name</label><input type="text" id="prof-name" class="form-input-box" required></div>
-            <div><label class="info-item-label">Email Address</label><input type="email" id="prof-email" class="form-input-box" disabled></div>
-            <div><label class="info-item-label">Date of Birth</label><input type="date" id="prof-dob" class="form-input-box" required></div>
-            <div><label class="info-item-label">Phone Number</label><input type="tel" id="prof-phone" class="form-input-box" required></div>
-            <div><label class="info-item-label">ID Card / Passport (CCCD)</label><input type="text" id="prof-cccd" class="form-input-box" required></div>
-            <div><label class="info-item-label">Residential Address</label><input type="text" id="prof-address" class="form-input-box" required></div>
+            <div><label class="info-item-label">Full Name</label><input type="text" id="prof-name"
+                class="form-input-box" required></div>
+            <div><label class="info-item-label">Email Address</label><input type="email" id="prof-email"
+                class="form-input-box" disabled></div>
+            <div><label class="info-item-label">Date of Birth</label><input type="date" id="prof-dob"
+                class="form-input-box" required></div>
+            <div><label class="info-item-label">Phone Number</label><input type="tel" id="prof-phone"
+                class="form-input-box" required></div>
+            <div><label class="info-item-label">ID Card / Passport (CCCD)</label><input type="text" id="prof-cccd"
+                class="form-input-box" required></div>
+            <div><label class="info-item-label">Residential Address</label><input type="text" id="prof-address"
+                class="form-input-box" required></div>
             <div style="grid-column: span 2; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-              <button type="submit" class="btn-manage" style="background: #0f172a; color: #fcf9f2; border: none;">Save & Update</button>
+              <button type="submit" class="btn-manage" style="background: #0f172a; color: #fcf9f2; border: none;">Save &
+                Update</button>
             </div>
           </form>
         </div>
         <div id="section-bookings" class="dashboard-section">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <h1 style="margin: 0; font-size: 1.75rem; color: #0f172a;">Booking History</h1>
-            <button id="refresh-bookings-btn" style="padding: 8px 16px; background: white; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-weight: 600;">
-                ↻ Refresh
+            <button id="refresh-bookings-btn"
+              style="padding: 8px 16px; background: white; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-weight: 600;">
+              ↻ Refresh
             </button>
           </div>
           <div id="my-bookings-container">
@@ -361,9 +711,13 @@
         <div id="section-rewards" class="dashboard-section">
           <div class="rewards-banner-card">
             <span class="rewards-tier" style="color: #fbbf24; font-weight: 700;">Gold Explorer</span>
-            <p style="margin: 0 0 8px 0; color: #94a3b8; text-transform: uppercase; font-weight: 600; font-size: 0.85rem;">Available Points</p>
-            <h2 class="rewards-points" style="font-size: 2.5rem; margin: 0; color: #0f172a;"><span id="dash-display-points">0</span> <span>Pts</span></h2>
-            <p style="margin: 24px 0 0 0; font-size: 0.95rem; color: #cbd5e1;">Earn +100 points upon successful completion of any booking!</p>
+            <p
+              style="margin: 0 0 8px 0; color: #94a3b8; text-transform: uppercase; font-weight: 600; font-size: 0.85rem;">
+              Available Points</p>
+            <h2 class="rewards-points" style="font-size: 2.5rem; margin: 0; color: #0f172a;"><span
+                id="dash-display-points">0</span> <span>Pts</span></h2>
+            <p style="margin: 24px 0 0 0; font-size: 0.95rem; color: #cbd5e1;">Earn +100 points upon successful
+              completion of any booking!</p>
           </div>
         </div>
       </main>
@@ -374,15 +728,19 @@
     <div class="booking-modal">
       <div class="modal-header">
         <h2>Secure Checkout</h2>
-        <button class="btn-manage" id="btn-close-booking" style="background: rgba(255,255,255,0.1); color: #fcf9f2; border: none; padding: 8px 16px;">Close</button>
+        <button class="btn-manage" id="btn-close-booking"
+          style="background: rgba(255,255,255,0.1); color: #fcf9f2; border: none; padding: 8px 16px;">Close</button>
       </div>
 
       <div class="modal-body">
         <form style="flex: 1;" id="checkout-form">
           <div class="booking-tier-banner" id="booking-tier-banner" style="display: none;"></div>
 
-          <h3 style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-top: 0; margin-bottom: 24px; color: #0f172a;">1. Stay Details</h3>
-          <div style="background: #fcf9f2; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 32px;">
+          <h3
+            style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-top: 0; margin-bottom: 24px; color: #0f172a;">
+            1. Stay Details</h3>
+          <div
+            style="background: #fcf9f2; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 32px;">
             <div style="margin-bottom: 16px;">
               <label class="info-item-label">Room Type</label>
               <select id="checkout-room-type" class="form-input-box" required>
@@ -394,33 +752,43 @@
             <div style="margin-bottom: 16px;">
               <label class="info-item-label">Select Room Number</label>
               <select id="checkout-room-number" class="form-input-box" required disabled>
-                  <option value="">-- Select a Room Type First --</option>
+                <option value="">-- Select a Room Type First --</option>
               </select>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-              <div><label class="info-item-label">Number of Rooms</label><input type="number" class="form-input-box" id="book-rooms" value="1" min="1" required></div>
-              <div><label class="info-item-label">Number of Guests</label><input type="number" class="form-input-box" id="book-guests" value="2" min="1" required></div>
+              <div><label class="info-item-label">Number of Rooms</label><input type="number" class="form-input-box"
+                  id="book-rooms" value="1" min="1" required></div>
+              <div><label class="info-item-label">Number of Guests</label><input type="number" class="form-input-box"
+                  id="book-guests" value="2" min="1" required></div>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-              <div><label class="info-item-label">Check-in Date</label><input type="date" class="form-input-box" id="book-in-date" required></div>
-              <div><label class="info-item-label">Check-out Date</label><input type="date" class="form-input-box" id="book-out-date" required></div>
+              <div><label class="info-item-label">Check-in Date</label><input type="date" class="form-input-box"
+                  id="book-in-date" required></div>
+              <div><label class="info-item-label">Check-out Date</label><input type="date" class="form-input-box"
+                  id="book-out-date" required></div>
             </div>
             <div>
               <label class="info-item-label">Estimated Time of Arrival (ETA)</label>
               <input type="time" class="form-input-box" value="14:00" required>
             </div>
           </div>
-          <h3 style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 24px; color: #0f172a; display: flex; justify-content: space-between; align-items: baseline;">
+          <h3
+            style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 24px; color: #0f172a; display: flex; justify-content: space-between; align-items: baseline;">
             <span>2. Guest Details</span>
-            <span id="auto-fill-notice" style="font-size: 0.85rem; color: #10b981; font-weight: 600; display: none;">Auto-filled securely</span>
+            <span id="auto-fill-notice"
+              style="font-size: 0.85rem; color: #10b981; font-weight: 600; display: none;">Auto-filled securely</span>
           </h3>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-            <div><label class="info-item-label">Full Name</label><input type="text" class="form-input-box" id="guest-name" required></div>
-            <div><label class="info-item-label">Email Address</label><input type="email" class="form-input-box" id="guest-email" required></div>
+            <div><label class="info-item-label">Full Name</label><input type="text" class="form-input-box"
+                id="guest-name" required></div>
+            <div><label class="info-item-label">Email Address</label><input type="email" class="form-input-box"
+                id="guest-email" required></div>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-            <div><label class="info-item-label">Date of Birth</label><input type="date" class="form-input-box" id="guest-dob" required></div>
-            <div><label class="info-item-label">Phone Number</label><input type="tel" class="form-input-box" id="guest-phone" required></div>
+            <div><label class="info-item-label">Date of Birth</label><input type="date" class="form-input-box"
+                id="guest-dob" required></div>
+            <div><label class="info-item-label">Phone Number</label><input type="tel" class="form-input-box"
+                id="guest-phone" required></div>
           </div>
           <div style="margin-bottom: 16px;">
             <label class="info-item-label">ID Card / Passport (CCCD)</label>
@@ -430,17 +798,21 @@
             <label class="info-item-label">Residential Address</label>
             <input type="text" class="form-input-box" id="guest-address" required>
           </div>
-          <h3 style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 24px; color: #0f172a;">3. Select Payment</h3>
+          <h3
+            style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 24px; color: #0f172a;">
+            3. Select Payment</h3>
           <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px;">
             <label class="payment-card-opt active" id="label-pay-cash">
-              <input type="radio" name="paymentMethod" value="Cash" checked style="margin-top: 4px; margin-right: 16px;">
+              <input type="radio" name="paymentMethod" value="Cash" checked
+                style="margin-top: 4px; margin-right: 16px;">
               <div>
                 <div style="font-weight: 700; color: #0f172a; font-size: 1.05rem;">Cash at Check-in</div>
                 <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">Pay directly at the property.</div>
               </div>
             </label>
             <label class="payment-card-opt" id="label-pay-bank">
-              <input type="radio" name="paymentMethod" value="Bank Transfer" style="margin-top: 4px; margin-right: 16px;">
+              <input type="radio" name="paymentMethod" value="Bank Transfer"
+                style="margin-top: 4px; margin-right: 16px;">
               <div>
                 <div style="font-weight: 700; color: #0f172a; font-size: 1.05rem;">Bank Transfer</div>
                 <div style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">Secure online transfer.</div>
@@ -448,34 +820,49 @@
             </label>
           </div>
           <div class="bank-info-box" id="bank-transfer-details" style="display: none;">
-            <p style="font-size: 0.95rem; color: #475569; margin: 0;">You will be redirected to the secure payOS payment gateway to complete your transfer.</p>
+            <p style="font-size: 0.95rem; color: #475569; margin: 0;">You will be redirected to the secure payOS payment
+              gateway to complete your transfer.</p>
           </div>
-          <button type="submit" class="btn-manage btn-primary-dark" style="width: 100%; padding: 16px; font-size: 1.1rem; margin-top: 32px; background: #0f172a; color:#fcf9f2; border:none;">Complete Booking</button>
+          <button type="submit" class="btn-manage btn-primary-dark"
+            style="width: 100%; padding: 16px; font-size: 1.1rem; margin-top: 32px; background: #0f172a; color:#fcf9f2; border:none;">Complete
+            Booking</button>
         </form>
         <aside class="summary-section">
-          <h3 style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-top: 0; margin-bottom: 20px; color: #0f172a;">Summary</h3>
+          <h3
+            style="font-size: 1.15rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-top: 0; margin-bottom: 20px; color: #0f172a;">
+            Summary</h3>
           <h4 id="summary-hotel-name" style="margin: 0 0 8px 0; color: #0f172a; font-size: 1.2rem;">Hotel Name</h4>
-          <p id="summary-room-type" style="margin: 0 0 24px 0; font-size: 0.95rem; color: #64748b; font-weight: 500;">Room Type</p>
+          <p id="summary-room-type" style="margin: 0 0 24px 0; font-size: 0.95rem; color: #64748b; font-weight: 500;">
+            Room Type</p>
 
-          <div style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 500;">
-            <span style="color: #64748b;">Price per night:</span> <strong id="summary-price-night" style="color: #0f172a;">$--</strong>
+          <div
+            style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 500;">
+            <span style="color: #64748b;">Price per night:</span> <strong id="summary-price-night"
+              style="color: #0f172a;">$--</strong>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 500;">
+          <div
+            style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 500;">
             <span style="color: #64748b;">Rooms:</span> <strong id="summary-rooms" style="color: #0f172a;">1</strong>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 500;">
-            <span style="color: #64748b;">Total Nights:</span> <strong id="summary-nights" style="color: #0f172a;">--</strong>
+          <div
+            style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 500;">
+            <span style="color: #64748b;">Total Nights:</span> <strong id="summary-nights"
+              style="color: #0f172a;">--</strong>
           </div>
-          <div id="discount-row" style="display: none; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 600;">
-            <span style="color: #10b981;">Discount Applied:</span> <strong id="summary-discount" style="color: #10b981;">-$--</strong>
+          <div id="discount-row"
+            style="display: none; justify-content: space-between; font-size: 0.95rem; margin-bottom: 16px; font-weight: 600;">
+            <span style="color: #10b981;">Discount Applied:</span> <strong id="summary-discount"
+              style="color: #10b981;">-$--</strong>
           </div>
           <div style="border-top: 1px dashed #cbd5e1; padding-top: 20px; margin-top: 20px;">
             <label class="info-item-label">Select Promo Code</label>
-            <select id="promo-code-select" class="form-input-box" style="font-weight: 600; color: #0f172a; cursor: pointer; background-color: #fcf9f2;">
+            <select id="promo-code-select" class="form-input-box"
+              style="font-weight: 600; color: #0f172a; cursor: pointer; background-color: #fcf9f2;">
               <option value="">-- No code --</option>
             </select>
           </div>
-          <div style="border-top: 1px solid #cbd5e1; padding-top: 24px; margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+          <div
+            style="border-top: 1px solid #cbd5e1; padding-top: 24px; margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 700; font-size: 1.1rem; color: #0f172a;">Total Amount</span>
             <strong id="summary-total" style="font-size: 2rem; color: #dc2626;">$--</strong>
           </div>
@@ -487,14 +874,19 @@
   <div class="modal-overlay" id="success-modal-overlay">
     <div class="success-modal">
       <h2 style="color: #059669; font-size: 2rem; margin-top: 0; font-weight: 800;">Booking Confirmed!</h2>
-      <p style="color: #475569; line-height: 1.6; margin-bottom: 24px; font-size: 1.05rem;">Thank you for your reservation. Present the QR code below at reception.</p>
+      <p style="color: #475569; line-height: 1.6; margin-bottom: 24px; font-size: 1.05rem;">Thank you for your
+        reservation. Present the QR code below at reception.</p>
 
       <div style="display: flex; justify-content: center; margin-bottom: 16px;">
-        <img id="qr-code-img" src="" alt="QR Code" style="width: 160px; height: 160px; border-radius: 8px; border: 4px solid #f1f5f9;">
+        <img id="qr-code-img" src="" alt="QR Code"
+          style="width: 160px; height: 160px; border-radius: 8px; border: 4px solid #f1f5f9;">
       </div>
-      <div style="font-weight: 700; color: #0f172a; font-size: 1.2rem; margin-bottom: 24px;">Code: <span id="generated-code-text"></span></div>
+      <div style="font-weight: 700; color: #0f172a; font-size: 1.2rem; margin-bottom: 24px;">Code: <span
+          id="generated-code-text"></span></div>
 
-      <button class="btn-manage btn-primary-dark" id="btn-done" style="width: 100%; padding: 16px; margin-top: 24px; font-size: 1.1rem; background: #0f172a; color:#fcf9f2; border:none;">View My Bookings</button>
+      <button class="btn-manage btn-primary-dark" id="btn-done"
+        style="width: 100%; padding: 16px; margin-top: 24px; font-size: 1.1rem; background: #0f172a; color:#fcf9f2; border:none;">View
+        My Bookings</button>
     </div>
   </div>
 
@@ -504,25 +896,25 @@
     // 1. FIX LỖI GIÁ $0 TỪ MAIN.JS
     setInterval(() => {
       document.querySelectorAll('.carousel-track [class*="price"], .carousel-track p').forEach(el => {
-        if(el.innerHTML.includes('$0')) el.innerHTML = el.innerHTML.replace('$0', '$120');
+        if (el.innerHTML.includes('$0')) el.innerHTML = el.innerHTML.replace('$0', '$120');
       });
     }, 1000);
 
     // 2. BỘ ĐÁNH CHẶN: MỞ MODAL THAY VÌ CHUYỂN TRANG
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
       const card = e.target.closest('.property-card');
       const btn = e.target.closest('button');
-      
+
       if (e.target.closest('.wishlist-btn')) return;
 
       if (card || (btn && btn.textContent.includes('Book Now'))) {
         e.preventDefault();
-        e.stopPropagation(); 
+        e.stopPropagation();
 
         let hotelName = 'Curated Hotel';
         let price = 120;
         let propertyId = 1;
-        
+
         const targetCard = card || (btn ? btn.closest('.booking-card') : null);
         if (targetCard) {
           if (targetCard.dataset.propertyId) {
@@ -530,7 +922,7 @@
           }
           const titleEl = targetCard.querySelector('h3, h4, .hotel-name, .card-title');
           if (titleEl) hotelName = titleEl.textContent.trim();
-          
+
           const priceEl = targetCard.querySelector('.price-text, .price');
           if (priceEl && priceEl.textContent.includes('$')) {
             // Loại bỏ dấu phẩy (nếu có) để parse số đúng
@@ -539,31 +931,31 @@
             if (match) price = parseFloat(match[1]);
           }
         }
-        
+
         if (typeof window.openBooking === 'function') {
-            window.openBooking(hotelName, 'Standard Room', price, propertyId);
+          window.openBooking(hotelName, 'Standard Room', price, propertyId);
         }
       }
-    }, true); 
+    }, true);
 
     // 3. HÀM MỞ MODAL & TỰ ĐỘNG ĐIỀN FORM
-    window.openBooking = function(hotelName = 'Featured Hotel', roomType = 'Standard Room', price = 120, propertyId = 1, roomId = 1) {
+    window.openBooking = function (hotelName = 'Featured Hotel', roomType = 'Standard Room', price = 120, propertyId = 1, roomId = 1) {
       const bookingModal = document.getElementById('booking-modal-overlay');
-      if(!bookingModal) return;
+      if (!bookingModal) return;
 
       // Lưu state Property ID và Room ID động vào localStorage
       localStorage.setItem('selectedPropertyId', propertyId);
       localStorage.setItem('selectedRoomId', roomId);
 
       const promoSelect = document.getElementById('promo-code-select');
-      if(promoSelect) promoSelect.value = "";
+      if (promoSelect) promoSelect.value = "";
 
       const sName = document.getElementById('summary-hotel-name');
       const sType = document.getElementById('summary-room-type');
       const sPrice = document.getElementById('summary-price-night');
-      if(sName) sName.textContent = hotelName;
-      if(sType) sType.textContent = roomType;
-      if(sPrice) sPrice.textContent = `$${Math.round(parseFloat(price))}`;
+      if (sName) sName.textContent = hotelName;
+      if (sType) sType.textContent = roomType;
+      if (sPrice) sPrice.textContent = `$${Math.round(parseFloat(price))}`;
 
       currentPricePerNight = price;
 
@@ -571,12 +963,12 @@
       const typeSelect = document.getElementById('checkout-room-type');
       const numberSelect = document.getElementById('checkout-room-number');
       const amenitiesContainer = document.getElementById('room-amenities-container');
-      
+
       console.log("Fetching room types for Property ID:", propertyId);
       if (!propertyId) {
-          console.error("Missing Property ID for room types fetch!");
-          if (typeSelect) typeSelect.innerHTML = '<option value="" disabled>Error: No Property ID</option>';
-          return;
+        console.error("Missing Property ID for room types fetch!");
+        if (typeSelect) typeSelect.innerHTML = '<option value="" disabled>Error: No Property ID</option>';
+        return;
       }
 
       if (typeSelect) {
@@ -584,12 +976,12 @@
         if (amenitiesContainer) amenitiesContainer.innerHTML = '';
         fetch(`/api/hotels/${propertyId}/room-types`)
           .then(async res => {
-              if (!res.ok) {
-                  const errData = await res.json().catch(() => ({}));
-                  console.error("Backend Error:", errData);
-                  throw new Error(errData.details || 'Network response was not ok');
-              }
-              return res.json();
+            if (!res.ok) {
+              const errData = await res.json().catch(() => ({}));
+              console.error("Backend Error:", errData);
+              throw new Error(errData.details || 'Network response was not ok');
+            }
+            return res.json();
           })
           .then(data => {
             if (data.success && data.data.length > 0) {
@@ -620,13 +1012,13 @@
           const selectedOpt = e.target.options[e.target.selectedIndex];
           const typeId = e.target.value;
           if (!typeId) {
-              if (numberSelect) {
-                  numberSelect.innerHTML = '<option value="">-- Select a Room Type First --</option>';
-                  numberSelect.disabled = true;
-              }
-              return;
+            if (numberSelect) {
+              numberSelect.innerHTML = '<option value="">-- Select a Room Type First --</option>';
+              numberSelect.disabled = true;
+            }
+            return;
           }
-          
+
           const newPrice = parseFloat(selectedOpt.dataset.price) || 0;
           const newName = selectedOpt.dataset.name;
           const amenities = JSON.parse(selectedOpt.dataset.amenities || '[]');
@@ -637,7 +1029,7 @@
 
           // Update amenities
           if (amenitiesContainer) {
-            amenitiesContainer.innerHTML = amenities.map(a => 
+            amenitiesContainer.innerHTML = amenities.map(a =>
               `<span style="background: #e2e8f0; color: #475569; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">
                 <i class="fas ${a.icon || 'fa-check'}"></i> ${a.name}
               </span>`
@@ -645,31 +1037,31 @@
           }
 
           if (typeof updatePriceSummary === 'function') updatePriceSummary();
-          
+
           // Fetch Available Rooms
           if (numberSelect) {
-              numberSelect.disabled = true;
-              numberSelect.innerHTML = '<option value="">Loading available rooms...</option>';
-              try {
-                  const res = await fetch(`/api/hotels/${propertyId}/room-types/${typeId}/available-rooms`);
-                  const roomsData = await res.json();
-                  
-                  numberSelect.innerHTML = '<option value="">-- Select a Room Number --</option>';
-                  if (roomsData.success && roomsData.data.length > 0) {
-                      roomsData.data.forEach(r => {
-                          const opt = document.createElement('option');
-                          opt.value = r.id || r.RoomID; // Physical Room ID
-                          opt.textContent = `Room ${r.room_number || r.RoomNumber}`;
-                          numberSelect.appendChild(opt);
-                      });
-                      numberSelect.disabled = false;
-                  } else {
-                      numberSelect.innerHTML = '<option value="">-- No Rooms Available --</option>';
-                  }
-              } catch (err) {
-                  console.error('Failed to load room numbers', err);
-                  numberSelect.innerHTML = '<option value="">Error loading</option>';
+            numberSelect.disabled = true;
+            numberSelect.innerHTML = '<option value="">Loading available rooms...</option>';
+            try {
+              const res = await fetch(`/api/hotels/${propertyId}/room-types/${typeId}/available-rooms`);
+              const roomsData = await res.json();
+
+              numberSelect.innerHTML = '<option value="">-- Select a Room Number --</option>';
+              if (roomsData.success && roomsData.data.length > 0) {
+                roomsData.data.forEach(r => {
+                  const opt = document.createElement('option');
+                  opt.value = r.id || r.RoomID; // Physical Room ID
+                  opt.textContent = `Room ${r.room_number || r.RoomNumber}`;
+                  numberSelect.appendChild(opt);
+                });
+                numberSelect.disabled = false;
+              } else {
+                numberSelect.innerHTML = '<option value="">-- No Rooms Available --</option>';
               }
+            } catch (err) {
+              console.error('Failed to load room numbers', err);
+              numberSelect.innerHTML = '<option value="">Error loading</option>';
+            }
           }
         };
       }
@@ -679,25 +1071,25 @@
       const hIn = document.getElementById('search-checkin');
       const hOut = document.getElementById('search-checkout');
 
-      if(bIn && hIn && hIn.value) {
-          bIn.value = hIn.value;
+      if (bIn && hIn && hIn.value) {
+        bIn.value = hIn.value;
       } else if (bIn) {
-          const today = new Date();
-          bIn.value = today.toISOString().split('T')[0];
+        const today = new Date();
+        bIn.value = today.toISOString().split('T')[0];
       }
 
-      if(bOut && hOut && hOut.value) {
-          bOut.value = hOut.value;
+      if (bOut && hOut && hOut.value) {
+        bOut.value = hOut.value;
       } else if (bOut) {
-          const tomorrow = new Date(); 
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          bOut.value = tomorrow.toISOString().split('T')[0];
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        bOut.value = tomorrow.toISOString().split('T')[0];
       }
 
       const rRooms = document.getElementById('book-rooms');
       const rGuests = document.getElementById('book-guests');
-      if(rRooms) rRooms.value = 1;
-      if(rGuests) rGuests.value = 2;
+      if (rRooms) rRooms.value = 1;
+      if (rGuests) rGuests.value = 2;
 
       const userRaw = localStorage.getItem('user');
       let user = userRaw ? JSON.parse(userRaw) : null;
@@ -712,22 +1104,22 @@
       const gAdd = document.getElementById('guest-address');
 
       if (user || Object.keys(savedProfile).length > 0) {
-        if(gName) gName.value = savedProfile.name || (user ? user.fullName : '') || 'Nguyễn Tiến Thịnh';
-        if(gEmail) gEmail.value = user ? user.email : 'thinhnt@btecfpt.edu.vn';
-        if(gDob) gDob.value = savedProfile.dob || '2005-10-10';
-        if(gPhone) gPhone.value = savedProfile.phone || '0987654321';
-        if(gCccd) gCccd.value = savedProfile.cccd || '012345678901';
-        if(gAdd) gAdd.value = savedProfile.address || 'Bắc Giang';
-        if(notice) notice.style.display = 'block';
+        if (gName) gName.value = savedProfile.name || (user ? user.fullName : '') || 'Nguyễn Tiến Thịnh';
+        if (gEmail) gEmail.value = user ? user.email : 'thinhnt@btecfpt.edu.vn';
+        if (gDob) gDob.value = savedProfile.dob || '2005-10-10';
+        if (gPhone) gPhone.value = savedProfile.phone || '0987654321';
+        if (gCccd) gCccd.value = savedProfile.cccd || '012345678901';
+        if (gAdd) gAdd.value = savedProfile.address || 'Bắc Giang';
+        if (notice) notice.style.display = 'block';
       } else {
-        if(gName) gName.value = ''; if(gEmail) gEmail.value = '';
-        if(gDob) gDob.value = ''; if(gPhone) gPhone.value = '';
-        if(gCccd) gCccd.value = ''; if(gAdd) gAdd.value = '';
-        if(notice) notice.style.display = 'none';
+        if (gName) gName.value = ''; if (gEmail) gEmail.value = '';
+        if (gDob) gDob.value = ''; if (gPhone) gPhone.value = '';
+        if (gCccd) gCccd.value = ''; if (gAdd) gAdd.value = '';
+        if (notice) notice.style.display = 'none';
       }
 
       bookingModal.classList.add('active');
-      window.dispatchEvent(new CustomEvent('updatePriceSummaryEvent', { detail: { price: price }}));
+      window.dispatchEvent(new CustomEvent('updatePriceSummaryEvent', { detail: { price: price } }));
     };
   </script>
 
@@ -745,9 +1137,9 @@
 
       if (user) {
         if (user.roleName === 'Admin') { window.location.href = 'admin.html'; return; }
-        if(guestBlock) guestBlock.style.display = 'none';
-        if(userBlock) userBlock.style.display = 'flex';
-        if(userName) userName.textContent = 'Hello, ' + (user.fullName || 'Nguyễn Tiến Thịnh');
+        if (guestBlock) guestBlock.style.display = 'none';
+        if (userBlock) userBlock.style.display = 'flex';
+        if (userName) userName.textContent = 'Hello, ' + (user.fullName || 'Nguyễn Tiến Thịnh');
       }
 
       const btnLogout = document.getElementById('btn-direct-logout');
@@ -760,7 +1152,7 @@
         });
       }
 
-      window.switchView = function(viewId, subDashId = null) {
+      window.switchView = function (viewId, subDashId = null) {
         document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
         document.querySelectorAll('.spa-link').forEach(link => link.classList.remove('active'));
 
@@ -774,7 +1166,7 @@
           if (!user && targetSectionId !== 'section-bookings') { window.location.href = 'login.html'; return; }
 
           const dashView = document.getElementById('dashboard-view');
-          if(dashView) dashView.classList.add('active');
+          if (dashView) dashView.classList.add('active');
           document.querySelectorAll('.dashboard-section').forEach(p => p.classList.remove('active'));
           document.querySelectorAll('.menu-tab').forEach(l => l.classList.remove('active'));
 
@@ -793,8 +1185,8 @@
           const targetView = document.getElementById(`${viewId}-view`);
           if (targetView) targetView.classList.add('active');
           else {
-              const homeView = document.getElementById('home-view');
-              if(homeView) homeView.classList.add('active');
+            const homeView = document.getElementById('home-view');
+            if (homeView) homeView.classList.add('active');
           }
           const activeLink = document.querySelector(`.spa-link[href="#${viewId}"]`);
           if (activeLink) activeLink.classList.add('active');
@@ -813,37 +1205,37 @@
       let currentPricePerNight = 120;
 
       window.addEventListener('updatePriceSummaryEvent', (e) => {
-          currentPricePerNight = e.detail.price || 120;
-          updatePriceSummary();
+        currentPricePerNight = e.detail.price || 120;
+        updatePriceSummary();
       });
 
       const loadActiveCoupons = async () => {
-          try {
-              const res = await fetch('/api/public/coupons');
-              const json = await res.json();
-              if (json.success && json.data) {
-                  const promoSelect = document.getElementById('promo-code-select');
-                  if (!promoSelect) return;
-                  promoSelect.innerHTML = '<option value="">-- No code --</option>';
-                  json.data.forEach(coupon => {
-                      const opt = document.createElement('option');
-                      opt.value = coupon.code;
-                      opt.dataset.type = coupon.type;
-                      opt.dataset.value = coupon.value;
-                      let labelText = coupon.type === 'percentage' ? `${parseFloat(coupon.value)}% Off` : `$${parseFloat(coupon.value).toFixed(2)} Off`;
-                      opt.textContent = `${coupon.code} (${labelText})`;
-                      promoSelect.appendChild(opt);
-                  });
-              }
-          } catch (error) {
-              console.error('Failed to load active coupons', error);
+        try {
+          const res = await fetch('/api/public/coupons');
+          const json = await res.json();
+          if (json.success && json.data) {
+            const promoSelect = document.getElementById('promo-code-select');
+            if (!promoSelect) return;
+            promoSelect.innerHTML = '<option value="">-- No code --</option>';
+            json.data.forEach(coupon => {
+              const opt = document.createElement('option');
+              opt.value = coupon.code;
+              opt.dataset.type = coupon.type;
+              opt.dataset.value = coupon.value;
+              let labelText = coupon.type === 'percentage' ? `${parseFloat(coupon.value)}% Off` : `$${parseFloat(coupon.value).toFixed(2)} Off`;
+              opt.textContent = `${coupon.code} (${labelText})`;
+              promoSelect.appendChild(opt);
+            });
           }
+        } catch (error) {
+          console.error('Failed to load active coupons', error);
+        }
       };
       loadActiveCoupons();
 
       const promoSelect = document.getElementById('promo-code-select');
       if (promoSelect) {
-        promoSelect.addEventListener('change', function() {
+        promoSelect.addEventListener('change', function () {
           updatePriceSummary();
         });
       }
@@ -852,11 +1244,11 @@
         radio.addEventListener('change', (e) => {
           const isBank = e.target.value === 'Bank Transfer';
           const bankDetails = document.getElementById('bank-transfer-details');
-          if(bankDetails) bankDetails.style.display = isBank ? 'block' : 'none';
+          if (bankDetails) bankDetails.style.display = isBank ? 'block' : 'none';
 
           document.querySelectorAll('.payment-card-opt').forEach(l => l.classList.remove('active'));
           const opt = e.target.closest('.payment-card-opt');
-          if(opt) opt.classList.add('active');
+          if (opt) opt.classList.add('active');
         });
       });
 
@@ -866,26 +1258,26 @@
         const bookOut = document.getElementById('book-out-date');
         let numRooms = roomsInput ? parseInt(roomsInput.value) || 1 : 1;
         const sRooms = document.getElementById('summary-rooms');
-        if(sRooms) sRooms.textContent = numRooms;
+        if (sRooms) sRooms.textContent = numRooms;
 
         if (bookIn && bookOut && bookIn.value && bookOut.value) {
           let nights = Math.max(1, Math.ceil((new Date(bookOut.value) - new Date(bookIn.value)) / (1000 * 60 * 60 * 24)));
           const sNights = document.getElementById('summary-nights');
-          if(sNights) sNights.textContent = nights;
+          if (sNights) sNights.textContent = nights;
 
           const rawTotal = nights * currentPricePerNight * numRooms;
           let discountAmt = 0;
 
           const promoSel = document.getElementById('promo-code-select');
           if (promoSel && promoSel.selectedIndex > 0) {
-              const selectedOpt = promoSel.options[promoSel.selectedIndex];
-              const dtype = selectedOpt.dataset.type;
-              const dvalue = parseFloat(selectedOpt.dataset.value) || 0;
-              if (dtype === 'percentage') {
-                  discountAmt = rawTotal * (dvalue / 100);
-              } else if (dtype === 'fixed') {
-                  discountAmt = dvalue;
-              }
+            const selectedOpt = promoSel.options[promoSel.selectedIndex];
+            const dtype = selectedOpt.dataset.type;
+            const dvalue = parseFloat(selectedOpt.dataset.value) || 0;
+            if (dtype === 'percentage') {
+              discountAmt = rawTotal * (dvalue / 100);
+            } else if (dtype === 'fixed') {
+              discountAmt = dvalue;
+            }
           }
           discountAmt = Math.round(Math.min(discountAmt, rawTotal));
 
@@ -914,7 +1306,7 @@
 
       const btnCloseBooking = document.getElementById('btn-close-booking');
       const bookingModal = document.getElementById('booking-modal-overlay');
-      if (btnCloseBooking) btnCloseBooking.addEventListener('click', () => { if(bookingModal) bookingModal.classList.remove('active'); });
+      if (btnCloseBooking) btnCloseBooking.addEventListener('click', () => { if (bookingModal) bookingModal.classList.remove('active'); });
 
       const checkoutForm = document.getElementById('checkout-form');
       const successModal = document.getElementById('success-modal-overlay');
@@ -925,23 +1317,23 @@
 
           const randomCode = `WNDR-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
           const gcText = document.getElementById('generated-code-text');
-          if(gcText) gcText.textContent = randomCode;
+          if (gcText) gcText.textContent = randomCode;
 
           const qrImg = document.getElementById('qr-code-img');
           if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${randomCode}`;
 
           // Get the selected radio button dynamically
           const selectedPaymentInput = document.querySelector('input[name="paymentMethod"]:checked');
-          
+
           // Strict fallback, but it should read the actual value ('Bank Transfer' or 'Cash')
           const actualPaymentMethod = selectedPaymentInput ? selectedPaymentInput.value : 'Cash';
 
           if (user) {
-              let currentPoints = parseInt(localStorage.getItem('userPoints')) || 0;
-              currentPoints += 100;
-              localStorage.setItem('userPoints', currentPoints.toString());
-              const dp = document.getElementById('dash-display-points');
-              if(dp) dp.textContent = currentPoints;
+            let currentPoints = parseInt(localStorage.getItem('userPoints')) || 0;
+            currentPoints += 100;
+            localStorage.setItem('userPoints', currentPoints.toString());
+            const dp = document.getElementById('dash-display-points');
+            if (dp) dp.textContent = currentPoints;
           }
 
           const hName = document.getElementById('summary-hotel-name');
@@ -957,82 +1349,82 @@
           const nameVal = gName ? gName.value.trim() : '';
           const emailVal = gEmail ? gEmail.value.trim() : '';
           const phoneVal = gPhone ? gPhone.value.trim() : '';
-          
+
           if (!nameVal || !emailVal || !phoneVal) {
-              alert("Please fill in all contact details to secure your booking.");
-              return; // Stop submission
+            alert("Please fill in all contact details to secure your booking.");
+            return; // Stop submission
           }
 
           const promoSel = document.getElementById('promo-code-select');
           const promoCodeVal = (promoSel && promoSel.selectedIndex > 0) ? promoSel.value : '';
 
           const newBooking = {
-              code: randomCode,
-              guestName: nameVal || 'Guest',
-              hotelName: hName ? hName.textContent : 'Unknown',
-              roomType: 'Standard Room',
-              guestsAndRooms: `${rGuests ? rGuests.value : '2'} Guests, ${rRooms ? rRooms.value : '1'} Rooms`,
-              checkIn: checkIn ? checkIn.value : '',
-              checkOut: checkOut ? checkOut.value : '',
-              totalPrice: hTotal ? hTotal.textContent : '$0',
-              paymentMethod: actualPaymentMethod,
-              bookedDate: new Date().toLocaleDateString('en-GB'),
-              status: 'Pending', // Đã bổ sung trạng thái để Admin có thể Confirm
-              promo_code: promoCodeVal
+            code: randomCode,
+            guestName: nameVal || 'Guest',
+            hotelName: hName ? hName.textContent : 'Unknown',
+            roomType: 'Standard Room',
+            guestsAndRooms: `${rGuests ? rGuests.value : '2'} Guests, ${rRooms ? rRooms.value : '1'} Rooms`,
+            checkIn: checkIn ? checkIn.value : '',
+            checkOut: checkOut ? checkOut.value : '',
+            totalPrice: hTotal ? hTotal.textContent : '$0',
+            paymentMethod: actualPaymentMethod,
+            bookedDate: new Date().toLocaleDateString('en-GB'),
+            status: 'Pending', // Đã bổ sung trạng thái để Admin có thể Confirm
+            promo_code: promoCodeVal
           };
 
           let rawAmount = hTotal ? hTotal.textContent.replace(/\$/g, '').replace(/,/g, '') : '0';
           let cleanAmount = parseInt(rawAmount, 10);
 
           const payload = {
-              propertyId: parseInt(localStorage.getItem('selectedPropertyId')) || 1, // Dynamic property ID
-              room_type_id: parseInt(document.getElementById('checkout-room-type') ? document.getElementById('checkout-room-type').value : null) || null,
-              room_id: parseInt(document.getElementById('checkout-room-number') ? document.getElementById('checkout-room-number').value : null) || null,
-              guestEmail: emailVal,
-              guest_name: nameVal,
-              guest_phone: phoneVal,
-              checkIn: checkIn ? checkIn.value : '',
-              checkOut: checkOut ? checkOut.value : '',
-              guests: rGuests ? rGuests.value : 2,
-              status: 'Pending',
-              notes: '',
-              promo_code: promoCodeVal,
-              payment_method: actualPaymentMethod,
-              total_amount: cleanAmount
+            propertyId: parseInt(localStorage.getItem('selectedPropertyId')) || 1, // Dynamic property ID
+            room_type_id: parseInt(document.getElementById('checkout-room-type') ? document.getElementById('checkout-room-type').value : null) || null,
+            room_id: parseInt(document.getElementById('checkout-room-number') ? document.getElementById('checkout-room-number').value : null) || null,
+            guestEmail: emailVal,
+            guest_name: nameVal,
+            guest_phone: phoneVal,
+            checkIn: checkIn ? checkIn.value : '',
+            checkOut: checkOut ? checkOut.value : '',
+            guests: rGuests ? rGuests.value : 2,
+            status: 'Pending',
+            notes: '',
+            promo_code: promoCodeVal,
+            payment_method: actualPaymentMethod,
+            total_amount: cleanAmount
           };
 
           console.log("Submitting payload...", payload);
 
           fetch('/api/bookings', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
           }).then(async res => {
-              const data = await res.json();
-              if (!res.ok || !data.success) {
-                  console.error("Backend Error:", data);
-                  alert(data.message || 'Failed to complete booking. Please try again.');
-                  throw new Error("Backend Error");
-              }
-              return data;
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+              console.error("Backend Error:", data);
+              alert(data.message || 'Failed to complete booking. Please try again.');
+              throw new Error("Backend Error");
+            }
+            return data;
           }).then(data => {
-              console.log("Backend Response:", data);
-              
-              if (actualPaymentMethod === 'Bank Transfer' && data.checkoutUrl) {
-                  console.log("PAYOS URL DETECTED. REDIRECTING NOW...");
-                  window.location.replace(data.checkoutUrl);
-                  return; // Absolutely halt execution here to prevent showing generic success popups
-              }
+            console.log("Backend Response:", data);
 
-              // Normal fallback for Cash check-in or if payOS is disabled
-              if (!localStorage.getItem('token')) {
-                  localStorage.setItem('guestEmail', payload.guestEmail);
-              }
-              alert("Booking Successful!");
-              window.location.hash = 'bookings';
-              window.location.reload();
+            if (actualPaymentMethod === 'Bank Transfer' && data.checkoutUrl) {
+              console.log("PAYOS URL DETECTED. REDIRECTING NOW...");
+              window.location.replace(data.checkoutUrl);
+              return; // Absolutely halt execution here to prevent showing generic success popups
+            }
+
+            // Normal fallback for Cash check-in or if payOS is disabled
+            if (!localStorage.getItem('token')) {
+              localStorage.setItem('guestEmail', payload.guestEmail);
+            }
+            alert("Booking Successful!");
+            window.location.hash = 'bookings';
+            window.location.reload();
           }).catch(err => {
-              console.error('Error calling booking API:', err);
+            console.error('Error calling booking API:', err);
           });
         });
       }
@@ -1046,99 +1438,99 @@
       }
 
       window.loadMyBookings = async () => {
-          const container = document.getElementById('my-bookings-container');
-          if(!container) return;
+        const container = document.getElementById('my-bookings-container');
+        if (!container) return;
 
-          let userId = '';
-          const userRaw = localStorage.getItem('user');
-          const token = localStorage.getItem('token');
-          const guestEmail = localStorage.getItem('guestEmail');
+        let userId = '';
+        const userRaw = localStorage.getItem('user');
+        const token = localStorage.getItem('token');
+        const guestEmail = localStorage.getItem('guestEmail');
 
-          if (userRaw) {
-              try {
-                  const userObj = JSON.parse(userRaw);
-                  userId = userObj.userId || userObj.id || userObj.UserID || '';
-              } catch(e) {}
-          }
+        if (userRaw) {
+          try {
+            const userObj = JSON.parse(userRaw);
+            userId = userObj.userId || userObj.id || userObj.UserID || '';
+          } catch (e) { }
+        }
 
-          if (!token && !guestEmail) {
-            container.innerHTML = `
+        if (!token && !guestEmail) {
+          container.innerHTML = `
               <div style="background: #fcf9f2; padding: 48px; text-align: center; border: 1px solid #e2e8f0; border-radius: 12px;">
                 <p style="font-size: 1.1rem; color: #0f172a; font-weight: 600;">No upcoming trips</p>
                 <p style="color: #64748b; margin-bottom: 24px;">Your booked itineraries will appear here.</p>
                 <button class="btn-manage btn-primary-dark" style="background:#0f172a; color:#fcf9f2; border:none;" onclick="window.location.hash='discover'">Book a Stay</button>
               </div>
             `;
+          return;
+        }
+
+        let endpoint = '';
+        let fetchHeaders = {};
+        if (token) {
+          endpoint = `/api/bookings?userId=${userId}`;
+          fetchHeaders = { 'Authorization': `Bearer ${token}` };
+        } else if (guestEmail) {
+          endpoint = `/api/bookings/guest?guestEmail=${guestEmail}`;
+        }
+
+        try {
+          const res = await fetch(endpoint, { headers: fetchHeaders });
+          if (res.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.replace('login.html');
             return;
           }
+          const json = await res.json();
+          const bookings = json.success ? json.data : [];
 
-          let endpoint = '';
-          let fetchHeaders = {};
-          if (token) {
-              endpoint = `/api/bookings?userId=${userId}`;
-              fetchHeaders = { 'Authorization': `Bearer ${token}` };
-          } else if (guestEmail) {
-              endpoint = `/api/bookings/guest?guestEmail=${guestEmail}`;
-          }
-
-          try {
-              const res = await fetch(endpoint, { headers: fetchHeaders });
-              if (res.status === 401) {
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('user');
-                  window.location.replace('login.html');
-                  return;
-              }
-              const json = await res.json();
-              const bookings = json.success ? json.data : [];
-
-              if (bookings.length === 0) {
-                container.innerHTML = `
+          if (bookings.length === 0) {
+            container.innerHTML = `
                   <div style="background: #fcf9f2; padding: 48px; text-align: center; border: 1px solid #e2e8f0; border-radius: 12px;">
                     <p style="font-size: 1.1rem; color: #0f172a; font-weight: 600;">No upcoming trips</p>
                     <p style="color: #64748b; margin-bottom: 24px;">Your booked itineraries will appear here.</p>
                     <button class="btn-manage btn-primary-dark" style="background:#0f172a; color:#fcf9f2; border:none;" onclick="window.location.hash='discover'">Book a Stay</button>
                   </div>
                 `;
-                return;
-              }
+            return;
+          }
 
-              let html = '';
-              bookings.forEach(b => {
-                console.log('Frontend received booking:', b);
-                
-                const bStatus = (b.booking_status || b.status || '').toLowerCase();
-                const pStatus = (b.payment_status || '').toLowerCase();
-                
-                const isConfirmed = bStatus === 'confirmed' || pStatus === 'paid';
-                
-                const topStatusBadge = isConfirmed 
-                    ? `<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">CONFIRMED</span>`
-                    : `<span style="background-color: #ffc107; color: black; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">PENDING</span>`;
-                const hotelName = b.hotel_name || 'Curated Hotel';
-                const code = b.id || 'N/A';
-                const bookedDate = b.created_at ? new Date(b.created_at).toLocaleDateString('en-GB') : 'N/A';
-                const checkIn = b.check_in_date ? new Date(b.check_in_date).toLocaleDateString('en-GB') : 'N/A';
-                const checkOut = b.check_out_date ? new Date(b.check_out_date).toLocaleDateString('en-GB') : 'N/A';
-                let formattedAmount = b.total_amount ? parseFloat(b.total_amount) : 0;
-                const totalPrice = `$${formattedAmount % 1 === 0 ? formattedAmount.toString() : formattedAmount.toFixed(2)}`;
+          let html = '';
+          bookings.forEach(b => {
+            console.log('Frontend received booking:', b);
 
-                const pMethod = (b.payment_method || '').toLowerCase();
-                
-                let paymentDisplay = '';
-                
-                if (pStatus === 'paid') {
-                    // It's fully paid
-                    paymentDisplay = `<span style="color: #28a745; font-weight: 600;">✓ Paid via ${b.payment_method || 'Bank Transfer'}</span>`;
-                } else if (pMethod.includes('bank') || pMethod.includes('payos')) {
-                    // It's a bank transfer but NOT YET paid
-                    paymentDisplay = `<span style="color: #ffc107; font-weight: 500;">Awaiting Bank Transfer (Pending)</span>`;
-                } else {
-                    // It's a cash booking
-                    paymentDisplay = `<span style="color: #6c757d; font-weight: 500;">Cash at Check-in (Pending)</span>`;
-                }
-                
-                html += `
+            const bStatus = (b.booking_status || b.status || '').toLowerCase();
+            const pStatus = (b.payment_status || '').toLowerCase();
+
+            const isConfirmed = bStatus === 'confirmed' || pStatus === 'paid';
+
+            const topStatusBadge = isConfirmed
+              ? `<span style="background-color: #28a745; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">CONFIRMED</span>`
+              : `<span style="background-color: #ffc107; color: black; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase;">PENDING</span>`;
+            const hotelName = b.hotel_name || 'Curated Hotel';
+            const code = b.id || 'N/A';
+            const bookedDate = b.created_at ? new Date(b.created_at).toLocaleDateString('en-GB') : 'N/A';
+            const checkIn = b.check_in_date ? new Date(b.check_in_date).toLocaleDateString('en-GB') : 'N/A';
+            const checkOut = b.check_out_date ? new Date(b.check_out_date).toLocaleDateString('en-GB') : 'N/A';
+            let formattedAmount = b.total_amount ? parseFloat(b.total_amount) : 0;
+            const totalPrice = `$${formattedAmount % 1 === 0 ? formattedAmount.toString() : formattedAmount.toFixed(2)}`;
+
+            const pMethod = (b.payment_method || '').toLowerCase();
+
+            let paymentDisplay = '';
+
+            if (pStatus === 'paid') {
+              // It's fully paid
+              paymentDisplay = `<span style="color: #28a745; font-weight: 600;">✓ Paid via ${b.payment_method || 'Bank Transfer'}</span>`;
+            } else if (pMethod.includes('bank') || pMethod.includes('payos')) {
+              // It's a bank transfer but NOT YET paid
+              paymentDisplay = `<span style="color: #ffc107; font-weight: 500;">Awaiting Bank Transfer (Pending)</span>`;
+            } else {
+              // It's a cash booking
+              paymentDisplay = `<span style="color: #6c757d; font-weight: 500;">Cash at Check-in (Pending)</span>`;
+            }
+
+            html += `
                   <div class="booking-card" style="display: block; padding: 24px; margin-bottom: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fcf9f2;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:16px;">
                       <div>
@@ -1158,70 +1550,70 @@
                     </div>
                   </div>
                 `;
-              });
-              container.innerHTML = html;
-          } catch (error) {
-              console.error("Error fetching bookings:", error);
-              container.innerHTML = `<p style="color: red;">Failed to load bookings.</p>`;
-          }
+          });
+          container.innerHTML = html;
+        } catch (error) {
+          console.error("Error fetching bookings:", error);
+          container.innerHTML = `<p style="color: red;">Failed to load bookings.</p>`;
+        }
       };
 
       const btnRefresh = document.getElementById('refresh-bookings-btn');
       if (btnRefresh) {
-          btnRefresh.addEventListener('click', async () => {
-              const originalText = btnRefresh.innerHTML;
-              btnRefresh.innerHTML = '↻ Refreshing...';
-              await window.loadMyBookings();
-              btnRefresh.innerHTML = originalText;
-          });
+        btnRefresh.addEventListener('click', async () => {
+          const originalText = btnRefresh.innerHTML;
+          btnRefresh.innerHTML = '↻ Refreshing...';
+          await window.loadMyBookings();
+          btnRefresh.innerHTML = originalText;
+        });
       }
     });
     const profileForm = document.getElementById('profile-form');
-      if (profileForm) {
-        // 1. Tự động điền dữ liệu đã lưu khi load trang
-        const savedProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
-        const userRaw = localStorage.getItem('user');
-        const user = userRaw ? JSON.parse(userRaw) : null;
+    if (profileForm) {
+      // 1. Tự động điền dữ liệu đã lưu khi load trang
+      const savedProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
+      const userRaw = localStorage.getItem('user');
+      const user = userRaw ? JSON.parse(userRaw) : null;
 
-        if (document.getElementById('prof-name')) document.getElementById('prof-name').value = savedProfile.name || (user ? user.fullName : '') || '';
-        if (document.getElementById('prof-email')) document.getElementById('prof-email').value = user ? user.email : '';
-        if (document.getElementById('prof-dob')) document.getElementById('prof-dob').value = savedProfile.dob || '';
-        if (document.getElementById('prof-phone')) document.getElementById('prof-phone').value = savedProfile.phone || '';
-        if (document.getElementById('prof-cccd')) document.getElementById('prof-cccd').value = savedProfile.cccd || '';
-        if (document.getElementById('prof-address')) document.getElementById('prof-address').value = savedProfile.address || '';
+      if (document.getElementById('prof-name')) document.getElementById('prof-name').value = savedProfile.name || (user ? user.fullName : '') || '';
+      if (document.getElementById('prof-email')) document.getElementById('prof-email').value = user ? user.email : '';
+      if (document.getElementById('prof-dob')) document.getElementById('prof-dob').value = savedProfile.dob || '';
+      if (document.getElementById('prof-phone')) document.getElementById('prof-phone').value = savedProfile.phone || '';
+      if (document.getElementById('prof-cccd')) document.getElementById('prof-cccd').value = savedProfile.cccd || '';
+      if (document.getElementById('prof-address')) document.getElementById('prof-address').value = savedProfile.address || '';
 
-        // 2. Lắng nghe sự kiện Submit để lưu dữ liệu
-        profileForm.addEventListener('submit', (e) => {
-          e.preventDefault(); // Ngăn trang bị reload
-          
-          const newProfile = {
-            name: document.getElementById('prof-name').value,
-            dob: document.getElementById('prof-dob').value,
-            phone: document.getElementById('prof-phone').value,
-            cccd: document.getElementById('prof-cccd').value,
-            address: document.getElementById('prof-address').value
-          };
-          
-          // Lưu vào localStorage
-          localStorage.setItem('userProfile', JSON.stringify(newProfile));
-          
-          // Đổi màu nút để báo hiệu thành công
-          const btn = profileForm.querySelector('.btn-manage');
-          const originalText = btn.textContent;
-          const originalBg = btn.style.background;
-          
-          btn.textContent = 'Saved Successfully!';
-          btn.style.background = '#10b981'; // Màu xanh lá
-          
-          setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.background = originalBg;
-          }, 2000);
-        });
-      }
+      // 2. Lắng nghe sự kiện Submit để lưu dữ liệu
+      profileForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Ngăn trang bị reload
+
+        const newProfile = {
+          name: document.getElementById('prof-name').value,
+          dob: document.getElementById('prof-dob').value,
+          phone: document.getElementById('prof-phone').value,
+          cccd: document.getElementById('prof-cccd').value,
+          address: document.getElementById('prof-address').value
+        };
+
+        // Lưu vào localStorage
+        localStorage.setItem('userProfile', JSON.stringify(newProfile));
+
+        // Đổi màu nút để báo hiệu thành công
+        const btn = profileForm.querySelector('.btn-manage');
+        const originalText = btn.textContent;
+        const originalBg = btn.style.background;
+
+        btn.textContent = 'Saved Successfully!';
+        btn.style.background = '#10b981'; // Màu xanh lá
+
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = originalBg;
+        }, 2000);
+      });
+    }
   </script>
   <script>
-  window.addEventListener('DOMContentLoaded', async () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
       const orderCode = urlParams.get('orderCode');
@@ -1229,35 +1621,36 @@
 
       // code '00' usually denotes success in PayOS
       if (orderCode && (code === '00' || status === 'PAID')) {
-          console.log("PayOS Payment Success detected for Order:", orderCode);
-          
-          try {
-              // Call backend to strictly confirm and update the DB
-              const response = await fetch(`/api/bookings/verify-payment`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ orderCode: orderCode })
-              });
-              
-              const result = await response.json();
-              if (result.success) {
-                  alert("🎉 Payment Successful! Your booking is confirmed.");
-                  // Clean the URL so it doesn't re-trigger on refresh
-                  window.history.replaceState({}, document.title, window.location.pathname + '#bookings');
-                  // Reload the bookings view
-                  if (typeof loadMyBookings === 'function') loadMyBookings();
-                  
-                  // Switch to the bookings view directly
-                  if (window.switchView) window.switchView('bookings');
-              }
-          } catch (error) {
-              console.error("Failed to verify payment with backend:", error);
+        console.log("PayOS Payment Success detected for Order:", orderCode);
+
+        try {
+          // Call backend to strictly confirm and update the DB
+          const response = await fetch(`/api/bookings/verify-payment`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderCode: orderCode })
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            alert("🎉 Payment Successful! Your booking is confirmed.");
+            // Clean the URL so it doesn't re-trigger on refresh
+            window.history.replaceState({}, document.title, window.location.pathname + '#bookings');
+            // Reload the bookings view
+            if (typeof loadMyBookings === 'function') loadMyBookings();
+
+            // Switch to the bookings view directly
+            if (window.switchView) window.switchView('bookings');
           }
+        } catch (error) {
+          console.error("Failed to verify payment with backend:", error);
+        }
       } else if (code && code !== '00') {
-          alert("Payment was canceled or failed.");
-          window.history.replaceState({}, document.title, window.location.pathname + '#bookings');
+        alert("Payment was canceled or failed.");
+        window.history.replaceState({}, document.title, window.location.pathname + '#bookings');
       }
-  });
+    });
   </script>
 </body>
+
 </html>
