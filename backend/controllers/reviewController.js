@@ -1,5 +1,28 @@
 import pool from '../connection.js';
 
+// Public/Customer POST /api/reviews
+export const createReview = async (req, res) => {
+    try {
+        const { hotel_id, rating, comment } = req.body;
+        // User ID fallback to 1 for guest bookings if no user is found
+        const user_id = req.user?.userId || req.body.userId || 1; 
+        
+        if (!hotel_id || !rating) {
+            return res.status(400).json({ success: false, message: 'Hotel ID and Rating are required' });
+        }
+
+        const [result] = await pool.execute(
+            'INSERT INTO reviews (hotel_id, user_id, rating, comment, status) VALUES (?, ?, ?, ?, ?)',
+            [hotel_id, user_id, rating, comment || '', 'pending']
+        );
+
+        res.status(201).json({ success: true, message: 'Review submitted successfully', reviewId: result.insertId });
+    } catch (error) {
+        console.error('SQL Error in createReview:', error.message);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
 // 1. GET /api/admin/reviews (with pagination, filter, search)
 export const getAdminReviews = async (req, res) => {
     try {
@@ -16,10 +39,10 @@ export const getAdminReviews = async (req, res) => {
                    h.Name as hotel_name
             FROM reviews r
             LEFT JOIN users u ON r.user_id = u.UserID
-            LEFT JOIN hotels h ON r.hotel_id = h.HotelID
+            LEFT JOIN properties h ON r.hotel_id = h.PropertyID
             WHERE 1=1
         `;
-        let countQuery = 'SELECT COUNT(*) as total FROM reviews WHERE 1=1';
+        let countQuery = 'SELECT COUNT(*) as total FROM reviews r LEFT JOIN users u ON r.user_id = u.UserID LEFT JOIN properties h ON r.hotel_id = h.PropertyID WHERE 1=1';
         let params = [];
 
         // Filter by status
@@ -190,7 +213,7 @@ export const exportReviewsCSV = async (req, res) => {
                    h.Name as hotel_name
             FROM reviews r
             LEFT JOIN users u ON r.user_id = u.UserID
-            LEFT JOIN hotels h ON r.hotel_id = h.HotelID
+            LEFT JOIN properties h ON r.hotel_id = h.PropertyID
             WHERE 1=1
         `;
         let params = [];

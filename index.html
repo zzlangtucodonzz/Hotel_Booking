@@ -251,6 +251,16 @@
       </div>
     </section>
 
+    <!-- ====== PROMOTIONS & ANNOUNCEMENTS SECTION ====== -->
+    <section class="section" id="promotions-section" style="background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%); display: none;">
+      <div class="container">
+        <h2 style="text-align: center; margin-bottom: 32px; font-size: 2rem; color: #0f172a;">🎉 Latest Promotions & News</h2>
+        <div id="promotions-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; align-items: start;">
+          <!-- Posts will be loaded here dynamically -->
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="loyalty-section">
       <div class="container">
         <div class="loyalty-banner animate-in">
@@ -259,16 +269,6 @@
             <p>Unlock instant savings, free upgrades, and exclusive access to our finest curated stays. Members save an average of 15% on every booking.</p>
           </div>
           <button class="btn-loyalty" id="btn-join-rewards" onclick="switchView('rewards')">Start Earning — It's Free</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ====== PROMOTIONS & ANNOUNCEMENTS SECTION ====== -->
-    <section class="section" id="promotions-section" style="background: linear-gradient(135deg, #fff4e6 0%, #ffe8cc 100%); display: none;">
-      <div class="container">
-        <h2 style="text-align: center; margin-bottom: 32px; font-size: 2rem; color: #0f172a;">🎉 Latest Promotions & News</h2>
-        <div id="promotions-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
-          <!-- Posts will be loaded here dynamically -->
         </div>
       </div>
     </section>
@@ -488,8 +488,78 @@
 
       <button class="btn-manage btn-primary-dark" id="btn-done" style="width: 100%; padding: 16px; margin-top: 24px; font-size: 1.1rem; background: #0f172a; color:#fcf9f2; border:none;">View My Bookings</button>
     </div>
+  <div class="modal-overlay" id="review-modal-overlay">
+    <div class="booking-modal" style="max-width: 500px;">
+      <div class="modal-header">
+        <h2>Hotel Review</h2>
+        <button class="btn-manage" onclick="document.getElementById('review-modal-overlay').classList.remove('active')" style="background: rgba(255,255,255,0.1); color: #fcf9f2; border: none; padding: 8px 16px;">Close</button>
+      </div>
+      <div class="modal-body" style="flex-direction: column; gap: 24px;">
+        <h3 id="review-hotel-name" style="margin-top: 0; color: #0f172a;">Hotel Name</h3>
+        <form id="review-form">
+          <input type="hidden" id="review-hotel-id">
+          <div style="margin-bottom: 16px;">
+            <label class="info-item-label">Rating (1-5 stars)</label>
+            <select id="review-rating" class="form-input-box" required>
+              <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+              <option value="4">⭐⭐⭐⭐ Good</option>
+              <option value="3">⭐⭐⭐ Average</option>
+              <option value="2">⭐⭐ Poor</option>
+              <option value="1">⭐ Terrible</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 24px;">
+            <label class="info-item-label">Your Review</label>
+            <textarea id="review-comment" class="form-input-box" rows="4" placeholder="Write your review about the hotel..."></textarea>
+          </div>
+          <button type="submit" class="btn-manage btn-primary-dark" style="width: 100%; padding: 12px; background: #0f172a; color:#fcf9f2; border:none; font-size: 1.05rem;">Submit Review</button>
+        </form>
+      </div>
+    </div>
   </div>
 
+  <script>
+    window.openReviewModal = function(hotelId, hotelName) {
+      document.getElementById('review-hotel-id').value = hotelId;
+      document.getElementById('review-hotel-name').textContent = hotelName;
+      document.getElementById('review-rating').value = '5';
+      document.getElementById('review-comment').value = '';
+      document.getElementById('review-modal-overlay').classList.add('active');
+    };
+
+    document.getElementById('review-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const hotelId = document.getElementById('review-hotel-id').value;
+      const rating = document.getElementById('review-rating').value;
+      const comment = document.getElementById('review-comment').value;
+
+      try {
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + (localStorage.getItem('token') || '')
+          },
+          body: JSON.stringify({
+            hotel_id: parseInt(hotelId),
+            rating: parseFloat(rating),
+            comment: comment
+          })
+        });
+        const data = await res.json();
+        if(data.success) {
+          alert('Thank you for your review!');
+          document.getElementById('review-modal-overlay').classList.remove('active');
+        } else {
+          alert('Error: ' + data.message);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred while submitting your review.');
+      }
+    });
+  </script>
+  </div>
   <script src="assets/js/main.js"></script>
 
   <script>
@@ -1104,9 +1174,12 @@
                         <h3 style="margin: 0 0 4px 0;">${hotelName}</h3>
                         <p style="margin: 0; color: #64748b;">Booking Code: <strong style="color: #0f172a;">${code}</strong></p>
                       </div>
-                      <div style="text-align: right;">
-                        ${topStatusBadge}
-                        <p style="margin: 8px 0 0 0; font-size: 0.85rem; color: #64748b;">Booked on: ${bookedDate}</p>
+                      <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                        <div>
+                          ${topStatusBadge}
+                          <button onclick="window.openReviewModal(${b.hotel_id || b.property_id || 1}, '${hotelName.replace(/'/g, "\\'")}')" style="margin-left: 8px; padding: 4px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #dc2626; color: white; border: none; cursor: pointer; text-transform: uppercase;">★ REVIEW</button>
+                        </div>
+                        <p style="margin: 0; font-size: 0.85rem; color: #64748b;">Booked on: ${bookedDate}</p>
                       </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">

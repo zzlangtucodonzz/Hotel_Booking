@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS posts (
 
 ### Step 3: See It On Homepage
 1. Go to: http://localhost:5000/
-2. Scroll down to the "Latest Promotions & News" section
+2. Scroll down to the "Latest Promotions & News" section 
 3. Your post should appear with the voucher code displayed!
 
 ## 🎯 Example Post

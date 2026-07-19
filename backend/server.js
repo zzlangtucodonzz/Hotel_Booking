@@ -18,6 +18,7 @@ import bookingRoutes from './routes/bookingRoutes.js';
 import inventoryRoutes from './routes/inventoryRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import couponRoutes from './routes/couponRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
 import { getPublicCoupons } from './controllers/couponController.js';
 import { getPublicPosts } from './controllers/cmsController.js';
 import { verifyToken, verifyAdmin } from './middlewares/authMiddleware.js';
@@ -64,6 +65,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/inventory', verifyToken, verifyAdmin, inventoryRoutes);
 app.use('/api/payments', verifyToken, paymentRoutes);
 app.use('/api/coupons', verifyToken, verifyAdmin, couponRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // --- Public API Routes ---
 app.get('/api/public/coupons', getPublicCoupons);
