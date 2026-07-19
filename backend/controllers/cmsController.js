@@ -9,7 +9,7 @@ export const getPosts = async (req, res) => {
         const status = req.query.status;
         const search = req.query.search;
 
-        let query = 'SELECT id, title, slug, status, updated_at, created_at FROM posts WHERE 1=1';
+        let query = 'SELECT id, title, slug, status, updated_at, created_at, voucher_code, voucher_description FROM posts WHERE 1=1';
         let countQuery = 'SELECT COUNT(*) as total FROM posts WHERE 1=1';
         let params = [];
 
@@ -70,15 +70,15 @@ export const getPostDetails = async (req, res) => {
 // 3. POST /api/admin/posts
 export const createPost = async (req, res) => {
     try {
-        const { title, slug, content, status, meta_title, meta_description } = req.body;
+        const { title, slug, content, status, meta_title, meta_description, voucher_code, voucher_description } = req.body;
         
         if (!title || !slug) {
             return res.status(400).json({ success: false, message: 'Title and Slug are required' });
         }
 
         const [result] = await pool.execute(
-            'INSERT INTO posts (title, slug, content, status, meta_title, meta_description) VALUES (?, ?, ?, ?, ?, ?)',
-            [title, slug, content || '', status || 'draft', meta_title || '', meta_description || '']
+            'INSERT INTO posts (title, slug, content, status, meta_title, meta_description, voucher_code, voucher_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [title, slug, content || '', status || 'draft', meta_title || '', meta_description || '', voucher_code || '', voucher_description || '']
         );
         
         res.status(201).json({ success: true, message: 'Post created successfully', id: result.insertId });
@@ -95,15 +95,15 @@ export const createPost = async (req, res) => {
 export const updatePost = async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, slug, content, status, meta_title, meta_description } = req.body;
+        const { title, slug, content, status, meta_title, meta_description, voucher_code, voucher_description } = req.body;
         
         if (!title || !slug) {
             return res.status(400).json({ success: false, message: 'Title and Slug are required' });
         }
 
         const [result] = await pool.execute(
-            'UPDATE posts SET title = ?, slug = ?, content = ?, status = ?, meta_title = ?, meta_description = ? WHERE id = ?',
-            [title, slug, content || '', status || 'draft', meta_title || '', meta_description || '', id]
+            'UPDATE posts SET title = ?, slug = ?, content = ?, status = ?, meta_title = ?, meta_description = ?, voucher_code = ?, voucher_description = ? WHERE id = ?',
+            [title, slug, content || '', status || 'draft', meta_title || '', meta_description || '', voucher_code || '', voucher_description || '', id]
         );
         
         if (result.affectedRows === 0) {
@@ -202,6 +202,39 @@ export const getPostStats = async (req, res) => {
         res.status(200).json({ success: true, data: stats || {} });
     } catch (error) {
         console.error('SQL Error in getPostStats:', error.message);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+// 9. GET /api/public/posts (for displaying on index page - PUBLIC)
+export const getPublicPosts = async (req, res) => {
+    try {
+        const limit = Math.min(100, parseInt(req.query.limit) || 6);
+        const offset = parseInt(req.query.offset) || 0;
+        
+        // Get published posts only
+        const [rows] = await pool.execute(
+            'SELECT id, title, slug, content, voucher_code, voucher_description, created_at, updated_at FROM posts WHERE status = "published" ORDER BY created_at DESC LIMIT ? OFFSET ?',
+            [limit, offset]
+        );
+        
+        // Get total count
+        const [[{ total }]] = await pool.execute(
+            'SELECT COUNT(*) as total FROM posts WHERE status = "published"'
+        );
+        
+        res.status(200).json({
+            success: true,
+            data: rows,
+            pagination: {
+                total,
+                limit,
+                offset,
+                hasMore: offset + limit < total
+            }
+        });
+    } catch (error) {
+        console.error('SQL Error in getPublicPosts:', error.message);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };

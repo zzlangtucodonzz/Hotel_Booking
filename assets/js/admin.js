@@ -4127,6 +4127,8 @@ function openCmsForm() {
   document.getElementById('cms-slug').value = '';
   document.getElementById('cms-meta-title').value = '';
   document.getElementById('cms-meta-description').value = '';
+  document.getElementById('cms-voucher-code').value = '';
+  document.getElementById('cms-voucher-description').value = '';
   document.getElementById('cms-status').value = 'draft';
 }
 
@@ -4150,6 +4152,8 @@ async function editPost(id) {
       document.getElementById('cms-status').value = p.status;
       document.getElementById('cms-meta-title').value = p.meta_title || '';
       document.getElementById('cms-meta-description').value = p.meta_description || '';
+      document.getElementById('cms-voucher-code').value = p.voucher_code || '';
+      document.getElementById('cms-voucher-description').value = p.voucher_description || '';
       
       if (quillEditor) {
         quillEditor.root.innerHTML = p.content || '';
@@ -4208,6 +4212,8 @@ async function submitCmsForm() {
   const status = document.getElementById('cms-status').value;
   const meta_title = document.getElementById('cms-meta-title').value;
   const meta_description = document.getElementById('cms-meta-description').value;
+  const voucher_code = document.getElementById('cms-voucher-code').value;
+  const voucher_description = document.getElementById('cms-voucher-description').value;
   
   let content = '';
   if (quillEditor) {
@@ -4219,7 +4225,7 @@ async function submitCmsForm() {
     return;
   }
   
-  const payload = { title, slug, content, status, meta_title, meta_description };
+  const payload = { title, slug, content, status, meta_title, meta_description, voucher_code, voucher_description };
   const isEdit = !!id;
   const url = isEdit ? `/api/admin/posts/${id}` : '/api/admin/posts';
   const method = isEdit ? 'PUT' : 'POST';

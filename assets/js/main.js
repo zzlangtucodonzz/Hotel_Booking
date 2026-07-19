@@ -424,6 +424,87 @@ const initComingSoonToasts = () => {
   });
 };
 
+/* ─────────────────────────────────────────────────────────
+   7b. LOAD PROMOTIONS & CMS POSTS
+───────────────────────────────────────────────────────── */
+const loadPromotionsPosts = async () => {
+  try {
+    const response = await fetch('/api/public/posts?limit=3&offset=0');
+    const json = await response.json();
+    
+    if (!json.success || !json.data || json.data.length === 0) {
+      // No posts, hide the section
+      const section = document.getElementById('promotions-section');
+      if (section) section.style.display = 'none';
+      return;
+    }
+
+    const container = document.getElementById('promotions-container');
+    if (!container) return;
+
+    // Show the promotions section
+    const section = document.getElementById('promotions-section');
+    if (section) section.style.display = 'block';
+
+    // Clear container
+    container.innerHTML = '';
+
+    // Render each post as a promotion card
+    json.data.forEach((post) => {
+      const postCard = document.createElement('div');
+      postCard.className = 'promotion-card';
+      postCard.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-left: 4px solid #ff6b35;
+      `;
+      
+      // Parse the HTML content and extract text
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = post.content || '';
+      const contentText = tempDiv.textContent.substring(0, 150) + '...';
+
+      const voucherSection = post.voucher_code ? `
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+          <div style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Use code:</div>
+          <div style="background: #fff4e6; border: 2px dashed #ff6b35; padding: 12px 16px; border-radius: 8px; text-align: center;">
+            <span style="font-weight: 700; font-size: 1.1rem; color: #ff6b35; font-family: monospace;">${post.voucher_code}</span>
+          </div>
+          ${post.voucher_description ? `<div style="font-size: 0.85rem; color: #666; margin-top: 8px;">${post.voucher_description}</div>` : ''}
+        </div>
+      ` : '';
+
+      postCard.innerHTML = `
+        <h3 style="margin-top: 0; margin-bottom: 12px; color: #0f172a; font-size: 1.2rem;">${post.title}</h3>
+        <p style="color: #666; line-height: 1.6; margin: 0 0 12px 0;">${contentText}</p>
+        <div style="font-size: 0.8rem; color: #999;">
+          ${new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+        </div>
+        ${voucherSection}
+      `;
+
+      postCard.addEventListener('mouseover', () => {
+        postCard.style.transform = 'translateY(-4px)';
+        postCard.style.boxShadow = '0 8px 16px rgba(0,0,0,0.15)';
+      });
+
+      postCard.addEventListener('mouseout', () => {
+        postCard.style.transform = 'translateY(0)';
+        postCard.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+      });
+
+      container.appendChild(postCard);
+    });
+
+  } catch (error) {
+    console.error('Error loading promotions:', error);
+  }
+};
+
 
 
 /* ─────────────────────────────────────────────────────────
@@ -444,6 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Gọi Data
   fetchAndRenderHotels();
+  loadPromotionsPosts(); // Load CMS posts with promotions
 
   // Scrollbar Style for Carousel
   const track = document.getElementById('carousel-track');

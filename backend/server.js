@@ -19,6 +19,7 @@ import inventoryRoutes from './routes/inventoryRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import couponRoutes from './routes/couponRoutes.js';
 import { getPublicCoupons } from './controllers/couponController.js';
+import { getPublicPosts } from './controllers/cmsController.js';
 import { verifyToken, verifyAdmin } from './middlewares/authMiddleware.js';
 
 // Setup biến môi trường thư mục cho ES Modules
@@ -66,6 +67,7 @@ app.use('/api/coupons', verifyToken, verifyAdmin, couponRoutes);
 
 // --- Public API Routes ---
 app.get('/api/public/coupons', getPublicCoupons);
+app.get('/api/public/posts', getPublicPosts);
 
 // --- Health Check Route ---
 app.get('/api/health', async (_req, res) => {
