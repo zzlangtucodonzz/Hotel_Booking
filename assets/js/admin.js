@@ -40,15 +40,71 @@ window.fetch = async function () {
 
 function enforceSecurity() {
   const token = localStorage.getItem('token');
-  if (!token) {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  // Check for both 'admin' and 'Admin' just to be safe
+  const isAdmin = user.role === 'admin' || user.roleName === 'Admin';
+
+  if (!token || !isAdmin) {
     console.warn("Security Alert: Unauthorized access attempt. Terminating session.");
-    localStorage.clear();
-    window.location.replace('login.html');
+    
+    // 1. Completely freeze the page - stop all other scripts from fetching data
+    window.stop(); 
+    
+    // 2. Create the un-bypassable overlay
+    const shield = document.createElement('div');
+    shield.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0, 0, 0, 0.9); z-index: 999999;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        pointer-events: all; /* Captures and blocks ALL clicks */
+        cursor: not-allowed;
+    `;
+    
+    // 3. Create the Modal Box
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: #fff; padding: 40px; border-radius: 12px;
+        text-align: center; box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        font-family: sans-serif; max-width: 400px;
+    `;
+    modal.innerHTML = `
+        <div style="font-size: 50px; margin-bottom: 15px;">🚫</div>
+        <h2 style="color: #dc3545; margin: 0 0 10px 0; font-size: 24px;">Access Denied</h2>
+        <p style="color: #333; font-size: 16px; margin: 0 0 20px 0;">You do not have Administrator privileges. This unauthorized access attempt has been logged.</p>
+        <p style="color: #666; font-size: 14px;">Redirecting securely in <span id="countdown" style="font-weight: bold; color: #dc3545;">5</span> seconds...</p>
+    `;
+    
+    shield.appendChild(modal);
+    document.body.appendChild(shield);
+
+    // 4. Disable keyboard interactions (prevent Tab, Escape, etc.)
+    document.addEventListener('keydown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+    }, { capture: true });
+
+    // 5. Countdown and Kick out
+    let timeLeft = 5;
+    const countdownSpan = document.getElementById('countdown');
+    const timer = setInterval(() => {
+        timeLeft -= 1;
+        if (countdownSpan) countdownSpan.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('currentUser');
+            window.location.replace('index.html'); // Use replace to prevent 'Back' button bypassing
+        }
+    }, 1000);
+    
+    return false;
   }
+  return true;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  enforceSecurity();
+  if (!enforceSecurity()) return;
   initSidebarToggle();
   initSidebarNavigation();
   initTopbarActions();
