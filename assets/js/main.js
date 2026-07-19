@@ -453,4 +453,38 @@ document.addEventListener('DOMContentLoaded', () => {
     track.style.msOverflowStyle = 'none';
     track.style.webkitOverflowScrolling = 'touch';
   }
+  const typeMap = {
+    "type-hotels": "Hotel",
+    "type-villas": "Villa",
+    "type-resorts": "Resort",
+    "type-homestays": "Homestay"
+  };
+
+  document.querySelectorAll(".type-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const type = typeMap[card.id];
+      if (!type) return;
+
+      document.querySelectorAll(".type-filter").forEach(cb => {
+        cb.checked = false;
+      });
+
+      const checkbox = document.querySelector(`.type-filter[value="${type}"]`);
+      console.log("type", type)
+      console.log("checkbox", checkbox)
+      if (checkbox) checkbox.checked = true;
+
+      if (typeof switchView === "function") {
+        switchView("discover");
+      }
+
+      applyFiltersAndRender();
+
+      document.getElementById("discover")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+    });
+  });
 });
