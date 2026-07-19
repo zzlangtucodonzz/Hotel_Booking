@@ -14,6 +14,7 @@ import {
   getFormDropdowns,
   upload,
   getHotelRoomTypes,
+  getAvailableRoomsForType,
 } from '../controllers/hotelController.js';
 import { verifyToken, verifyAdmin } from '../middlewares/authMiddleware.js';
 
@@ -31,6 +32,9 @@ router.get('/:id', getHotelById);
 
 // GET  /api/hotels/:id/room-types  → room types and amenities for hotel
 router.get('/:id/room-types', getHotelRoomTypes);
+
+// GET  /api/hotels/:propertyId/room-types/:roomTypeId/available-rooms
+router.get('/:propertyId/room-types/:roomTypeId/available-rooms', getAvailableRoomsForType);
 
 // POST /api/hotels                 → create hotel (multipart/form-data with image)
 router.post('/', verifyToken, verifyAdmin, upload.single('image'), createHotel);

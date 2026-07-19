@@ -33,7 +33,9 @@ export const getBookings = async (req, res) => {
         b.payment_method as payment_method,
         LOWER(b.booking_status) as booking_status, 
         b.created_at as created_at,
-        p.Name AS hotel_name
+        p.Name AS hotel_name,
+        rt.Name AS room_type_name,
+        r.RoomNumber AS room_number
       FROM bookings b
       LEFT JOIN users u ON b.UserID = u.UserID
       LEFT JOIN booking_rooms br ON b.id = br.booking_id
@@ -114,9 +116,14 @@ export const getGuestBookings = async (req, res) => {
         b.payment_method as payment_method,
         LOWER(b.booking_status) as booking_status, 
         b.created_at as created_at,
-        p.Name AS hotel_name
+        p.Name AS hotel_name,
+        rt.Name AS room_type_name,
+        r.RoomNumber AS room_number
       FROM bookings b
       LEFT JOIN properties p ON b.hotel_id = p.PropertyID
+      LEFT JOIN booking_rooms br ON b.id = br.booking_id
+      LEFT JOIN Rooms r ON br.room_id = r.RoomID
+      LEFT JOIN RoomTypes rt ON r.RoomTypeID = rt.RoomTypeID
       WHERE b.guest_email = ?
       GROUP BY b.id ORDER BY b.created_at DESC
     `;
@@ -273,7 +280,7 @@ export const createBooking = async (req, res) => {
   console.log("INCOMING BOOKING PAYLOAD:", req.body);
   const connection = await pool.getConnection();
   try {
-    const { propertyId, room_type_id, guestEmail, checkIn, checkOut, guests, status, notes, promo_code, payment_method, total_amount, guest_name, guest_phone } = req.body;
+    const { propertyId, room_type_id, room_id, guestEmail, checkIn, checkOut, guests, status, notes, promo_code, payment_method, total_amount, guest_name, guest_phone } = req.body;
 
     if (!propertyId || !room_type_id || !guestEmail || !checkIn || !checkOut) {
       return res.status(400).json({ success: false, message: 'Missing required fields.' });
@@ -294,18 +301,31 @@ export const createBooking = async (req, res) => {
       }
     }
 
-    // 3.5 FIND AVAILABLE PHYSICAL ROOM
-    const [availableRooms] = await connection.query(
-      `SELECT RoomID FROM Rooms WHERE RoomTypeID = ? AND Status = 'Available' LIMIT 1`,
-      [room_type_id]
-    );
+    // 3.5 USE PROVIDED PHYSICAL ROOM ID OR FIND FIRST AVAILABLE
+    let roomId = room_id;
+    if (!roomId) {
+        const [availableRooms] = await connection.query(
+          `SELECT RoomID FROM Rooms WHERE RoomTypeID = ? AND Status = 'Available' LIMIT 1`,
+          [room_type_id]
+        );
 
-    if (availableRooms.length === 0) {
-      await connection.rollback();
-      return res.status(400).json({ success: false, message: 'No rooms available for this type.' });
+        if (availableRooms.length === 0) {
+          await connection.rollback();
+          return res.status(400).json({ success: false, message: 'No rooms available for this type.' });
+        }
+        
+        roomId = availableRooms[0].RoomID;
+    } else {
+        // Verify the provided room_id is actually available and matches the type
+        const [roomCheck] = await connection.query(
+          `SELECT RoomID FROM Rooms WHERE RoomID = ? AND RoomTypeID = ? AND Status = 'Available'`,
+          [roomId, room_type_id]
+        );
+        if (roomCheck.length === 0) {
+          await connection.rollback();
+          return res.status(400).json({ success: false, message: 'The selected room is not available.' });
+        }
     }
-    
-    const roomId = availableRooms[0].RoomID;
 
     // 4. GET PRICE
     const [roomTypeRows] = await connection.query(
@@ -326,6 +346,26 @@ export const createBooking = async (req, res) => {
     if (nights <= 0) nights = 1;
     // Sử dụng total_amount từ frontend nếu có (đã trừ promo), nếu không tự tính
     const finalTotalAmount = (total_amount !== undefined && !isNaN(total_amount)) ? parseInt(total_amount) : (pricePerNight * nights);
+
+    // 5.5 OVERLAP CHECK
+    // The logic for date overlap: (ExistingCheckIn < NewCheckOut) AND (ExistingCheckOut > NewCheckIn)
+    const overlapCheckSql = `
+        SELECT b.id FROM bookings b
+        JOIN booking_rooms br ON b.id = br.booking_id
+        WHERE br.room_id = ? 
+        AND b.booking_status != 'cancelled' 
+        AND b.check_in_date < ? 
+        AND b.check_out_date > ?
+    `;
+    const [overlapResults] = await connection.query(overlapCheckSql, [roomId, checkOut, checkIn]);
+    
+    if (overlapResults.length > 0) {
+        await connection.rollback();
+        return res.status(409).json({ 
+            success: false, 
+            message: 'This room is already booked for the selected dates. Please choose different dates or another room.' 
+        });
+    }
 
     // 6. INSERT BOOKING
     const orderCode = Math.floor(Date.now() / 1000);

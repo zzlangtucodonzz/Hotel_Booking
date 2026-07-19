@@ -531,3 +531,34 @@ export const getHotelRoomTypes = async (req, res) => {
     });
   }
 };
+
+/**
+ * GET /api/hotels/:propertyId/room-types/:roomTypeId/available-rooms
+ * Returns available physical rooms for a specific room type.
+ */
+export const getAvailableRoomsForType = async (req, res) => {
+  try {
+    const { propertyId, roomTypeId } = req.params;
+    
+    // Fetch rooms that belong to the type and are NOT currently booked
+    // (For simplicity in this prompt, just fetch by status 'available')
+    // Make sure column names match schema: 'rooms' table, 'room_type_id', 'status', 'room_number'
+    const sqlRooms = `SELECT RoomID as id, RoomNumber as room_number, Status FROM rooms WHERE RoomTypeID = ? AND Status = 'available'`;
+    
+    const [rooms] = await pool.query(sqlRooms, [roomTypeId]);
+
+    console.log("Fetched Available Rooms:", rooms);
+
+    return res.status(200).json({
+      success: true,
+      data: rooms
+    });
+  } catch (error) {
+    console.error("❌ SQL ERROR FETCHING AVAILABLE ROOMS:", error.sqlMessage || error.message || error);
+    return res.status(500).json({
+      success: false,
+      message: 'Database error fetching available rooms',
+      details: error.sqlMessage || error.message
+    });
+  }
+};

@@ -373,11 +373,17 @@
           <div style="background: #fcf9f2; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 32px;">
             <div style="margin-bottom: 16px;">
               <label class="info-item-label">Room Type</label>
-              <select id="book-room-type" class="form-input-box" required>
+              <select id="checkout-room-type" class="form-input-box" required>
                 <option value="" disabled selected>Loading room types...</option>
               </select>
               <div id="room-amenities-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
               </div>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <label class="info-item-label">Select Room Number</label>
+              <select id="checkout-room-number" class="form-input-box" required disabled>
+                  <option value="">-- Select a Room Type First --</option>
+              </select>
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
               <div><label class="info-item-label">Number of Rooms</label><input type="number" class="form-input-box" id="book-rooms" value="1" min="1" required></div>
@@ -550,18 +556,19 @@
       currentPricePerNight = price;
 
       // Fetch Room Types dynamically
-      const roomTypeSelect = document.getElementById('book-room-type');
+      const typeSelect = document.getElementById('checkout-room-type');
+      const numberSelect = document.getElementById('checkout-room-number');
       const amenitiesContainer = document.getElementById('room-amenities-container');
       
       console.log("Fetching room types for Property ID:", propertyId);
       if (!propertyId) {
           console.error("Missing Property ID for room types fetch!");
-          if (roomTypeSelect) roomTypeSelect.innerHTML = '<option value="" disabled>Error: No Property ID</option>';
+          if (typeSelect) typeSelect.innerHTML = '<option value="" disabled>Error: No Property ID</option>';
           return;
       }
 
-      if (roomTypeSelect) {
-        roomTypeSelect.innerHTML = '<option value="" disabled selected>Loading room types...</option>';
+      if (typeSelect) {
+        typeSelect.innerHTML = '<option value="" disabled selected>Loading room types...</option>';
         if (amenitiesContainer) amenitiesContainer.innerHTML = '';
         fetch(`/api/hotels/${propertyId}/room-types`)
           .then(async res => {
@@ -574,7 +581,7 @@
           })
           .then(data => {
             if (data.success && data.data.length > 0) {
-              roomTypeSelect.innerHTML = '';
+              typeSelect.innerHTML = '<option value="">-- Select Room Type --</option>';
               data.data.forEach((rt, idx) => {
                 const exactId = rt.RoomTypeID || rt.room_type_id || rt.id;
                 const exactName = rt.Name || rt.type_name || rt.name;
@@ -586,23 +593,28 @@
                 opt.dataset.name = exactName;
                 opt.dataset.amenities = rt.amenities_list || '[]';
                 opt.textContent = `${exactName} - $${Math.round(exactPrice)}/night`;
-                if (idx === 0) opt.selected = true; // Auto select first
-                roomTypeSelect.appendChild(opt);
+                typeSelect.appendChild(opt);
               });
-              // Trigger change for the first one
-              roomTypeSelect.dispatchEvent(new Event('change'));
             } else {
-              roomTypeSelect.innerHTML = '<option value="" disabled>No room types available</option>';
+              typeSelect.innerHTML = '<option value="" disabled>No room types available</option>';
             }
           })
           .catch(err => {
             console.error('Failed to load room types', err);
-            roomTypeSelect.innerHTML = '<option value="" disabled>Error loading</option>';
+            typeSelect.innerHTML = '<option value="" disabled>Error loading</option>';
           });
 
-        roomTypeSelect.onchange = (e) => {
+        typeSelect.onchange = async (e) => {
           const selectedOpt = e.target.options[e.target.selectedIndex];
-          if (!selectedOpt) return;
+          const typeId = e.target.value;
+          if (!typeId) {
+              if (numberSelect) {
+                  numberSelect.innerHTML = '<option value="">-- Select a Room Type First --</option>';
+                  numberSelect.disabled = true;
+              }
+              return;
+          }
+          
           const newPrice = parseFloat(selectedOpt.dataset.price) || 0;
           const newName = selectedOpt.dataset.name;
           const amenities = JSON.parse(selectedOpt.dataset.amenities || '[]');
@@ -621,6 +633,32 @@
           }
 
           if (typeof updatePriceSummary === 'function') updatePriceSummary();
+          
+          // Fetch Available Rooms
+          if (numberSelect) {
+              numberSelect.disabled = true;
+              numberSelect.innerHTML = '<option value="">Loading available rooms...</option>';
+              try {
+                  const res = await fetch(`/api/hotels/${propertyId}/room-types/${typeId}/available-rooms`);
+                  const roomsData = await res.json();
+                  
+                  numberSelect.innerHTML = '<option value="">-- Select a Room Number --</option>';
+                  if (roomsData.success && roomsData.data.length > 0) {
+                      roomsData.data.forEach(r => {
+                          const opt = document.createElement('option');
+                          opt.value = r.id || r.RoomID; // Physical Room ID
+                          opt.textContent = `Room ${r.room_number || r.RoomNumber}`;
+                          numberSelect.appendChild(opt);
+                      });
+                      numberSelect.disabled = false;
+                  } else {
+                      numberSelect.innerHTML = '<option value="">-- No Rooms Available --</option>';
+                  }
+              } catch (err) {
+                  console.error('Failed to load room numbers', err);
+                  numberSelect.innerHTML = '<option value="">Error loading</option>';
+              }
+          }
         };
       }
 
@@ -936,7 +974,8 @@
 
           const payload = {
               propertyId: parseInt(localStorage.getItem('selectedPropertyId')) || 1, // Dynamic property ID
-              room_type_id: parseInt(document.getElementById('book-room-type') ? document.getElementById('book-room-type').value : null) || null,
+              room_type_id: parseInt(document.getElementById('checkout-room-type') ? document.getElementById('checkout-room-type').value : null) || null,
+              room_id: parseInt(document.getElementById('checkout-room-number') ? document.getElementById('checkout-room-number').value : null) || null,
               guestEmail: emailVal,
               guest_name: nameVal,
               guest_phone: phoneVal,
@@ -960,7 +999,7 @@
               const data = await res.json();
               if (!res.ok || !data.success) {
                   console.error("Backend Error:", data);
-                  alert("Booking failed: " + (data.message || "Internal Server Error"));
+                  alert(data.message || 'Failed to complete booking. Please try again.');
                   throw new Error("Backend Error");
               }
               return data;
@@ -1100,7 +1139,7 @@
                       </div>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                      <div><div style="color:#64748b; font-size: 0.95rem; margin-bottom:4px;">Room Details</div><div style="font-weight:700; color:#0f172a;">Standard Room</div></div>
+                      <div><div style="color:#64748b; font-size: 0.95rem; margin-bottom:4px;">Room Details</div><div style="font-weight:700; color:#0f172a;">${b.room_type_name || 'Standard Room'} (Room ${b.room_number || 'N/A'})</div></div>
                       <div style="text-align: right;"><div style="color:#64748b; font-size: 0.95rem; margin-bottom:4px;">Total Amount</div><div style="font-size: 1.5rem; font-weight:800; color:#dc2626;">${totalPrice}</div></div>
                       <div><div style="color:#64748b; font-size: 0.95rem; margin-bottom:4px;">Stay Dates</div><div style="font-weight:700; color:#0f172a;">${checkIn} to ${checkOut}</div></div>
                       <div style="text-align: right;"><div style="color:#64748b; font-size: 0.95rem; margin-bottom:4px;">Payment Method</div><div>${paymentDisplay}</div></div>
