@@ -87,7 +87,7 @@ export const getInventoryCalendar = async (req, res) => {
          FROM booking_rooms br
          JOIN bookings b ON br.booking_id = b.id
          WHERE br.room_id IN (?)
-           AND b.booking_status IN ('confirmed', 'completed')
+           AND LOWER(b.booking_status) != 'cancelled'
            AND b.check_in_date <= ? 
            AND b.check_out_date >= ?`,
         [roomIds, end_date, start_date]
