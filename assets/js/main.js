@@ -424,6 +424,98 @@ const initComingSoonToasts = () => {
   });
 };
 
+/* ─────────────────────────────────────────────────────────
+   7b. LOAD PROMOTIONS & CMS POSTS
+───────────────────────────────────────────────────────── */
+const loadPromotionsPosts = async () => {
+  try {
+    const response = await fetch('/api/public/posts?limit=3&offset=0');
+    const json = await response.json();
+    
+    if (!json.success || !json.data || json.data.length === 0) {
+      // No posts, hide the section
+      const section = document.getElementById('promotions-section');
+      if (section) section.style.display = 'none';
+      return;
+    }
+
+    const container = document.getElementById('promotions-container');
+    if (!container) return;
+
+    // Show the promotions section
+    const section = document.getElementById('promotions-section');
+    if (section) section.style.display = 'block';
+
+    // Clear container
+    container.innerHTML = '';
+
+    // Render each post as a promotion card
+    json.data.forEach((post) => {
+      const postCard = document.createElement('div');
+      postCard.className = 'promotion-card';
+      postCard.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-left: 4px solid #ff6b35;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        box-sizing: border-box;
+      `;
+      
+      // Parse the HTML content and extract text
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = post.content || '';
+      const contentText = tempDiv.textContent.substring(0, 150) + '...';
+
+      const voucherSection = post.voucher_code ? `
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed #e2e8f0;">
+          <div style="font-size: 0.85rem; color: #64748b; margin-bottom: 8px; font-weight: 500;">Promo Code:</div>
+          <div style="background: #fff4e6; border: 1px dashed #ff6b35; padding: 10px 16px; border-radius: 8px; text-align: center;">
+            <span style="font-weight: 700; font-size: 1.15rem; color: #ff6b35; font-family: monospace; letter-spacing: 1px;">${post.voucher_code}</span>
+          </div>
+          ${post.voucher_description ? `<div style="font-size: 0.85rem; color: #64748b; margin-top: 8px; text-align: center;">${post.voucher_description}</div>` : ''}
+        </div>
+      ` : '';
+
+      postCard.innerHTML = `
+        <div>
+          <div style="font-size: 0.75rem; font-weight: 700; color: #ff6b35; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.05em;">News & Offers</div>
+          <h3 style="margin-top: 0; margin-bottom: 12px; color: #0f172a; font-size: 1.25rem; font-weight: 700; line-height: 1.4;">${post.title}</h3>
+          <p style="color: #475569; line-height: 1.6; margin: 0 0 16px 0; font-size: 0.95rem;">${contentText}</p>
+        </div>
+        <div>
+          <div style="font-size: 0.85rem; color: #94a3b8; font-weight: 500; display: flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            ${new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+          </div>
+          ${voucherSection}
+        </div>
+      `;
+
+      postCard.addEventListener('mouseover', () => {
+        postCard.style.transform = 'translateY(-4px)';
+        postCard.style.boxShadow = '0 8px 16px rgba(0,0,0,0.15)';
+      });
+
+      postCard.addEventListener('mouseout', () => {
+        postCard.style.transform = 'translateY(0)';
+        postCard.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+      });
+
+      container.appendChild(postCard);
+    });
+
+  } catch (error) {
+    console.error('Error loading promotions:', error);
+  }
+};
+
 
 
 /* ─────────────────────────────────────────────────────────
@@ -444,6 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Gọi Data
   fetchAndRenderHotels();
+  loadPromotionsPosts(); // Load CMS posts with promotions
 
   // Scrollbar Style for Carousel
   const track = document.getElementById('carousel-track');
