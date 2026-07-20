@@ -485,4 +485,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
   });
+
+  const destinationMap = {
+    "dest-hoian": "Ha Noi",
+    "dest-danang": "Da Nang",
+    "dest-nhatrang": "Ho Chi Minh"
+  };
+
+  document.querySelectorAll(".destination-card").forEach(card => {
+    card.addEventListener("click", () => {
+
+      const city = destinationMap[card.id];
+      if (!city) return;
+
+      if (typeof switchView === "function") {
+        switchView("discover");
+      }
+
+      const input = document.getElementById("discover-dest");
+      if (input) {
+        input.value = city;
+      }
+
+      document.querySelectorAll(".type-filter").forEach(cb => cb.checked = false);
+      document.querySelectorAll(".price-filter").forEach(cb => cb.checked = false);
+
+      applyFiltersAndRender();
+
+      document.getElementById("discover")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+
+  });
 });
