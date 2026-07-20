@@ -5,9 +5,9 @@
 /* ─────────────────────────────────────────────────────────
    1. CONSTANTS & GLOBAL VARIABLES
 ───────────────────────────────────────────────────────── */
-const API_BASE       = '/api/properties';
+const API_BASE = '/api/properties';
 const SKELETON_COUNT = 5;
-let allProperties    = []; // Biến lưu toàn bộ dữ liệu gốc để lọc client-side
+let allProperties = []; // Biến lưu toàn bộ dữ liệu gốc để lọc client-side
 
 /* ─────────────────────────────────────────────────────────
    2. HELPERS
@@ -42,14 +42,14 @@ const HEART_SVG = `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" st
 const buildPropertyCard = (property, index) => {
   const { PropertyID, Name, BasePrice, Rating, City, Country, TypeName, PrimaryImage } = property;
   const location = [City, Country].filter(Boolean).join(', ') || 'Vietnam';
-  const imgSrc   = PrimaryImage || 'assets/images/hanoi-hotel.png';
-  const price    = formatPrice(BasePrice);
-  const label    = ratingLabel(Rating);
+  const imgSrc = PrimaryImage || 'assets/images/hanoi-hotel.png';
+  const price = formatPrice(BasePrice);
+  const label = ratingLabel(Rating);
   const ratingDisplay = Rating ? parseFloat(Rating).toFixed(1) : '';
 
   let badge = '';
-  if (index === 0)               badge = `<span class="card-badge">Top Rated</span>`;
-  else if (Rating >= 9.5)        badge = `<span class="card-badge">Exceptional</span>`;
+  if (index === 0) badge = `<span class="card-badge">Top Rated</span>`;
+  else if (Rating >= 9.5) badge = `<span class="card-badge">Exceptional</span>`;
   else if (TypeName === 'Villa') badge = `<span class="card-badge">Insider Pick</span>`;
 
   const article = document.createElement('article');
@@ -89,11 +89,11 @@ const buildPropertyCard = (property, index) => {
   }
 
   article.addEventListener('click', (e) => {
-    if (e.target.closest('.wishlist-btn')) return; 
+    if (e.target.closest('.wishlist-btn')) return;
     if (typeof window.openBooking === 'function') {
-        let finalPrice = parseFloat(BasePrice);
-        if (isNaN(finalPrice) || finalPrice <= 0) finalPrice = 120;
-        window.openBooking(Name, TypeName || 'Standard Room', finalPrice, PropertyID);
+      let finalPrice = parseFloat(BasePrice);
+      if (isNaN(finalPrice) || finalPrice <= 0) finalPrice = 120;
+      window.openBooking(Name, TypeName || 'Standard Room', finalPrice, PropertyID);
     }
   });
 
@@ -120,7 +120,7 @@ const buildSkeletonCard = () => {
 };
 
 const showSkeletons = (container, count = SKELETON_COUNT) => {
-  if (!container) return () => {};
+  if (!container) return () => { };
   const skeletons = Array.from({ length: count }, buildSkeletonCard);
   skeletons.forEach((s) => container.appendChild(s));
   return () => skeletons.forEach((s) => s.remove());
@@ -145,12 +145,12 @@ const buildEmptyState = (message = 'No properties found.') => {
 const renderCardsToContainer = (container, propertiesArray) => {
   if (!container) return;
   container.innerHTML = '';
-  
+
   if (propertiesArray.length === 0) {
     container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b; font-weight: 500;">No properties match your filters. Try adjusting your search.</div>';
     return;
   }
-  
+
   propertiesArray.forEach((prop, i) => {
     container.appendChild(buildPropertyCard(prop, i));
   });
@@ -182,12 +182,12 @@ const applyFiltersAndRender = () => {
     // 3. Price Filter
     if (priceFilters.length > 0) {
       let matchPrice = false;
-      const price = parseFloat(p.BasePrice) || 120; 
-      
+      const price = parseFloat(p.BasePrice) || 120;
+
       if (priceFilters.includes('under100') && price < 100) matchPrice = true;
       if (priceFilters.includes('100to200') && price >= 100 && price <= 200) matchPrice = true;
       if (priceFilters.includes('over200') && price > 200) matchPrice = true;
-      
+
       if (!matchPrice) return false;
     }
     return true;
@@ -206,7 +206,7 @@ const applyFiltersAndRender = () => {
 const fetchAndRenderHotels = async () => {
   const container = document.getElementById('featured-hotels-container');
   const discoverContainer = document.getElementById('hotel-listings-container');
-  
+
   const clearContainer = showSkeletons(container);
   const clearDiscover = showSkeletons(discoverContainer);
 
@@ -218,8 +218,8 @@ const fetchAndRenderHotels = async () => {
     clearDiscover();
 
     if (json.success && Array.isArray(json.data)) {
-      allProperties = json.data; 
-      
+      allProperties = json.data;
+
       if (discoverContainer) {
         discoverContainer.style.display = 'grid';
         discoverContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
@@ -227,23 +227,23 @@ const fetchAndRenderHotels = async () => {
       }
 
       // Render Trang chủ
-      if (container) renderCardsToContainer(container, allProperties.slice(0, 10)); 
-      
+      if (container) renderCardsToContainer(container, allProperties.slice(0, 10));
+
       // Render Trang Find Stays
       applyFiltersAndRender();
-      
-      if(typeof updateCarouselNav === 'function') updateCarouselNav();
+
+      if (typeof updateCarouselNav === 'function') updateCarouselNav();
     } else {
-        if(container) container.appendChild(buildEmptyState());
-        if(discoverContainer) discoverContainer.appendChild(buildEmptyState());
+      if (container) container.appendChild(buildEmptyState());
+      if (discoverContainer) discoverContainer.appendChild(buildEmptyState());
     }
   } catch (err) {
     clearContainer();
     clearDiscover();
     console.error('Fetch error:', err);
     const errBox = buildEmptyState('Could not load properties. Please refresh the page.');
-    if(container) container.appendChild(errBox.cloneNode(true));
-    if(discoverContainer) discoverContainer.appendChild(errBox.cloneNode(true));
+    if (container) container.appendChild(errBox.cloneNode(true));
+    if (discoverContainer) discoverContainer.appendChild(errBox.cloneNode(true));
   }
 };
 
@@ -253,7 +253,7 @@ const fetchAndRenderHotels = async () => {
 const initSearchAndFilters = () => {
   const heroForm = document.getElementById('search-form');
   const heroDest = document.getElementById('search-destination');
-  
+
   if (heroForm && heroDest) {
     heroForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -273,10 +273,10 @@ const initSearchAndFilters = () => {
 /* ─────────────────────────────────────────────────────────
    7. UI CONTROLLERS (Carousel, Animations, Toggles)
 ───────────────────────────────────────────────────────── */
-let updateCarouselNav = () => {};
+let updateCarouselNav = () => { };
 
 const initCarousel = () => {
-  const track   = document.getElementById('carousel-track');
+  const track = document.getElementById('carousel-track');
   const prevBtn = document.getElementById('carousel-prev');
   const nextBtn = document.getElementById('carousel-next');
   if (!track || !prevBtn || !nextBtn) return;
@@ -288,9 +288,9 @@ const initCarousel = () => {
 
   updateCarouselNav = () => {
     const maxScroll = track.scrollWidth - track.parentElement.offsetWidth;
-    prevBtn.style.opacity       = track.scrollLeft <= 10 ? '0.3' : '1';
+    prevBtn.style.opacity = track.scrollLeft <= 10 ? '0.3' : '1';
     prevBtn.style.pointerEvents = track.scrollLeft <= 10 ? 'none' : 'auto';
-    nextBtn.style.opacity       = track.scrollLeft >= maxScroll - 10 ? '0.3' : '1';
+    nextBtn.style.opacity = track.scrollLeft >= maxScroll - 10 ? '0.3' : '1';
     nextBtn.style.pointerEvents = track.scrollLeft >= maxScroll - 10 ? 'none' : 'auto';
   };
 
@@ -353,7 +353,7 @@ const initSubnav = () => {
 };
 
 const initAuthHeader = () => {
-  const token   = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
   const userRaw = localStorage.getItem('user');
   if (!token || !userRaw) {
     document.body.classList.remove('is-logged-in');
@@ -369,23 +369,23 @@ const initAuthHeader = () => {
     return;
   }
   document.body.classList.add('is-logged-in');
-  const fullName  = user.fullName || 'Traveller';
+  const fullName = user.fullName || 'Traveller';
   const firstName = fullName.split(' ')[0];
-  const initials  = fullName.split(' ').slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join('');
+  const initials = fullName.split(' ').slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join('');
   const greetingEl = document.getElementById('user-greeting');
-  const avatarEl   = document.getElementById('user-avatar');
+  const avatarEl = document.getElementById('user-avatar');
   if (greetingEl) greetingEl.textContent = `Hello, ${firstName}`;
-  if (avatarEl)   avatarEl.textContent   = initials;
-  const userBlock  = document.getElementById('auth-user-block');
+  if (avatarEl) avatarEl.textContent = initials;
+  const userBlock = document.getElementById('auth-user-block');
   const triggerBtn = document.getElementById('user-profile-trigger');
   if (!userBlock || !triggerBtn) return;
-  
+
   triggerBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     const isOpen = userBlock.getAttribute('aria-expanded') === 'true';
     userBlock.setAttribute('aria-expanded', !isOpen);
   });
-  
+
   document.addEventListener('click', (e) => {
     if (userBlock.getAttribute('aria-expanded') === 'true' && !userBlock.contains(e.target)) {
       userBlock.setAttribute('aria-expanded', 'false');
@@ -438,10 +438,10 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeaderScroll();
   initStaggeredAnimations();
   initSubnav();
-  initAuthHeader(); 
+  initAuthHeader();
   initSearchAndFilters(); // Đã gộp Form tìm kiếm và Bộ lọc
   initComingSoonToasts();
-  
+
   // Gọi Data
   fetchAndRenderHotels();
 
@@ -453,4 +453,36 @@ document.addEventListener('DOMContentLoaded', () => {
     track.style.msOverflowStyle = 'none';
     track.style.webkitOverflowScrolling = 'touch';
   }
+  const typeMap = {
+    "type-hotels": "Hotel",
+    "type-villas": "Villa",
+    "type-resorts": "Resort",
+    "type-homestays": "Homestay"
+  };
+
+  document.querySelectorAll(".type-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const type = typeMap[card.id];
+      if (!type) return;
+
+      document.querySelectorAll(".type-filter").forEach(cb => {
+        cb.checked = false;
+      });
+
+      const checkbox = document.querySelector(`.type-filter[value="${type}"]`);
+      if (checkbox) checkbox.checked = true;
+
+      if (typeof switchView === "function") {
+        switchView("discover");
+      }
+
+      applyFiltersAndRender();
+
+      document.getElementById("discover")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+    });
+  });
 });
