@@ -21,9 +21,9 @@ import { getAdminPayments, archivePayment } from '../controllers/paymentControll
 import { getAdminCoupons, createCoupon, toggleCouponStatus } from '../controllers/couponController.js';
 import { getAdminCustomers, getCustomerDetails, toggleCustomerStatus } from '../controllers/customerController.js';
 import { getRoles, createRole, updateRolePermissions, getStaff, assignRole } from '../controllers/roleController.js';
-import { getPosts, getPostDetails, createPost, updatePost, togglePostStatus } from '../controllers/cmsController.js';
-import { getAdminReviews, updateReviewStatus, updateReviewReply } from '../controllers/reviewController.js';
-import { getMedia, uploadMedia, renameMedia, deleteMedia, uploadMediaMiddleware } from '../controllers/mediaController.js';
+import { getPosts, getPostDetails, createPost, updatePost, togglePostStatus, deletePost, bulkDeletePosts, getPostStats } from '../controllers/cmsController.js';
+import { getAdminReviews, updateReviewStatus, updateReviewReply, bulkUpdateReviewStatus, exportReviewsCSV, getReviewStats } from '../controllers/reviewController.js';
+import { getMedia, uploadMedia, renameMedia, deleteMedia, bulkDeleteMedia, createFolder, listFolders, getMediaStats, uploadMediaMiddleware } from '../controllers/mediaController.js';
 import { getSettings, bulkUpdateSettings } from '../controllers/settingController.js';
 import { getNotifications, markAsRead, markAllAsRead } from '../controllers/notificationController.js';
 import { getTickets, getTicketDetails, updateTicketStatus, replyTicket } from '../controllers/ticketController.js';
@@ -82,21 +82,31 @@ router.post('/staff/assign', assignRole);
 
 // ── CMS (Pages/Blogs) ──────────────────────────────────────────
 router.get('/posts', getPosts);
+router.get('/posts/stats', getPostStats);
 router.get('/posts/:id', getPostDetails);
 router.post('/posts', createPost);
 router.put('/posts/:id', updatePost);
 router.patch('/posts/:id/status', togglePostStatus);
+router.delete('/posts/:id', deletePost);
+router.post('/posts/bulk-delete', bulkDeletePosts);
 
 // ── Reviews (Moderation & Stats) ─────────────────────────────────
 router.get('/reviews', getAdminReviews);
+router.get('/reviews/stats', getReviewStats);
 router.patch('/reviews/:id/status', updateReviewStatus);
 router.post('/reviews/:id/reply', updateReviewReply);
+router.post('/reviews/bulk-update-status', bulkUpdateReviewStatus);
+router.get('/reviews/export/csv', exportReviewsCSV);
 
 // ── Media Manager ────────────────────────────────────────────────
 router.get('/media', getMedia);
+router.get('/media/stats', getMediaStats);
+router.get('/media/folders/list', listFolders);
 router.post('/media/upload', uploadMediaMiddleware, uploadMedia);
+router.post('/media/folder', createFolder);
 router.put('/media/:id/rename', renameMedia);
 router.delete('/media/:id', deleteMedia);
+router.post('/media/bulk-delete', bulkDeleteMedia);
 
 // ── System Settings ──────────────────────────────────────────────
 router.get('/settings', getSettings);
